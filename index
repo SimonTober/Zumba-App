@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Zumba Stunden Planer</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #ff4d8d;
+    --purple: #7c3aed;
+    --bg: #0f0720;
+    --card: #1a0f35;
+    --card2: #22103f;
+    --text: #f0e8ff;
+    --muted: #9b85c4;
+    --border: rgba(255,77,141,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 3rem; }
+
+  /* Header */
+  .header { text-align: center; padding: 2.2rem 1rem 1.4rem; background: linear-gradient(180deg, rgba(124,58,237,0.18) 0%, transparent 100%); }
+  .logo { font-size: 2.4rem; font-weight: 900; color: var(--pink); letter-spacing: 1px; line-height: 1; }
+  .logo span { color: var(--text); }
+  .tagline { color: var(--muted); font-size: 0.82rem; margin-top: 4px; }
+
+  /* Main button */
+  .wrap { padding: 0 1rem; max-width: 500px; margin: 0 auto; }
+  .btn-generate { display: block; width: 100%; padding: 1.1rem 1rem; margin: 1.2rem 0; background: linear-gradient(135deg, var(--pink) 0%, #c8356b 100%); border: none; border-radius: 18px; font-family: 'Nunito', sans-serif; font-size: 1.15rem; font-weight: 900; color: white; cursor: pointer; letter-spacing: 0.5px; box-shadow: 0 6px 24px rgba(255,77,141,0.35); transition: transform 0.12s, box-shadow 0.12s; }
+  .btn-generate:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(255,77,141,0.25); }
+
+  /* Date badge */
+  .date-badge { text-align: center; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; }
+
+  /* Phase card */
+  .phase { background: var(--card); border: 1px solid var(--border); border-radius: 18px; margin-bottom: 1rem; overflow: hidden; }
+  .phase-header { display: flex; align-items: center; gap: 10px; padding: 0.9rem 1rem 0.75rem; border-bottom: 1px solid var(--border); }
+  .phase-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .phase-name { font-weight: 900; font-size: 0.95rem; color: var(--text); flex: 1; }
+  .phase-dur { font-size: 0.72rem; color: var(--muted); background: rgba(255,255,255,0.06); padding: 2px 9px; border-radius: 20px; }
+
+  /* Exercise rows */
+  .ex-list { padding: 0.6rem 0.75rem 0.75rem; }
+  .ex-item { display: flex; align-items: flex-start; gap: 9px; padding: 0.65rem 0.75rem; background: rgba(255,255,255,0.04); border-radius: 11px; margin-bottom: 0.45rem; }
+  .ex-item:last-child { margin-bottom: 0; }
+  .ex-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pink); margin-top: 6px; flex-shrink: 0; }
+  .ex-text { flex: 1; }
+  .ex-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .ex-desc { font-size: 0.76rem; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+  /* Music section */
+  .music-card { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25); border-radius: 18px; margin-bottom: 1rem; overflow: hidden; }
+  .music-header { display: flex; align-items: center; gap: 8px; padding: 0.9rem 1rem 0.75rem; border-bottom: 1px solid rgba(124,58,237,0.18); }
+  .music-header-title { font-weight: 900; font-size: 0.95rem; }
+  .music-hint { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+  .music-list { padding: 0.6rem 0.75rem 0.75rem; }
+  .music-row { display: flex; align-items: center; gap: 8px; padding: 0.6rem 0.75rem; background: rgba(255,255,255,0.04); border-radius: 11px; margin-bottom: 0.4rem; }
+  .music-row:last-child { margin-bottom: 0; }
+  .music-phase { font-size: 0.65rem; font-weight: 700; color: var(--pink); background: rgba(255,77,141,0.12); padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+  .music-title { font-weight: 700; font-size: 0.85rem; flex: 1; }
+  .music-artist { font-size: 0.72rem; color: var(--muted); }
+  .music-bpm { font-size: 0.68rem; color: var(--muted); white-space: nowrap; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 10px; }
+
+  /* Tip box */
+  .tip-box { background: rgba(255,200,80,0.06); border: 1px solid rgba(255,200,80,0.2); border-radius: 14px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
+  .tip-label { font-size: 0.68rem; font-weight: 700; color: #ffca50; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .tip-text { font-size: 0.83rem; color: #c9b07a; line-height: 1.55; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+  .empty-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+  .empty-title { font-weight: 700; font-size: 1.05rem; color: var(--text); margin-bottom: 0.4rem; }
+  .empty-sub { font-size: 0.83rem; line-height: 1.5; }
+
+  /* Footer */
+  .footer { text-align: center; color: var(--muted); font-size: 0.72rem; padding: 1.5rem 1rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">ZUMBA <span>STUNDEN</span></div>
+  <div class="tagline">Für Teilnehmerinnen von 35–65 Jahren · 55 Minuten</div>
+</div>
+
+<div class="wrap">
+  <button class="btn-generate" onclick="generateSession()">🎵 Neue Zumba Stunde erstellen</button>
+  <div id="output">
+    <div class="empty">
+      <div class="empty-icon">💃</div>
+      <div class="empty-title">Bereit zum Tanzen!</div>
+      <div class="empty-sub">Tippe auf den Button und erhalte deine persönliche Zumba-Stunde für heute.</div>
+    </div>
+  </div>
+  <div class="footer">Zumba Stunden Planer · Jeden Tag neu generiert</div>
+</div>
+
+<script>
+const DB = {
+  warmup: [
+    { name: "Merengue-Schritt", desc: "Lockerer Grundschritt links-rechts im Merengue-Takt, Hüften leicht mitschwingen lassen. Arme locker mitbewegen." },
+    { name: "Seitschritt mit Clap", desc: "Zwei Schritte zur Seite, zusammen, klatschen. Tempo langsam steigern. Schultern entspannt halten." },
+    { name: "Salsa-Grundschritt", desc: "Schritt vor, zurück im Salsa-Rhythmus. Gewichtsverlagerung spüren, Knie leicht beugen." },
+    { name: "Mambo-Wippschritt", desc: "Auf der Stelle wippen, abwechselnd Fersen heben. Hüfte folgt der Bewegung. Ideal als Aufwärmer." },
+    { name: "Cumbia-Seitengang", desc: "Kleiner Ausfallschritt zur Seite mit Hüftschwung. Arme öffnen und schließen im Takt." },
+    { name: "Schulterkreisen", desc: "Im Stand beide Schultern nach hinten kreisen, dann vorwärts. Oberkörper entspannen, tief atmen." },
+    { name: "Hüftkreisen", desc: "Füße schulterbreit, Hüfte in großen Kreisen schwingen. Knie leicht gebeugt, Oberkörper ruhig." },
+    { name: "March & Reach", desc: "Auf der Stelle marschieren, abwechselnd Arme nach oben strecken. Langsam warmwerden." },
+    { name: "Reggaeton-Bounce", desc: "Leichtes Wippen in den Knien mit tiefem Beat, Arme locker vorne und hinten schwingen." },
+    { name: "Cha-Cha-Cha Basis", desc: "Grundschritt Cha-Cha-Cha: vor – zurück – cha-cha-cha. Hüfte locker, Lächeln nicht vergessen!" },
+  ],
+  main1: [
+    { name: "Salsa Drehung", desc: "Salsa-Grundschritt mit 360°-Drehung nach je 8 Takten. Arme elegant ausgestreckt, Blick führt die Drehung." },
+    { name: "Cumbia-Sequenz", desc: "Drei Schritte seitwärts, Hüftschwung, zurück. Arme wechseln oben und unten. Energetischer Rhythmus." },
+    { name: "Merengue-March", desc: "Knie hochziehen im Merengue-Takt, Arme kraftvoll pumpen. Tempo steigern nach 8 Wiederholungen." },
+    { name: "Salsa mit Arm-Styling", desc: "Grundschritt Salsa, dazu fließende Armbewegungen von innen nach außen. Körpergefühl entwickeln." },
+    { name: "Samba-Bounce", desc: "Samba-typisches Kniebeugen im schnellen Rhythmus, Oberkörper dreht leicht mit. Hüfte aktiv einsetzen." },
+    { name: "Cha-Cha-Variation", desc: "Cha-Cha-Cha mit Seitausfallschritt und Klatschen auf Beat 1. Zügiges Tempo, kontrollierte Schritte." },
+    { name: "Flamenco Stomps", desc: "Kraftvolles Aufstampfen, Arme über Kopf, Hüften seitlich. Kurze Pause, dann Wiederholung." },
+    { name: "Reggaeton Steps", desc: "Tiefer Stand, Füße wechseln vorne, Arm-Pumps dazu. Hip-Hop-Einfluss, kraftvoll und taktfest." },
+    { name: "Salsa Kreis", desc: "Im Kreis gehen mit Salsa-Schritten, nach 8 Takten Richtung wechseln. Gruppe synchron halten." },
+    { name: "Merengue Hüftstoß", desc: "Hüfte seitlich ausstoßen auf jeden Takt, Gewicht verlagern. Arme seitlich ausgestreckt für Balance." },
+    { name: "Cumbia mit Drehung", desc: "Cumbia-Grundschritt nach 4 Takten mit Viertel-Drehung. Alle vier Richtungen durcharbeiten." },
+    { name: "Paso Doble Basics", desc: "Stolze Körperhaltung, energische Schritte vor und zurück, Arme wie beim Stierkampf. Selbstbewusstsein zeigen!" },
+  ],
+  main2: [
+    { name: "Bachata-Slide", desc: "Drei Schritte seitwärts und Hüftstoß auf Takt 4. Typischer Bachata-Rhythmus, sinnlich und präzise." },
+    { name: "Bollywood-Arme", desc: "Klassische Bollywood-Armbewegungen mit Achter-Schritt. Fröhlich, ausdrucksstark, viel Energie." },
+    { name: "Reggaeton Perreo", desc: "Tiefes Kniebeugen, Hüftkrreisen, Arme nach vorne. Kraftvoll und rhythmisch, kurze Wiederholungen." },
+    { name: "Afro-Cuban Step", desc: "Tiefer Stand, Oberkörper bewegt sich wellenförmig mit Seitschritten. Afrikanisch inspiriert, erdverbunden." },
+    { name: "Samba mit Armen", desc: "Schneller Samba-Bounce, Arme wechseln zwischen Kopfhöhe und Hüfte. Energie hochhalten!" },
+    { name: "Pop-Isolation", desc: "Hüft- und Schulter-Isolationen im modernen Pop-Rhythmus. Jeder Körperteil einzeln bewegen." },
+    { name: "Mambo Kick", desc: "Mambo-Schritte mit Beinauswurf auf Takt 3. Knie weich, Oberkörper stabil. Power-Bewegung!" },
+    { name: "Hip-Hop Shuffle", desc: "Schritt-Touch seitwärts mit Armswings. Locker und groovy, auf den Takt achten." },
+    { name: "Tropical Step", desc: "Leichte Fußarbeit mit Armwellen über den Kopf. Karibisches Feeling, entspannt und rhythmisch." },
+    { name: "Bachata mit Drehung", desc: "Bachata-Grundschritt mit Spin nach je 8 Takten. Drehung langsam beginnen, dann flüssiger werden." },
+    { name: "Latin Freeze", desc: "Kurze Power-Sequenz gefolgt von einem 'Einfrieren' auf Takt 8. Überraschungsmoment für die Gruppe!" },
+    { name: "Zumba-Kombination", desc: "Mix aus Merengue, Salsa und Cumbia in einer 16-Takt-Phrase. Höhepunkt der Stunde – alles zusammen!" },
+  ],
+  cooldown: [
+    { name: "Langsamer Merengue", desc: "Sehr ruhiger Merengue-Schritt, Herzfrequenz senken. Tiefes Atmen, Bewegungen kleiner werden lassen." },
+    { name: "Schulter-Stretch", desc: "Einen Arm quer vor die Brust, 20 Sekunden halten, wechseln. Schultermuskel gut dehnen." },
+    { name: "Hüftbeuger-Dehnung", desc: "Ausfallschritt, hinteres Knie fast am Boden, Hüfte nach vorne schieben. 25 Sekunden pro Seite." },
+    { name: "Seitliche Rumpfdehnung", desc: "Arm über den Kopf zur Seite beugen, Körperseite dehnen. Langsam und kontrolliert atmen." },
+    { name: "Waden-Stretch", desc: "Hände an die Wand, ein Bein gestreckt zurück, Ferse drückt zum Boden. 20 Sek. halten." },
+    { name: "Oberschenkel-Dehnung", desc: "Im Stand ein Bein anwinkeln, Fuß zur Gesäß ziehen. Balance halten oder Stuhl nutzen. Für 20 Sek." },
+    { name: "Katze-Kuh-Bewegung", desc: "Im Stand: Rücken runden und strecken abwechselnd. Wirbelsäule mobilisieren, tief atmen." },
+    { name: "Nacken-Rollen", desc: "Kopf langsam von einer Seite zur anderen rollen, nie ganz nach hinten. Nackenmuskulatur lockern." },
+    { name: "Große Atemrunde", desc: "Arme beim Einatmen heben, beim Ausatmen senken. Dreimal wiederholen. Gruppe gut einbinden." },
+    { name: "Stehende Rumpfrotation", desc: "Hände an die Hüften, Oberkörper langsam von links nach rechts drehen. Wirbelsäule mobilisieren." },
+  ]
+};
+
+const MUSIC = [
+  { phase: "Warm-Up", title: "Vivir Mi Vida", artist: "Marc Anthony", bpm: 95 },
+  { phase: "Warm-Up", title: "La Bamba", artist: "Ritchie Valens", bpm: 98 },
+  { phase: "Warm-Up", title: "Bamboleo", artist: "Gipsy Kings", bpm: 100 },
+  { phase: "Warm-Up", title: "Conga", artist: "Gloria Estefan", bpm: 102 },
+  { phase: "Warm-Up", title: "Macarena", artist: "Los del Río", bpm: 104 },
+  { phase: "Latin", title: "Despacito", artist: "Luis Fonsi", bpm: 126 },
+  { phase: "Latin", title: "Bailando", artist: "Enrique Iglesias", bpm: 130 },
+  { phase: "Latin", title: "Hips Don't Lie", artist: "Shakira", bpm: 128 },
+  { phase: "Latin", title: "Waka Waka", artist: "Shakira", bpm: 132 },
+  { phase: "Latin", title: "Gasolina", artist: "Daddy Yankee", bpm: 129 },
+  { phase: "Latin", title: "La Tortura", artist: "Shakira", bpm: 127 },
+  { phase: "Party", title: "Con Calma", artist: "Daddy Yankee", bpm: 134 },
+  { phase: "Party", title: "Lean On", artist: "Major Lazer", bpm: 136 },
+  { phase: "Party", title: "Boom Boom", artist: "RedOne", bpm: 138 },
+  { phase: "Party", title: "Danza Kuduro", artist: "Don Omar", bpm: 140 },
+  { phase: "Party", title: "Magalenha", artist: "Sérgio Mendes", bpm: 135 },
+  { phase: "Party", title: "Soca Dance", artist: "Faye-Ann Lyons", bpm: 142 },
+  { phase: "Cool-Down", title: "Quizás, Quizás, Quizás", artist: "Nat King Cole", bpm: 78 },
+  { phase: "Cool-Down", title: "Bésame Mucho", artist: "Andrea Bocelli", bpm: 75 },
+  { phase: "Cool-Down", title: "La Vie en Rose", artist: "Édith Piaf", bpm: 72 },
+  { phase: "Cool-Down", title: "Perhaps Love", artist: "José Carreras", bpm: 74 },
+];
+
+const TIPS = [
+  "Erinnere die Teilnehmerinnen: Jede macht ihr eigenes Tempo – keine Vergleiche, nur Freude!",
+  "Lächeln ist Pflicht! Eine gute Atmosphäre motiviert mehr als die perfekte Technik.",
+  "Pausen sind okay. Wer Wasser braucht, holt sich Wasser – kein Durchhalten erzwingen.",
+  "Variationen anbieten: Für Anfängerinnen kleinere Schritte, für Fortgeschrittene mehr Hüfteinsatz.",
+  "Augenkontakt mit der Gruppe halten – das schafft Verbindung und Motivation.",
+  "Nach der Stunde kurz nachfragen: Was hat am meisten Spaß gemacht? Feedback ist Gold!",
+  "Musik etwas lauter in der Hauptphase, im Cool-Down deutlich leiser – das hilft dem Körper runterzukommen.",
+  "Komplimente verteilen! Einzelne Teilnehmerinnen gezielt loben – das bleibt in Erinnerung.",
+];
+
+function pick(arr, n) {
+  const copy = [...arr];
+  const result = [];
+  for (let i = 0; i < n && copy.length; i++) {
+    const idx = Math.floor(Math.random() * copy.length);
+    result.push(copy.splice(idx, 1)[0]);
+  }
+  return result;
+}
+
+function pickOne(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function today() {
+  return new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function generateSession() {
+  const phases = [
+    { id: 'warmup',  icon: '🌅', name: 'Warm-Up',             dur: '8 Min',  exs: pick(DB.warmup,  3) },
+    { id: 'main1',   icon: '🔥', name: 'Hauptteil – Latin',   dur: '15 Min', exs: pick(DB.main1,   4) },
+    { id: 'main2',   icon: '💥', name: 'Hauptteil – Party',   dur: '15 Min', exs: pick(DB.main2,   4) },
+    { id: 'cooldown',icon: '🌙', name: 'Cool-Down & Stretch', dur: '10 Min', exs: pick(DB.cooldown, 3) },
+  ];
+
+  const warmSong  = pickOne(MUSIC.filter(m => m.phase === 'Warm-Up'));
+  const latin1    = pickOne(MUSIC.filter(m => m.phase === 'Latin'));
+  const latin2    = (() => { const opts = MUSIC.filter(m => m.phase === 'Latin' && m !== latin1); return pickOne(opts); })();
+  const partySong = pickOne(MUSIC.filter(m => m.phase === 'Party'));
+  const coolSong  = pickOne(MUSIC.filter(m => m.phase === 'Cool-Down'));
+  const tip = pickOne(TIPS);
+
+  let html = `<div class="date-badge">📅 ${today()}</div>`;
+
+  phases.forEach(p => {
+    html += `<div class="phase">
+      <div class="phase-header">
+        <span class="phase-icon">${p.icon}</span>
+        <span class="phase-name">${p.name}</span>
+        <span class="phase-dur">${p.dur}</span>
+      </div>
+      <div class="ex-list">`;
+    p.exs.forEach(ex => {
+      html += `<div class="ex-item">
+        <div class="ex-dot"></div>
+        <div class="ex-text">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-desc">${ex.desc}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  const songs = [
+    { label: 'Warm-Up', song: warmSong },
+    { label: 'Latin 1', song: latin1 },
+    { label: 'Latin 2', song: latin2 },
+    { label: 'Party',   song: partySong },
+    { label: 'Cool-Down', song: coolSong },
+  ];
+
+  html += `<div class="music-card">
+    <div class="music-header">
+      <span style="font-size:1.2rem">🎶</span>
+      <div>
+        <div class="music-header-title">Musikvorschläge</div>
+        <div class="music-hint">Titel bei Spotify oder YouTube suchen</div>
+      </div>
+    </div>
+    <div class="music-list">`;
+  songs.forEach(s => {
+    html += `<div class="music-row">
+      <span class="music-phase">${s.label}</span>
+      <div style="flex:1">
+        <div class="music-title">${s.song.title}</div>
+        <div class="music-artist">${s.song.artist}</div>
+      </div>
+      <span class="music-bpm">${s.song.bpm} BPM</span>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  html += `<div class="tip-box">
+    <div class="tip-label">💡 Tipp für heute</div>
+    <div class="tip-text">${tip}</div>
+  </div>`;
+
+  document.getElementById('output').innerHTML = html;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
