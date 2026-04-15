@@ -2,281 +2,687 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Zumba Stunden Planer</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zumba Planer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --pink: #ff4d8d;
-    --purple: #7c3aed;
-    --bg: #0f0720;
-    --card: #1a0f35;
-    --card2: #22103f;
-    --text: #f0e8ff;
-    --muted: #9b85c4;
-    --border: rgba(255,77,141,0.18);
+    --rose: #e8c5b0;
+    --rose-light: #f5efe8;
+    --rose-dark: #c4997a;
+    --lilac: #c9b8d8;
+    --lilac-light: #ede8f4;
+    --lilac-dark: #9b84b8;
+    --cream: #f5efe8;
+    --brown: #2d1f14;
+    --brown-mid: #5a3e2b;
+    --gray-soft: #7a6e65;
+    --white: #fff;
+    --card-bg: rgba(255,255,255,0.85);
+    --border: rgba(45,31,20,0.12);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 3rem; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #f5efe8 0%, #ede8f4 50%, #f5efe8 100%);
+    min-height: 100vh;
+    color: var(--brown);
+  }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 500; }
 
   /* Header */
-  .header { text-align: center; padding: 2.2rem 1rem 1.4rem; background: linear-gradient(180deg, rgba(124,58,237,0.18) 0%, transparent 100%); }
-  .logo { font-size: 2.4rem; font-weight: 900; color: var(--pink); letter-spacing: 1px; line-height: 1; }
-  .logo span { color: var(--text); }
-  .tagline { color: var(--muted); font-size: 0.82rem; margin-top: 4px; }
+  .header {
+    text-align: center;
+    padding: 2.5rem 1.5rem 1.5rem;
+    background: rgba(255,255,255,0.5);
+    border-bottom: 1px solid var(--border);
+  }
+  .header h1 { font-size: 2rem; color: var(--brown); letter-spacing: 0.5px; }
+  .header p { color: var(--gray-soft); margin-top: 0.4rem; font-size: 0.95rem; }
 
-  /* Main button */
-  .wrap { padding: 0 1rem; max-width: 500px; margin: 0 auto; }
-  .btn-generate { display: block; width: 100%; padding: 1.1rem 1rem; margin: 1.2rem 0; background: linear-gradient(135deg, var(--pink) 0%, #c8356b 100%); border: none; border-radius: 18px; font-family: 'Nunito', sans-serif; font-size: 1.15rem; font-weight: 900; color: white; cursor: pointer; letter-spacing: 0.5px; box-shadow: 0 6px 24px rgba(255,77,141,0.35); transition: transform 0.12s, box-shadow 0.12s; }
-  .btn-generate:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(255,77,141,0.25); }
+  /* Nav Tabs */
+  .nav {
+    display: flex;
+    gap: 0;
+    background: rgba(255,255,255,0.6);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .nav button {
+    flex: 1;
+    min-width: 100px;
+    padding: 0.85rem 1rem;
+    background: none;
+    border: none;
+    border-bottom: 2.5px solid transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    color: var(--gray-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav button.active {
+    color: var(--brown);
+    border-bottom-color: var(--rose-dark);
+    font-weight: 600;
+    background: rgba(255,255,255,0.4);
+  }
+  .nav button:hover:not(.active) { color: var(--brown); background: rgba(255,255,255,0.3); }
 
-  /* Date badge */
-  .date-badge { text-align: center; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.8rem; }
+  /* Main */
+  .main { padding: 1.5rem; max-width: 700px; margin: 0 auto; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
 
-  /* Phase card */
-  .phase { background: var(--card); border: 1px solid var(--border); border-radius: 18px; margin-bottom: 1rem; overflow: hidden; }
-  .phase-header { display: flex; align-items: center; gap: 10px; padding: 0.9rem 1rem 0.75rem; border-bottom: 1px solid var(--border); }
-  .phase-icon { font-size: 1.3rem; flex-shrink: 0; }
-  .phase-name { font-weight: 900; font-size: 0.95rem; color: var(--text); flex: 1; }
-  .phase-dur { font-size: 0.72rem; color: var(--muted); background: rgba(255,255,255,0.06); padding: 2px 9px; border-radius: 20px; }
+  /* Generate Button */
+  .gen-btn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: var(--brown);
+    color: var(--cream);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    margin-bottom: 1.5rem;
+  }
+  .gen-btn:hover { background: var(--brown-mid); transform: translateY(-1px); }
+  .gen-btn:active { transform: translateY(0); }
 
-  /* Exercise rows */
-  .ex-list { padding: 0.6rem 0.75rem 0.75rem; }
-  .ex-item { display: flex; align-items: flex-start; gap: 9px; padding: 0.65rem 0.75rem; background: rgba(255,255,255,0.04); border-radius: 11px; margin-bottom: 0.45rem; }
-  .ex-item:last-child { margin-bottom: 0; }
-  .ex-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pink); margin-top: 6px; flex-shrink: 0; }
-  .ex-text { flex: 1; }
-  .ex-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
-  .ex-desc { font-size: 0.76rem; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  /* Phase Cards */
+  .phase-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .phase-header {
+    padding: 1rem 1.2rem 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .phase-header h3 { font-size: 1rem; }
+  .phase-meta { font-size: 0.8rem; color: var(--gray-soft); margin-left: auto; }
 
-  /* Music section */
-  .music-card { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25); border-radius: 18px; margin-bottom: 1rem; overflow: hidden; }
-  .music-header { display: flex; align-items: center; gap: 8px; padding: 0.9rem 1rem 0.75rem; border-bottom: 1px solid rgba(124,58,237,0.18); }
-  .music-header-title { font-weight: 900; font-size: 0.95rem; }
-  .music-hint { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
-  .music-list { padding: 0.6rem 0.75rem 0.75rem; }
-  .music-row { display: flex; align-items: center; gap: 8px; padding: 0.6rem 0.75rem; background: rgba(255,255,255,0.04); border-radius: 11px; margin-bottom: 0.4rem; }
-  .music-row:last-child { margin-bottom: 0; }
-  .music-phase { font-size: 0.65rem; font-weight: 700; color: var(--pink); background: rgba(255,77,141,0.12); padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
-  .music-title { font-weight: 700; font-size: 0.85rem; flex: 1; }
-  .music-artist { font-size: 0.72rem; color: var(--muted); }
-  .music-bpm { font-size: 0.68rem; color: var(--muted); white-space: nowrap; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 10px; }
+  /* Music Row */
+  .music-row {
+    padding: 0.75rem 1.2rem;
+    background: rgba(201,184,216,0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--brown-mid);
+    border-bottom: 1px solid var(--border);
+  }
+  .music-icon { font-size: 1rem; }
 
-  /* Tip box */
-  .tip-box { background: rgba(255,200,80,0.06); border: 1px solid rgba(255,200,80,0.2); border-radius: 14px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
-  .tip-label { font-size: 0.68rem; font-weight: 700; color: #ffca50; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-  .tip-text { font-size: 0.83rem; color: #c9b07a; line-height: 1.55; }
+  /* Exercise Items */
+  .exercise-item {
+    padding: 0.85rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(45,31,20,0.06);
+    transition: background 0.15s;
+  }
+  .exercise-item:last-child { border-bottom: none; }
+  .exercise-item:hover { background: rgba(232,197,176,0.15); }
+  .exercise-info { flex: 1; cursor: pointer; }
+  .exercise-name { font-weight: 500; font-size: 0.95rem; color: var(--brown); }
+  .exercise-tags { display: flex; gap: 0.4rem; margin-top: 0.25rem; flex-wrap: wrap; }
+  .tag {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .tag-level-leicht { background: #e8f5e9; color: #2e7d32; }
+  .tag-level-mittel { background: #fff3e0; color: #e65100; }
+  .tag-level-aktiv { background: #fce4ec; color: #c62828; }
+  .tag-muscle { background: var(--lilac-light); color: #6a3f8f; }
+  .tag-duration { background: var(--rose-light); color: var(--brown-mid); }
 
-  /* Empty state */
-  .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
-  .empty-icon { font-size: 3.5rem; margin-bottom: 1rem; }
-  .empty-title { font-weight: 700; font-size: 1.05rem; color: var(--text); margin-bottom: 0.4rem; }
-  .empty-sub { font-size: 0.83rem; line-height: 1.5; }
+  .swap-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray-soft);
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .swap-btn:hover { background: var(--rose); border-color: var(--rose-dark); color: var(--brown); }
 
-  /* Footer */
-  .footer { text-align: center; color: var(--muted); font-size: 0.72rem; padding: 1.5rem 1rem 0; }
+  .fav-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .fav-btn.active { background: #fce4ec; border-color: #f48fb1; }
+
+  /* Tips */
+  .tip-box {
+    background: rgba(201,184,216,0.2);
+    border-left: 3px solid var(--lilac-dark);
+    border-radius: 0 10px 10px 0;
+    padding: 0.9rem 1.1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--brown-mid);
+  }
+  .tip-box strong { color: var(--brown); }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--gray-soft);
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.6; }
+  .empty-state h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--brown); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(45,31,20,0.4);
+    z-index: 100;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 440px;
+    width: 100%;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h3 { font-size: 1.2rem; margin-bottom: 0.3rem; }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 30px; height: 30px;
+    border-radius: 50%; border: 1px solid var(--border);
+    background: var(--cream); cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    color: var(--gray-soft);
+  }
+  .modal-tags { display: flex; gap: 0.4rem; margin: 0.5rem 0 1rem; flex-wrap: wrap; }
+  .modal-section { margin-bottom: 0.9rem; }
+  .modal-section h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-soft); margin-bottom: 0.4rem; }
+  .modal-steps { list-style: none; }
+  .modal-steps li {
+    padding: 0.4rem 0 0.4rem 1.5rem;
+    position: relative;
+    font-size: 0.9rem;
+    color: var(--brown-mid);
+    border-bottom: 1px solid rgba(45,31,20,0.06);
+  }
+  .modal-steps li:last-child { border-bottom: none; }
+  .modal-steps li::before {
+    content: attr(data-num);
+    position: absolute; left: 0;
+    width: 18px; height: 18px;
+    background: var(--rose);
+    border-radius: 50%;
+    font-size: 0.72rem;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--brown);
+    top: 0.45rem;
+  }
+
+  /* History */
+  .history-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .history-card:hover { background: rgba(232,197,176,0.2); }
+  .history-date { font-size: 0.8rem; color: var(--gray-soft); margin-bottom: 0.3rem; }
+  .history-exercises { font-size: 0.85rem; color: var(--brown-mid); }
+
+  /* Favorites */
+  .fav-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .fav-card-info { flex: 1; }
+  .fav-card-name { font-weight: 500; font-size: 0.95rem; }
+  .fav-card-meta { font-size: 0.8rem; color: var(--gray-soft); margin-top: 0.2rem; }
+  .remove-fav {
+    width: 28px; height: 28px;
+    border-radius: 50%; border: 1px solid var(--border);
+    background: none; cursor: pointer; font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray-soft);
+  }
+  .remove-fav:hover { background: #fce4ec; color: #c62828; }
+
+  .section-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray-soft);
+    margin: 1.2rem 0 0.6rem;
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="logo">ZUMBA <span>STUNDEN</span></div>
-  <div class="tagline">Für Teilnehmerinnen von 35–65 Jahren · 55 Minuten</div>
+  <h1>Zumba Planer</h1>
+  <p>Deine persönliche Kursassistentin</p>
 </div>
 
-<div class="wrap">
-  <button class="btn-generate" onclick="generateSession()">🎵 Neue Zumba Stunde erstellen</button>
-  <div id="output">
-    <div class="empty">
-      <div class="empty-icon">💃</div>
-      <div class="empty-title">Bereit zum Tanzen!</div>
-      <div class="empty-sub">Tippe auf den Button und erhalte deine persönliche Zumba-Stunde für heute.</div>
+<nav class="nav">
+  <button class="active" onclick="switchTab('plan')">Stunde planen</button>
+  <button onclick="switchTab('history')">Verlauf</button>
+  <button onclick="switchTab('favorites')">Favoriten</button>
+</nav>
+
+<div class="main">
+  <!-- Plan Tab -->
+  <div id="tab-plan" class="tab-content active">
+    <button class="gen-btn" onclick="generateSession()">✦ Neue Zumba-Stunde erstellen</button>
+    <div id="session-container">
+      <div class="empty-state">
+        <div class="empty-icon">💃</div>
+        <h3>Bereit für eine neue Stunde?</h3>
+        <p>Klick auf den Button oben, um eine individuell zusammengestellte 55-Minuten-Stunde zu generieren.</p>
+      </div>
     </div>
   </div>
-  <div class="footer">Zumba Stunden Planer · Jeden Tag neu generiert</div>
+
+  <!-- History Tab -->
+  <div id="tab-history" class="tab-content">
+    <p class="section-label">Letzte Sessions</p>
+    <div id="history-container">
+      <div class="empty-state">
+        <div class="empty-icon">🗓️</div>
+        <h3>Noch keine Sessions</h3>
+        <p>Erstelle deine erste Zumba-Stunde und sie erscheint hier.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Favorites Tab -->
+  <div id="tab-favorites" class="tab-content">
+    <p class="section-label">Gespeicherte Übungen</p>
+    <div id="favorites-container">
+      <div class="empty-state">
+        <div class="empty-icon">🤍</div>
+        <h3>Keine Favoriten</h3>
+        <p>Tippe auf das Herz bei einer Übung, um sie hier zu speichern.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <h3 id="modal-title"></h3>
+    <div id="modal-tags" class="modal-tags"></div>
+    <div class="modal-section">
+      <h4>Ausführung</h4>
+      <ol class="modal-steps" id="modal-steps"></ol>
+    </div>
+    <div class="modal-section">
+      <h4>Worauf achten</h4>
+      <p id="modal-tip" style="font-size:0.9rem;color:var(--brown-mid);"></p>
+    </div>
+  </div>
 </div>
 
 <script>
-const DB = {
+const EXERCISES = {
   warmup: [
-    { name: "Merengue-Schritt", desc: "Lockerer Grundschritt links-rechts im Merengue-Takt, Hüften leicht mitschwingen lassen. Arme locker mitbewegen." },
-    { name: "Seitschritt mit Clap", desc: "Zwei Schritte zur Seite, zusammen, klatschen. Tempo langsam steigern. Schultern entspannt halten." },
-    { name: "Salsa-Grundschritt", desc: "Schritt vor, zurück im Salsa-Rhythmus. Gewichtsverlagerung spüren, Knie leicht beugen." },
-    { name: "Mambo-Wippschritt", desc: "Auf der Stelle wippen, abwechselnd Fersen heben. Hüfte folgt der Bewegung. Ideal als Aufwärmer." },
-    { name: "Cumbia-Seitengang", desc: "Kleiner Ausfallschritt zur Seite mit Hüftschwung. Arme öffnen und schließen im Takt." },
-    { name: "Schulterkreisen", desc: "Im Stand beide Schultern nach hinten kreisen, dann vorwärts. Oberkörper entspannen, tief atmen." },
-    { name: "Hüftkreisen", desc: "Füße schulterbreit, Hüfte in großen Kreisen schwingen. Knie leicht gebeugt, Oberkörper ruhig." },
-    { name: "March & Reach", desc: "Auf der Stelle marschieren, abwechselnd Arme nach oben strecken. Langsam warmwerden." },
-    { name: "Reggaeton-Bounce", desc: "Leichtes Wippen in den Knien mit tiefem Beat, Arme locker vorne und hinten schwingen." },
-    { name: "Cha-Cha-Cha Basis", desc: "Grundschritt Cha-Cha-Cha: vor – zurück – cha-cha-cha. Hüfte locker, Lächeln nicht vergessen!" },
+    { name: "Merengue March", duration: "3 min", level: "leicht", muscle: "Beine", steps: ["Auf der Stelle marschieren", "Hüften im Rhythmus schwingen", "Arme natürlich mitbewegen", "Schrittweise Tempo steigern"], tip: "Auf aufrechte Haltung achten, Schultern entspannt lassen." },
+    { name: "Salsa Side Step", duration: "2 min", level: "leicht", muscle: "Hüfte", steps: ["Seitschritt rechts, Gewicht verlagern", "Linken Fuß nachziehen", "Gegenrichtung wiederholen", "Arme locker in der Hüfte"], tip: "Knie leicht beugen für mehr Beweglichkeit." },
+    { name: "Cumbia Walk", duration: "3 min", level: "leicht", muscle: "Beine & Hüfte", steps: ["Kleiner Schritt vorwärts links", "Rechten Fuß nachziehen mit Wippe", "Leichte Hüftrotation", "Rhythmus: 1-2-3 Pause"], tip: "Ruhiger Einstieg – Fokus auf den Rhythmus finden." },
+    { name: "Reggaeton Bounce", duration: "2 min", level: "leicht", muscle: "Knie", steps: ["Füße schulterbreit", "Leichtes Auf-und-Ab mit Knien", "Hüfte locker mitschwingen", "Arme entspannt heben"], tip: "Knie nicht überstrecken, sanft federn." },
+    { name: "Cha-Cha Warm-Up", duration: "3 min", level: "leicht", muscle: "Beine", steps: ["Grundschritt: vor-zurück-cha-cha-cha", "Hüfte mitbewegen", "Arme zum Körper führen", "Tempo langsam erhöhen"], tip: "Das dritte 'Cha' ist der Schlüssel – zähle laut mit." },
+    { name: "Afrobeats Sway", duration: "2 min", level: "leicht", muscle: "Rücken & Hüfte", steps: ["Schultern abwechselnd vor-rollen", "Oberkörper seitlich wippen", "Füße sanft tippen", "Arme fließend bewegen"], tip: "Oberkörper führt die Bewegung, Beine folgen." },
+    { name: "Samba Tap", duration: "3 min", level: "leicht", muscle: "Waden", steps: ["Rechts-Tap seitlich", "Zurück zur Mitte", "Links-Tap seitlich", "Schnell in Rhythmus kommen"], tip: "Ferse leicht anheben beim Tap." }
   ],
-  main1: [
-    { name: "Salsa Drehung", desc: "Salsa-Grundschritt mit 360°-Drehung nach je 8 Takten. Arme elegant ausgestreckt, Blick führt die Drehung." },
-    { name: "Cumbia-Sequenz", desc: "Drei Schritte seitwärts, Hüftschwung, zurück. Arme wechseln oben und unten. Energetischer Rhythmus." },
-    { name: "Merengue-March", desc: "Knie hochziehen im Merengue-Takt, Arme kraftvoll pumpen. Tempo steigern nach 8 Wiederholungen." },
-    { name: "Salsa mit Arm-Styling", desc: "Grundschritt Salsa, dazu fließende Armbewegungen von innen nach außen. Körpergefühl entwickeln." },
-    { name: "Samba-Bounce", desc: "Samba-typisches Kniebeugen im schnellen Rhythmus, Oberkörper dreht leicht mit. Hüfte aktiv einsetzen." },
-    { name: "Cha-Cha-Variation", desc: "Cha-Cha-Cha mit Seitausfallschritt und Klatschen auf Beat 1. Zügiges Tempo, kontrollierte Schritte." },
-    { name: "Flamenco Stomps", desc: "Kraftvolles Aufstampfen, Arme über Kopf, Hüften seitlich. Kurze Pause, dann Wiederholung." },
-    { name: "Reggaeton Steps", desc: "Tiefer Stand, Füße wechseln vorne, Arm-Pumps dazu. Hip-Hop-Einfluss, kraftvoll und taktfest." },
-    { name: "Salsa Kreis", desc: "Im Kreis gehen mit Salsa-Schritten, nach 8 Takten Richtung wechseln. Gruppe synchron halten." },
-    { name: "Merengue Hüftstoß", desc: "Hüfte seitlich ausstoßen auf jeden Takt, Gewicht verlagern. Arme seitlich ausgestreckt für Balance." },
-    { name: "Cumbia mit Drehung", desc: "Cumbia-Grundschritt nach 4 Takten mit Viertel-Drehung. Alle vier Richtungen durcharbeiten." },
-    { name: "Paso Doble Basics", desc: "Stolze Körperhaltung, energische Schritte vor und zurück, Arme wie beim Stierkampf. Selbstbewusstsein zeigen!" },
-  ],
-  main2: [
-    { name: "Bachata-Slide", desc: "Drei Schritte seitwärts und Hüftstoß auf Takt 4. Typischer Bachata-Rhythmus, sinnlich und präzise." },
-    { name: "Bollywood-Arme", desc: "Klassische Bollywood-Armbewegungen mit Achter-Schritt. Fröhlich, ausdrucksstark, viel Energie." },
-    { name: "Reggaeton Perreo", desc: "Tiefes Kniebeugen, Hüftkrreisen, Arme nach vorne. Kraftvoll und rhythmisch, kurze Wiederholungen." },
-    { name: "Afro-Cuban Step", desc: "Tiefer Stand, Oberkörper bewegt sich wellenförmig mit Seitschritten. Afrikanisch inspiriert, erdverbunden." },
-    { name: "Samba mit Armen", desc: "Schneller Samba-Bounce, Arme wechseln zwischen Kopfhöhe und Hüfte. Energie hochhalten!" },
-    { name: "Pop-Isolation", desc: "Hüft- und Schulter-Isolationen im modernen Pop-Rhythmus. Jeder Körperteil einzeln bewegen." },
-    { name: "Mambo Kick", desc: "Mambo-Schritte mit Beinauswurf auf Takt 3. Knie weich, Oberkörper stabil. Power-Bewegung!" },
-    { name: "Hip-Hop Shuffle", desc: "Schritt-Touch seitwärts mit Armswings. Locker und groovy, auf den Takt achten." },
-    { name: "Tropical Step", desc: "Leichte Fußarbeit mit Armwellen über den Kopf. Karibisches Feeling, entspannt und rhythmisch." },
-    { name: "Bachata mit Drehung", desc: "Bachata-Grundschritt mit Spin nach je 8 Takten. Drehung langsam beginnen, dann flüssiger werden." },
-    { name: "Latin Freeze", desc: "Kurze Power-Sequenz gefolgt von einem 'Einfrieren' auf Takt 8. Überraschungsmoment für die Gruppe!" },
-    { name: "Zumba-Kombination", desc: "Mix aus Merengue, Salsa und Cumbia in einer 16-Takt-Phrase. Höhepunkt der Stunde – alles zusammen!" },
+  main: [
+    { name: "Salsa Básico", duration: "4 min", level: "mittel", muscle: "Beine & Core", steps: ["Vor mit links, Gewicht verlagern", "Zurück auf rechts", "Seitschritt links-zusammen-links", "Wiederholen mit rechts als Start"], tip: "Hüfte dreht mit – nicht steif bleiben." },
+    { name: "Reggaeton Perreo", duration: "4 min", level: "aktiv", muscle: "Gesäß & Oberschenkel", steps: ["Füße parallel, kniebreit", "Tiefes Kniebeugen in Rhythmus", "Hüfte nach hinten schieben", "Kreisbewegung mit Hüfte"], tip: "Knie zeigen immer in Zehenrichtung." },
+    { name: "Merengue Mambo", duration: "3 min", level: "mittel", muscle: "Hüfte & Beine", steps: ["Marsch-Grundschritt mit Schwung", "Hüfte stark betonen", "Abwechselnd Mambo-Schritt vor", "Arme hoch-tief wechseln"], tip: "Stärker betonen als beim Warm-Up." },
+    { name: "Cumbia Giro", duration: "4 min", level: "mittel", muscle: "Core & Beine", steps: ["Cumbia-Grundschritt", "Nach 4 Counts Drehung um 180°", "Weiter in neuer Richtung", "Arme helfen beim Schwung"], tip: "Blick fixieren beim Drehen gegen Schwindel." },
+    { name: "Samba no Pé", duration: "4 min", level: "aktiv", muscle: "Waden & Hüfte", steps: ["Schnelles Dreier-Schritt-Muster", "Gewicht stark auf Ballen", "Hüfte pendelt seitlich", "Oberkörper gegenteilig zur Hüfte"], tip: "Auf Zehenspitzen arbeiten stärkt Waden." },
+    { name: "Afrobeats Groove", duration: "4 min", level: "mittel", muscle: "Ganzkörper", steps: ["Stampf rechts, Hüfte raus", "Arm-Wave seitlich", "Niedrig gehen, zurück hoch", "Freestyle-Arme erlaubt"], tip: "Ausdrucksstark tanzen – keine Perfektion nötig." },
+    { name: "Bollywood Steps", duration: "3 min", level: "mittel", muscle: "Arme & Schultern", steps: ["Seitschritt mit Arm nach oben", "Hand-Figuren (Mudras)", "Kopf mitbewegen", "Ausdrucksvolle Mimik"], tip: "Arme sind das Herzstück – voll einsetzen." },
+    { name: "Pop-Fusion Shuffle", duration: "4 min", level: "mittel", muscle: "Beine & Core", steps: ["Shuffle rechts x2", "Touch links", "Shuffle links x2", "Touch rechts + Armkreis"], tip: "Flüssige Übergänge zwischen Shuffles." },
+    { name: "Cha-Cha Suzie Q", duration: "3 min", level: "mittel", muscle: "Hüfte & Beine", steps: ["Grundschritt cha-cha-cha", "Suzie-Q: Fersen-Pivot", "Hüftkreis dabei", "Arme: Box-Form"], tip: "Fersen drehen – nicht die Zehen." },
+    { name: "Kizomba Slide", duration: "4 min", level: "leicht", muscle: "Core & Balance", steps: ["Gleitschritt seitlich rechts", "Hüfte sinkt beim Gleiten", "Linken Fuß heranziehen", "Pause – dann links"], tip: "Langsam und kontrolliert – Kraft liegt im Gleiten." },
+    { name: "Reggae Rock", duration: "3 min", level: "leicht", muscle: "Oberkörper", steps: ["Wiege-Schritt vor-zurück", "Schultern abwechselnd hoch", "Arme locker seitlich", "Hüfte im Offbeat"], tip: "Reggae lebt vom Offbeat – zwischen die Beats tanzen." },
+    { name: "High-Intensity Salsa", duration: "4 min", level: "aktiv", muscle: "Ganzkörper", steps: ["Schneller Salsa-Grundschritt", "Spin nach je 8 Counts", "Armarbeit hinzufügen", "Sprung-Variation optional"], tip: "Knie weich landen – keine Stöße." },
+    { name: "Dancehall Badman", duration: "4 min", level: "aktiv", muscle: "Beine & Gesäß", steps: ["Breiter Stand, Knie gebeugt", "Stampf-Muster abwechselnd", "Oberkörper lehnt zurück", "Arme charismatisch"], tip: "Tiefe Kniebeuge hält – nicht aufgeben!" },
+    { name: "Motown Groove", duration: "3 min", level: "leicht", muscle: "Schultern & Arme", steps: ["Side-Step mit Schulterroll", "Finger-Snap auf 2 und 4", "Hüftwackeln dazu", "Smile – es ist Soul!"], tip: "Leichtigkeit und Freude zeigen." },
+    { name: "Flamenco Fusion", duration: "4 min", level: "mittel", muscle: "Arme & Core", steps: ["Stampf rechts, Arme öffnen", "Drehung mit Arm-Bogen", "Stampf links, Arme schließen", "Stolze Haltung beibehalten"], tip: "Brust raus, Kinn hoch – Flamenco ist Haltung." },
+    { name: "Bhangra Pump", duration: "3 min", level: "aktiv", muscle: "Schultern & Arme", steps: ["Sprungseil-Arm oben rechts", "Schulter pump-up", "Seite wechseln", "Knie hinzufügen"], tip: "Energie in Arme stecken – treibend und freudig." },
+    { name: "Timba Tumbao", duration: "4 min", level: "aktiv", muscle: "Hüfte & Core", steps: ["Tumbao: Vorwärts auf Ballen", "Hüfte kreuzt bei jedem Step", "Rückwärts variieren", "Arm-Akzente auf Clave"], tip: "Der Tumbao ist das Fundament kubanischen Tanzens." },
+    { name: "Buena Vista Step", duration: "3 min", level: "mittel", muscle: "Beine & Balance", steps: ["Son-Cubano-Grundschritt", "Körpergewicht fließt", "Partnerform solo üben", "Strahlende Haltung"], tip: "Widerstand im Schritt schafft Eleganz." }
   ],
   cooldown: [
-    { name: "Langsamer Merengue", desc: "Sehr ruhiger Merengue-Schritt, Herzfrequenz senken. Tiefes Atmen, Bewegungen kleiner werden lassen." },
-    { name: "Schulter-Stretch", desc: "Einen Arm quer vor die Brust, 20 Sekunden halten, wechseln. Schultermuskel gut dehnen." },
-    { name: "Hüftbeuger-Dehnung", desc: "Ausfallschritt, hinteres Knie fast am Boden, Hüfte nach vorne schieben. 25 Sekunden pro Seite." },
-    { name: "Seitliche Rumpfdehnung", desc: "Arm über den Kopf zur Seite beugen, Körperseite dehnen. Langsam und kontrolliert atmen." },
-    { name: "Waden-Stretch", desc: "Hände an die Wand, ein Bein gestreckt zurück, Ferse drückt zum Boden. 20 Sek. halten." },
-    { name: "Oberschenkel-Dehnung", desc: "Im Stand ein Bein anwinkeln, Fuß zur Gesäß ziehen. Balance halten oder Stuhl nutzen. Für 20 Sek." },
-    { name: "Katze-Kuh-Bewegung", desc: "Im Stand: Rücken runden und strecken abwechselnd. Wirbelsäule mobilisieren, tief atmen." },
-    { name: "Nacken-Rollen", desc: "Kopf langsam von einer Seite zur anderen rollen, nie ganz nach hinten. Nackenmuskulatur lockern." },
-    { name: "Große Atemrunde", desc: "Arme beim Einatmen heben, beim Ausatmen senken. Dreimal wiederholen. Gruppe gut einbinden." },
-    { name: "Stehende Rumpfrotation", desc: "Hände an die Hüften, Oberkörper langsam von links nach rechts drehen. Wirbelsäule mobilisieren." },
+    { name: "Slow Merengue Flow", duration: "3 min", level: "leicht", muscle: "Ganzkörper", steps: ["Merengue im halben Tempo", "Arme weit und fließend", "Atemrhythmus einhalten", "Bewegungen weicher werden lassen"], tip: "Atmung verlangsamen – ins Abkühlen kommen." },
+    { name: "Wirbelsäulen-Welle", duration: "2 min", level: "leicht", muscle: "Rücken", steps: ["Beine schulterbreit", "Oberkörper nach vorn rollen", "Wirbel für Wirbel aufrollen", "Am Ende Schulterdehnung"], tip: "Sehr langsam, nie ruckartig." },
+    { name: "Hüftkreise", duration: "2 min", level: "leicht", muscle: "Hüftbeuger", steps: ["Hände in Hüfte", "Große Kreise rechts x8", "Pause – dann links x8", "Kleiner werden lassen"], tip: "Bauchnabel einziehen für mehr Wirkung." },
+    { name: "Butterfly Stretch", duration: "2 min", level: "leicht", muscle: "Innenschenkel", steps: ["Sitzen, Fußsohlen zusammen", "Knie sanft zum Boden drücken", "Oberkörper leicht vorbeugen", "30 Sek halten, wiederholen"], tip: "Nie Knie nach unten drücken – sanft leiten." },
+    { name: "Salsa Soft Cool-Down", duration: "3 min", level: "leicht", muscle: "Beine", steps: ["Salsa sehr langsam", "Fokus auf Dehnung der Beinrückseite", "Schrittweise vereinfachen", "Ausatmen bei jedem Schritt"], tip: "Die letzten Minuten gehören der Ruhe." },
+    { name: "Schulter & Nacken Lösung", duration: "2 min", level: "leicht", muscle: "Schultern & Nacken", steps: ["Kopf seitlich neigen links", "10 Sek halten", "Rechts wiederholen", "Schultern kreisen rückwärts"], tip: "Nacken ist Spannungsspeicher – Zeit nehmen." },
+    { name: "Stehende Vorbeuge", duration: "2 min", level: "leicht", muscle: "Rücken & Hamstrings", steps: ["Beine leicht gebeugt", "Oberkörper locker nach vorn hängen", "Kopf hängt schwer", "Langsam aufrollen"], tip: "Auf Schwindel achten – langsam aufrichten." },
+    { name: "Gratitude Flow", duration: "3 min", level: "leicht", muscle: "Ganzkörper", steps: ["Arme öffnen wie Flügel", "Tiefer Atemzug", "Arme sinken beim Ausatmen", "3x Dankbarkeits-Atemzug"], tip: "Klasse mit Lächeln und Dankbarkeit beenden." }
   ]
 };
 
-const MUSIC = [
-  { phase: "Warm-Up", title: "Vivir Mi Vida", artist: "Marc Anthony", bpm: 95 },
-  { phase: "Warm-Up", title: "La Bamba", artist: "Ritchie Valens", bpm: 98 },
-  { phase: "Warm-Up", title: "Bamboleo", artist: "Gipsy Kings", bpm: 100 },
-  { phase: "Warm-Up", title: "Conga", artist: "Gloria Estefan", bpm: 102 },
-  { phase: "Warm-Up", title: "Macarena", artist: "Los del Río", bpm: 104 },
-  { phase: "Latin", title: "Despacito", artist: "Luis Fonsi", bpm: 126 },
-  { phase: "Latin", title: "Bailando", artist: "Enrique Iglesias", bpm: 130 },
-  { phase: "Latin", title: "Hips Don't Lie", artist: "Shakira", bpm: 128 },
-  { phase: "Latin", title: "Waka Waka", artist: "Shakira", bpm: 132 },
-  { phase: "Latin", title: "Gasolina", artist: "Daddy Yankee", bpm: 129 },
-  { phase: "Latin", title: "La Tortura", artist: "Shakira", bpm: 127 },
-  { phase: "Party", title: "Con Calma", artist: "Daddy Yankee", bpm: 134 },
-  { phase: "Party", title: "Lean On", artist: "Major Lazer", bpm: 136 },
-  { phase: "Party", title: "Boom Boom", artist: "RedOne", bpm: 138 },
-  { phase: "Party", title: "Danza Kuduro", artist: "Don Omar", bpm: 140 },
-  { phase: "Party", title: "Magalenha", artist: "Sérgio Mendes", bpm: 135 },
-  { phase: "Party", title: "Soca Dance", artist: "Faye-Ann Lyons", bpm: 142 },
-  { phase: "Cool-Down", title: "Quizás, Quizás, Quizás", artist: "Nat King Cole", bpm: 78 },
-  { phase: "Cool-Down", title: "Bésame Mucho", artist: "Andrea Bocelli", bpm: 75 },
-  { phase: "Cool-Down", title: "La Vie en Rose", artist: "Édith Piaf", bpm: 72 },
-  { phase: "Cool-Down", title: "Perhaps Love", artist: "José Carreras", bpm: 74 },
-];
+const MUSIC = {
+  warmup: [
+    { title: "Bésame – Camila", bpm: "mittel" },
+    { title: "La Bicicleta – Carlos Vives & Shakira", bpm: "mittel" },
+    { title: "Taboo – Don Omar", bpm: "mittel" },
+    { title: "El Sonidito – Hechizeros Band", bpm: "mittel" },
+    { title: "Quimbara – Celia Cruz", bpm: "mittel" },
+    { title: "Livin la Vida Loca – Ricky Martin", bpm: "mittel" }
+  ],
+  main1: [
+    { title: "Despacito – Luis Fonsi ft. Daddy Yankee", bpm: "schnell" },
+    { title: "Gasolina – Daddy Yankee", bpm: "schnell" },
+    { title: "Con Calma – Daddy Yankee", bpm: "schnell" },
+    { title: "Taki Taki – DJ Snake", bpm: "schnell" },
+    { title: "Lean On – Major Lazer", bpm: "schnell" },
+    { title: "Conga – Gloria Estefan", bpm: "schnell" },
+    { title: "Waka Waka – Shakira", bpm: "schnell" },
+    { title: "Boom Boom – Daddy Yankee", bpm: "schnell" },
+    { title: "Rude Boy – Rihanna", bpm: "schnell" },
+    { title: "Danza Kuduro – Don Omar", bpm: "schnell" }
+  ],
+  main2: [
+    { title: "Mi Gente – J. Balvin", bpm: "sehr schnell" },
+    { title: "Reggaeton Lento – CNCO", bpm: "schnell" },
+    { title: "Bidi Bidi Bom Bom – Selena", bpm: "schnell" },
+    { title: "She Bangs – Ricky Martin", bpm: "sehr schnell" },
+    { title: "Pon de Replay – Rihanna", bpm: "sehr schnell" },
+    { title: "Jump – Kris Kross", bpm: "sehr schnell" },
+    { title: "Bailando – Enrique Iglesias", bpm: "sehr schnell" },
+    { title: "África – Toto (Zumba-Remix)", bpm: "schnell" },
+    { title: "Baby Shark Remix – Pinkfong", bpm: "sehr schnell" },
+    { title: "Moves Like Jagger – Maroon 5", bpm: "schnell" }
+  ],
+  cooldown: [
+    { title: "La Isla Bonita – Madonna", bpm: "ruhig" },
+    { title: "Quizás Quizás Quizás – Nat King Cole", bpm: "ruhig" },
+    { title: "Bésame Mucho – Trio Los Panchos", bpm: "ruhig" },
+    { title: "Cucurrucucú Paloma – Caetano Veloso", bpm: "ruhig" },
+    { title: "Gracias a la Vida – Mercedes Sosa", bpm: "ruhig" },
+    { title: "Bamboleo – Gipsy Kings", bpm: "ruhig" }
+  ]
+};
 
 const TIPS = [
-  "Erinnere die Teilnehmerinnen: Jede macht ihr eigenes Tempo – keine Vergleiche, nur Freude!",
-  "Lächeln ist Pflicht! Eine gute Atmosphäre motiviert mehr als die perfekte Technik.",
-  "Pausen sind okay. Wer Wasser braucht, holt sich Wasser – kein Durchhalten erzwingen.",
-  "Variationen anbieten: Für Anfängerinnen kleinere Schritte, für Fortgeschrittene mehr Hüfteinsatz.",
-  "Augenkontakt mit der Gruppe halten – das schafft Verbindung und Motivation.",
-  "Nach der Stunde kurz nachfragen: Was hat am meisten Spaß gemacht? Feedback ist Gold!",
-  "Musik etwas lauter in der Hauptphase, im Cool-Down deutlich leiser – das hilft dem Körper runterzukommen.",
-  "Komplimente verteilen! Einzelne Teilnehmerinnen gezielt loben – das bleibt in Erinnerung.",
+  "Lächeln ist der beste Tanz-Accessoire! Ermutige deine Teilnehmerinnen, Spaß zu haben – Perfektion kommt von allein.",
+  "Erinnere daran: Wasser-Pause nach jeder Phase. Hydration ist Selbstfürsorge!",
+  "Variation macht Spaß: Biete bei intensiven Moves immer eine leichtere Alternative an.",
+  "Die beste Musik-Energie kommt, wenn alle mitsingen – ermutige es!",
+  "Achte auf Rückmeldungen: Wer Schmerzen hat, pausiert. Kein Ego im Fitnesskurs.",
+  "Zeige selbst Freude – deine Energie überträgt sich auf die ganze Gruppe.",
+  "Beginne und beende immer mit Dankbarkeit und einem kurzen Atemmoment.",
+  "Schwierigkeitsstufen sichtbar anbieten: 'wer möchte, kann höher springen'.",
+  "Die Gemeinschaft ist das Herzstück von Zumba – nutze die Zeit nach dem Kurs für kurzen Austausch."
 ];
 
-function pick(arr, n) {
-  const copy = [...arr];
-  const result = [];
-  for (let i = 0; i < n && copy.length; i++) {
-    const idx = Math.floor(Math.random() * copy.length);
-    result.push(copy.splice(idx, 1)[0]);
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  return result;
+  return a;
 }
 
+function pick(arr, n) { return shuffle(arr).slice(0, n); }
 function pickOne(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function today() {
-  return new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-}
+let currentSession = null;
+let favorites = JSON.parse(localStorage.getItem('zumba-favs') || '[]');
+let history = JSON.parse(localStorage.getItem('zumba-history') || '[]');
+
+function levelClass(l) { return 'tag-level-' + l; }
 
 function generateSession() {
-  const phases = [
-    { id: 'warmup',  icon: '🌅', name: 'Warm-Up',             dur: '8 Min',  exs: pick(DB.warmup,  3) },
-    { id: 'main1',   icon: '🔥', name: 'Hauptteil – Latin',   dur: '15 Min', exs: pick(DB.main1,   4) },
-    { id: 'main2',   icon: '💥', name: 'Hauptteil – Party',   dur: '15 Min', exs: pick(DB.main2,   4) },
-    { id: 'cooldown',icon: '🌙', name: 'Cool-Down & Stretch', dur: '10 Min', exs: pick(DB.cooldown, 3) },
-  ];
+  const warmupEx = pick(EXERCISES.warmup, 3);
+  const main1Ex = pick(EXERCISES.main, 5);
+  const remainMain = EXERCISES.main.filter(e => !main1Ex.includes(e));
+  const main2Ex = pick(remainMain.length >= 4 ? remainMain : EXERCISES.main, 4);
+  const coolEx = pick(EXERCISES.cooldown, 3);
 
-  const warmSong  = pickOne(MUSIC.filter(m => m.phase === 'Warm-Up'));
-  const latin1    = pickOne(MUSIC.filter(m => m.phase === 'Latin'));
-  const latin2    = (() => { const opts = MUSIC.filter(m => m.phase === 'Latin' && m !== latin1); return pickOne(opts); })();
-  const partySong = pickOne(MUSIC.filter(m => m.phase === 'Party'));
-  const coolSong  = pickOne(MUSIC.filter(m => m.phase === 'Cool-Down'));
-  const tip = pickOne(TIPS);
+  currentSession = {
+    warmup: warmupEx, main1: main1Ex, main2: main2Ex, cooldown: coolEx,
+    music: {
+      warmup: pickOne(MUSIC.warmup),
+      main1: pickOne(MUSIC.main1),
+      main2: pickOne(MUSIC.main2),
+      cooldown: pickOne(MUSIC.cooldown)
+    },
+    tip: pickOne(TIPS),
+    date: new Date().toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+  };
 
-  let html = `<div class="date-badge">📅 ${today()}</div>`;
-
-  phases.forEach(p => {
-    html += `<div class="phase">
-      <div class="phase-header">
-        <span class="phase-icon">${p.icon}</span>
-        <span class="phase-name">${p.name}</span>
-        <span class="phase-dur">${p.dur}</span>
-      </div>
-      <div class="ex-list">`;
-    p.exs.forEach(ex => {
-      html += `<div class="ex-item">
-        <div class="ex-dot"></div>
-        <div class="ex-text">
-          <div class="ex-name">${ex.name}</div>
-          <div class="ex-desc">${ex.desc}</div>
-        </div>
-      </div>`;
-    });
-    html += `</div></div>`;
-  });
-
-  const songs = [
-    { label: 'Warm-Up', song: warmSong },
-    { label: 'Latin 1', song: latin1 },
-    { label: 'Latin 2', song: latin2 },
-    { label: 'Party',   song: partySong },
-    { label: 'Cool-Down', song: coolSong },
-  ];
-
-  html += `<div class="music-card">
-    <div class="music-header">
-      <span style="font-size:1.2rem">🎶</span>
-      <div>
-        <div class="music-header-title">Musikvorschläge</div>
-        <div class="music-hint">Titel bei Spotify oder YouTube suchen</div>
-      </div>
-    </div>
-    <div class="music-list">`;
-  songs.forEach(s => {
-    html += `<div class="music-row">
-      <span class="music-phase">${s.label}</span>
-      <div style="flex:1">
-        <div class="music-title">${s.song.title}</div>
-        <div class="music-artist">${s.song.artist}</div>
-      </div>
-      <span class="music-bpm">${s.song.bpm} BPM</span>
-    </div>`;
-  });
-  html += `</div></div>`;
-
-  html += `<div class="tip-box">
-    <div class="tip-label">💡 Tipp für heute</div>
-    <div class="tip-text">${tip}</div>
-  </div>`;
-
-  document.getElementById('output').innerHTML = html;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  renderSession();
+  saveToHistory(currentSession);
 }
+
+function renderSession() {
+  if (!currentSession) return;
+  const { warmup, main1, main2, cooldown, music, tip } = currentSession;
+  const container = document.getElementById('session-container');
+
+  container.innerHTML = `
+    ${renderPhase('Warm-Up', '🌸', '#e8c5b0', warmup, music.warmup, '10 min', 'warmup', 0)}
+    ${renderPhase('Hauptteil I', '🔥', '#c9b8d8', main1, music.main1, '20 min', 'main1', 0)}
+    ${renderPhase('Hauptteil II', '⚡', '#d4b8c9', main2, music.main2, '17 min', 'main2', 0)}
+    ${renderPhase('Cool-Down', '🌿', '#b8d4c9', cooldown, music.cooldown, '8 min', 'cooldown', 0)}
+    <div class="tip-box"><strong>Tipp für heute:</strong> ${tip}</div>
+  `;
+}
+
+function renderPhase(label, icon, color, exercises, music, duration, phaseKey, start) {
+  const rows = exercises.map((ex, i) => renderExercise(ex, phaseKey, i)).join('');
+  const bpmLabel = { ruhig: '♩ ruhig', mittel: '♪ mittel', schnell: '♫ schnell', 'sehr schnell': '♫♫ sehr schnell' }[music.bpm] || music.bpm;
+  return `
+    <div class="phase-card">
+      <div class="phase-header" style="background:${color}22;">
+        <div class="phase-dot" style="background:${color};"></div>
+        <h3>${label}</h3>
+        <span class="phase-meta">${duration}</span>
+      </div>
+      <div class="music-row">
+        <span class="music-icon">♬</span>
+        <span><strong>${music.title}</strong> – ${bpmLabel}</span>
+      </div>
+      ${rows}
+    </div>
+  `;
+}
+
+function renderExercise(ex, phaseKey, idx) {
+  const isFav = favorites.some(f => f.name === ex.name);
+  return `
+    <div class="exercise-item" id="ex-${phaseKey}-${idx}">
+      <div class="exercise-info" onclick="openModal(${JSON.stringify(ex).replace(/'/g,"&#39;")})">
+        <div class="exercise-name">${ex.name}</div>
+        <div class="exercise-tags">
+          <span class="tag ${levelClass(ex.level)}">${ex.level}</span>
+          <span class="tag tag-muscle">${ex.muscle}</span>
+          <span class="tag tag-duration">${ex.duration}</span>
+        </div>
+      </div>
+      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${JSON.stringify(ex).replace(/'/g,"&#39;")}, this)" title="Favorit">♥</button>
+      <button class="swap-btn" onclick="swapExercise('${phaseKey}', ${idx})" title="Austauschen">⇄</button>
+    </div>
+  `;
+}
+
+function swapExercise(phaseKey, idx) {
+  if (!currentSession) return;
+  const pool = EXERCISES[phaseKey === 'main1' || phaseKey === 'main2' ? 'main' : phaseKey];
+  const current = currentSession[phaseKey][idx];
+  const available = pool.filter(e => {
+    const inMain1 = currentSession.main1.map(x => x.name);
+    const inMain2 = currentSession.main2.map(x => x.name);
+    if (phaseKey === 'main1') return !inMain1.includes(e.name);
+    if (phaseKey === 'main2') return !inMain2.includes(e.name);
+    return e.name !== current.name;
+  });
+  if (!available.length) return;
+  currentSession[phaseKey][idx] = available[Math.floor(Math.random() * available.length)];
+  renderSession();
+}
+
+function openModal(ex) {
+  if (typeof ex === 'string') ex = JSON.parse(ex);
+  document.getElementById('modal-title').textContent = ex.name;
+  document.getElementById('modal-tags').innerHTML = `
+    <span class="tag ${levelClass(ex.level)}">${ex.level}</span>
+    <span class="tag tag-muscle">${ex.muscle}</span>
+    <span class="tag tag-duration">${ex.duration}</span>
+  `;
+  document.getElementById('modal-steps').innerHTML = ex.steps.map((s, i) => `<li data-num="${i+1}">${s}</li>`).join('');
+  document.getElementById('modal-tip').textContent = ex.tip;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
+}
+
+function toggleFav(ex, btn) {
+  if (typeof ex === 'string') ex = JSON.parse(ex);
+  const idx = favorites.findIndex(f => f.name === ex.name);
+  if (idx >= 0) {
+    favorites.splice(idx, 1);
+    btn.classList.remove('active');
+  } else {
+    favorites.push(ex);
+    btn.classList.add('active');
+  }
+  localStorage.setItem('zumba-favs', JSON.stringify(favorites));
+  renderFavorites();
+}
+
+function removeFav(name) {
+  favorites = favorites.filter(f => f.name !== name);
+  localStorage.setItem('zumba-favs', JSON.stringify(favorites));
+  renderFavorites();
+  if (currentSession) renderSession();
+}
+
+function saveToHistory(session) {
+  const entry = {
+    date: session.date,
+    exercises: [
+      ...session.warmup.map(e => e.name),
+      ...session.main1.map(e => e.name),
+      ...session.main2.map(e => e.name),
+      ...session.cooldown.map(e => e.name)
+    ],
+    session
+  };
+  history.unshift(entry);
+  if (history.length > 10) history = history.slice(0, 10);
+  localStorage.setItem('zumba-history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const c = document.getElementById('history-container');
+  if (!history.length) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🗓️</div><h3>Noch keine Sessions</h3><p>Erstelle deine erste Zumba-Stunde und sie erscheint hier.</p></div>';
+    return;
+  }
+  c.innerHTML = history.map((h, i) => `
+    <div class="history-card" onclick="loadHistorySession(${i})">
+      <div class="history-date">${h.date}</div>
+      <div class="history-exercises">${h.exercises.slice(0, 5).join(' · ')}${h.exercises.length > 5 ? ' …' : ''}</div>
+    </div>
+  `).join('');
+}
+
+function loadHistorySession(i) {
+  currentSession = history[i].session;
+  switchTab('plan');
+  renderSession();
+}
+
+function renderFavorites() {
+  const c = document.getElementById('favorites-container');
+  if (!favorites.length) {
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🤍</div><h3>Keine Favoriten</h3><p>Tippe auf das Herz bei einer Übung, um sie hier zu speichern.</p></div>';
+    return;
+  }
+  c.innerHTML = favorites.map(f => `
+    <div class="fav-card">
+      <div class="fav-card-info" onclick="openModal(${JSON.stringify(f).replace(/'/g,"&#39;")})">
+        <div class="fav-card-name">${f.name}</div>
+        <div class="fav-card-meta">${f.level} · ${f.muscle} · ${f.duration}</div>
+      </div>
+      <button class="remove-fav" onclick="removeFav('${f.name.replace(/'/g,"&#39;")}')">✕</button>
+    </div>
+  `).join('');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach((b, i) => {
+    b.classList.toggle('active', ['plan','history','favorites'][i] === name);
+  });
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+renderHistory();
+renderFavorites();
 </script>
 </body>
 </html>
