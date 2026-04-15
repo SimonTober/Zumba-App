@@ -364,13 +364,14 @@
     <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
     <h3 id="modal-title"></h3>
     <div id="modal-tags" class="modal-tags"></div>
+    <p id="modal-beschreibung" style="font-size:0.9rem;color:var(--brown-mid);line-height:1.6;margin-bottom:1rem;"></p>
     <div class="modal-section">
-      <h4>Ausführung</h4>
+      <h4>Ausführung Schritt für Schritt</h4>
       <ol class="modal-steps" id="modal-steps"></ol>
     </div>
     <div class="modal-section">
-      <h4>Worauf achten</h4>
-      <p id="modal-tip" style="font-size:0.9rem;color:var(--brown-mid);"></p>
+      <h4>Tipp für die Kursleiterin</h4>
+      <p id="modal-tip" style="font-size:0.9rem;color:var(--brown-mid);background:var(--lilac-light);padding:0.7rem 0.9rem;border-radius:8px;"></p>
     </div>
   </div>
 </div>
@@ -378,43 +379,234 @@
 <script>
 const EXERCISES = {
   warmup: [
-    { name: "Merengue March", duration: "3 min", level: "leicht", muscle: "Beine", steps: ["Auf der Stelle marschieren", "Hüften im Rhythmus schwingen", "Arme natürlich mitbewegen", "Schrittweise Tempo steigern"], tip: "Auf aufrechte Haltung achten, Schultern entspannt lassen." },
-    { name: "Salsa Side Step", duration: "2 min", level: "leicht", muscle: "Hüfte", steps: ["Seitschritt rechts, Gewicht verlagern", "Linken Fuß nachziehen", "Gegenrichtung wiederholen", "Arme locker in der Hüfte"], tip: "Knie leicht beugen für mehr Beweglichkeit." },
-    { name: "Cumbia Walk", duration: "3 min", level: "leicht", muscle: "Beine & Hüfte", steps: ["Kleiner Schritt vorwärts links", "Rechten Fuß nachziehen mit Wippe", "Leichte Hüftrotation", "Rhythmus: 1-2-3 Pause"], tip: "Ruhiger Einstieg – Fokus auf den Rhythmus finden." },
-    { name: "Reggaeton Bounce", duration: "2 min", level: "leicht", muscle: "Knie", steps: ["Füße schulterbreit", "Leichtes Auf-und-Ab mit Knien", "Hüfte locker mitschwingen", "Arme entspannt heben"], tip: "Knie nicht überstrecken, sanft federn." },
-    { name: "Cha-Cha Warm-Up", duration: "3 min", level: "leicht", muscle: "Beine", steps: ["Grundschritt: vor-zurück-cha-cha-cha", "Hüfte mitbewegen", "Arme zum Körper führen", "Tempo langsam erhöhen"], tip: "Das dritte 'Cha' ist der Schlüssel – zähle laut mit." },
-    { name: "Afrobeats Sway", duration: "2 min", level: "leicht", muscle: "Rücken & Hüfte", steps: ["Schultern abwechselnd vor-rollen", "Oberkörper seitlich wippen", "Füße sanft tippen", "Arme fließend bewegen"], tip: "Oberkörper führt die Bewegung, Beine folgen." },
-    { name: "Samba Tap", duration: "3 min", level: "leicht", muscle: "Waden", steps: ["Rechts-Tap seitlich", "Zurück zur Mitte", "Links-Tap seitlich", "Schnell in Rhythmus kommen"], tip: "Ferse leicht anheben beim Tap." }
+    {
+      name: "Merengue-Marsch",
+      duration: "3 min", level: "leicht", muscle: "Beine",
+      beschreibung: "Der Merengue-Marsch ist der klassische Einstieg in jede Zumba-Stunde. Man marschiert auf der Stelle oder leicht vorwärts und rückwärts, während die Hüfte bei jedem Schritt betont wird. Die Arme schwingen natürlich mit – entspannt und locker.",
+      steps: ["Auf der Stelle marschieren, Knie leicht anheben", "Bei jedem Schritt die Hüfte zur Seite schieben", "Arme natürlich mitschwingen oder auf die Hüften legen", "Tempo langsam steigern, Rhythmus finden"],
+      tip: "Auf aufrechte Haltung achten – Schultern entspannt, nicht hochziehen."
+    },
+    {
+      name: "Salsa Seitschritt",
+      duration: "2 min", level: "leicht", muscle: "Hüfte",
+      beschreibung: "Ein einfacher Seitschritt aus der Salsa, ideal zum Aufwärmen. Man tritt abwechselnd nach links und rechts und zieht den anderen Fuß nach. Die Hüfte schwingt dabei natürlich mit – eine tolle Übung, um Rhythmusgefühl zu entwickeln.",
+      steps: ["Einen großen Schritt zur rechten Seite machen", "Linken Fuß heranziehen, Gewicht wechseln", "Zur linken Seite wiederholen", "Arme locker mitschwingen"],
+      tip: "Knie leicht beugen – das gibt mehr Beweglichkeit und schont die Gelenke."
+    },
+    {
+      name: "Cumbia-Grundschritt",
+      duration: "3 min", level: "leicht", muscle: "Beine & Hüfte",
+      beschreibung: "Der Cumbia-Schritt kommt aus Kolumbien und ist ein schaukelnder, fließender Schritt. Ein Fuß tritt leicht diagonal zurück, das Gewicht wippt dabei sanft. Die Bewegung fühlt sich wie Schaukeln an und ist besonders gelenkschonend – perfekt für den Einstieg.",
+      steps: ["Kleinen Schritt mit links nach vorne-diagonal", "Rechten Fuß nachziehen mit leichter Hüftwippe", "Gewicht sanft zwischen links und rechts wechseln", "Rhythmus: 1-2-3 Pause"],
+      tip: "Ruhiger Einstieg – Fokus auf das Rhythmusgefühl, nicht auf Perfektion."
+    },
+    {
+      name: "Reggaeton Federn",
+      duration: "2 min", level: "leicht", muscle: "Knie & Hüfte",
+      beschreibung: "Ein sanftes Auf-und-Ab in den Knien, das den Körper aufwärmt und locker macht. Die Hüfte schwingt dabei locker mit. Diese Übung aktiviert die Beinmuskulatur und bringt Schwung in die Schultern – typisch für den Reggaeton-Stil.",
+      steps: ["Füße schulterbreit aufstellen", "Knie gleichmäßig leicht beugen und strecken", "Hüfte locker mitwippen lassen", "Arme entspannt heben und senken"],
+      tip: "Knie nicht überstrecken – sanft federn, nicht stampfen."
+    },
+    {
+      name: "Cha-Cha Aufwärmen",
+      duration: "3 min", level: "leicht", muscle: "Beine",
+      beschreibung: "Der Cha-Cha ist ein Tanz mit einem unverwechselbaren Drei-Schritt-Muster: vor – zurück – cha-cha-cha. Das schnelle Dreifach-Trippeln bringt den Körper auf Temperatur und schult gleichzeitig das Rhythmusgefühl. Sehr beliebt in Zumba-Stunden.",
+      steps: ["Schritt nach vorne mit links", "Gewicht zurück auf rechts", "Dreifachschritt: links-rechts-links (cha-cha-cha)", "Wiederholen mit rechts als Startbein"],
+      tip: "Das 'cha-cha-cha' laut mitzählen hilft enorm beim Einstieg."
+    },
+    {
+      name: "Afrobeats Schulterschwung",
+      duration: "2 min", level: "leicht", muscle: "Rücken & Hüfte",
+      beschreibung: "Inspiriert von westafrikanischen Tanzstilen – der Oberkörper wippt und die Schultern rollen abwechselnd nach vorne. Die Füße tippen dabei leicht mit. Diese Übung löst Verspannungen in Schultern und Rücken und macht einfach gute Laune.",
+      steps: ["Schultern abwechselnd nach vorne rollen", "Oberkörper seitlich sanft wippen lassen", "Füße tippen locker im Rhythmus", "Arme fließend und weit bewegen"],
+      tip: "Der Oberkörper führt die Bewegung – die Beine folgen einfach mit."
+    },
+    {
+      name: "Samba Antippen",
+      duration: "3 min", level: "leicht", muscle: "Waden & Beine",
+      beschreibung: "Beim Samba-Antippen tippt man abwechselnd links und rechts mit der Fußspitze seitlich auf den Boden. Das aktiviert die Waden und bringt leichten Schwung in die Hüfte. Eine einfache, aber effektive Bewegung, die das Herzblut in Fahrt bringt.",
+      steps: ["Rechten Fuß seitlich antippen, Ferse bleibt oben", "Fuß zurück zur Mitte bringen", "Linken Fuß seitlich antippen", "Rhythmus aufbauen, Hüfte leicht mitschwingen"],
+      tip: "Die Ferse beim Antippen leicht anheben – das aktiviert die Wadenmuskulatur."
+    }
   ],
   main: [
-    { name: "Salsa Básico", duration: "4 min", level: "mittel", muscle: "Beine & Core", steps: ["Vor mit links, Gewicht verlagern", "Zurück auf rechts", "Seitschritt links-zusammen-links", "Wiederholen mit rechts als Start"], tip: "Hüfte dreht mit – nicht steif bleiben." },
-    { name: "Reggaeton Perreo", duration: "4 min", level: "aktiv", muscle: "Gesäß & Oberschenkel", steps: ["Füße parallel, kniebreit", "Tiefes Kniebeugen in Rhythmus", "Hüfte nach hinten schieben", "Kreisbewegung mit Hüfte"], tip: "Knie zeigen immer in Zehenrichtung." },
-    { name: "Merengue Mambo", duration: "3 min", level: "mittel", muscle: "Hüfte & Beine", steps: ["Marsch-Grundschritt mit Schwung", "Hüfte stark betonen", "Abwechselnd Mambo-Schritt vor", "Arme hoch-tief wechseln"], tip: "Stärker betonen als beim Warm-Up." },
-    { name: "Cumbia Giro", duration: "4 min", level: "mittel", muscle: "Core & Beine", steps: ["Cumbia-Grundschritt", "Nach 4 Counts Drehung um 180°", "Weiter in neuer Richtung", "Arme helfen beim Schwung"], tip: "Blick fixieren beim Drehen gegen Schwindel." },
-    { name: "Samba no Pé", duration: "4 min", level: "aktiv", muscle: "Waden & Hüfte", steps: ["Schnelles Dreier-Schritt-Muster", "Gewicht stark auf Ballen", "Hüfte pendelt seitlich", "Oberkörper gegenteilig zur Hüfte"], tip: "Auf Zehenspitzen arbeiten stärkt Waden." },
-    { name: "Afrobeats Groove", duration: "4 min", level: "mittel", muscle: "Ganzkörper", steps: ["Stampf rechts, Hüfte raus", "Arm-Wave seitlich", "Niedrig gehen, zurück hoch", "Freestyle-Arme erlaubt"], tip: "Ausdrucksstark tanzen – keine Perfektion nötig." },
-    { name: "Bollywood Steps", duration: "3 min", level: "mittel", muscle: "Arme & Schultern", steps: ["Seitschritt mit Arm nach oben", "Hand-Figuren (Mudras)", "Kopf mitbewegen", "Ausdrucksvolle Mimik"], tip: "Arme sind das Herzstück – voll einsetzen." },
-    { name: "Pop-Fusion Shuffle", duration: "4 min", level: "mittel", muscle: "Beine & Core", steps: ["Shuffle rechts x2", "Touch links", "Shuffle links x2", "Touch rechts + Armkreis"], tip: "Flüssige Übergänge zwischen Shuffles." },
-    { name: "Cha-Cha Suzie Q", duration: "3 min", level: "mittel", muscle: "Hüfte & Beine", steps: ["Grundschritt cha-cha-cha", "Suzie-Q: Fersen-Pivot", "Hüftkreis dabei", "Arme: Box-Form"], tip: "Fersen drehen – nicht die Zehen." },
-    { name: "Kizomba Slide", duration: "4 min", level: "leicht", muscle: "Core & Balance", steps: ["Gleitschritt seitlich rechts", "Hüfte sinkt beim Gleiten", "Linken Fuß heranziehen", "Pause – dann links"], tip: "Langsam und kontrolliert – Kraft liegt im Gleiten." },
-    { name: "Reggae Rock", duration: "3 min", level: "leicht", muscle: "Oberkörper", steps: ["Wiege-Schritt vor-zurück", "Schultern abwechselnd hoch", "Arme locker seitlich", "Hüfte im Offbeat"], tip: "Reggae lebt vom Offbeat – zwischen die Beats tanzen." },
-    { name: "High-Intensity Salsa", duration: "4 min", level: "aktiv", muscle: "Ganzkörper", steps: ["Schneller Salsa-Grundschritt", "Spin nach je 8 Counts", "Armarbeit hinzufügen", "Sprung-Variation optional"], tip: "Knie weich landen – keine Stöße." },
-    { name: "Dancehall Badman", duration: "4 min", level: "aktiv", muscle: "Beine & Gesäß", steps: ["Breiter Stand, Knie gebeugt", "Stampf-Muster abwechselnd", "Oberkörper lehnt zurück", "Arme charismatisch"], tip: "Tiefe Kniebeuge hält – nicht aufgeben!" },
-    { name: "Motown Groove", duration: "3 min", level: "leicht", muscle: "Schultern & Arme", steps: ["Side-Step mit Schulterroll", "Finger-Snap auf 2 und 4", "Hüftwackeln dazu", "Smile – es ist Soul!"], tip: "Leichtigkeit und Freude zeigen." },
-    { name: "Flamenco Fusion", duration: "4 min", level: "mittel", muscle: "Arme & Core", steps: ["Stampf rechts, Arme öffnen", "Drehung mit Arm-Bogen", "Stampf links, Arme schließen", "Stolze Haltung beibehalten"], tip: "Brust raus, Kinn hoch – Flamenco ist Haltung." },
-    { name: "Bhangra Pump", duration: "3 min", level: "aktiv", muscle: "Schultern & Arme", steps: ["Sprungseil-Arm oben rechts", "Schulter pump-up", "Seite wechseln", "Knie hinzufügen"], tip: "Energie in Arme stecken – treibend und freudig." },
-    { name: "Timba Tumbao", duration: "4 min", level: "aktiv", muscle: "Hüfte & Core", steps: ["Tumbao: Vorwärts auf Ballen", "Hüfte kreuzt bei jedem Step", "Rückwärts variieren", "Arm-Akzente auf Clave"], tip: "Der Tumbao ist das Fundament kubanischen Tanzens." },
-    { name: "Buena Vista Step", duration: "3 min", level: "mittel", muscle: "Beine & Balance", steps: ["Son-Cubano-Grundschritt", "Körpergewicht fließt", "Partnerform solo üben", "Strahlende Haltung"], tip: "Widerstand im Schritt schafft Eleganz." }
+    {
+      name: "Salsa Grundschritt",
+      duration: "4 min", level: "mittel", muscle: "Beine & Core",
+      beschreibung: "Der Salsa-Grundschritt ist das Herzstück des lateinamerikanischen Tanzens. Man bewegt sich im Wechsel vor und zurück, verlagert das Gewicht fließend und dreht die Hüfte bei jedem Schritt. Die Bewegung stärkt Beine und Rumpfmuskeln und verbessert die Koordination.",
+      steps: ["Schritt nach vorne mit links, Gewicht verlagern", "Zurück auf rechts wechseln", "Seitschritt links – zusammen – links", "Mit rechts als Startbein wiederholen"],
+      tip: "Hüfte aktiv mitdrehen – nicht steif bleiben, das ist der Kern der Salsa."
+    },
+    {
+      name: "Reggaeton Kniebeugen-Rhythmus",
+      duration: "4 min", level: "aktiv", muscle: "Gesäß & Oberschenkel",
+      beschreibung: "Tiefe, rhythmische Kniebeugen im Reggaeton-Stil. Man geht tief in die Hocke, schiebt die Hüfte dabei nach hinten und führt kreisende Hüftbewegungen aus. Diese Übung ist sehr effektiv für Gesäß und Oberschenkel und bringt die Herzrate hoch.",
+      steps: ["Füße parallel, etwas mehr als schulterbreit", "Tief in die Knie gehen, Hüfte nach hinten schieben", "Im Rhythmus auf und ab bewegen", "Kreisbewegung mit der Hüfte hinzufügen"],
+      tip: "Knie zeigen immer in Zehenrichtung – nie nach innen knicken lassen."
+    },
+    {
+      name: "Merengue mit Hüftschwung",
+      duration: "3 min", level: "mittel", muscle: "Hüfte & Beine",
+      beschreibung: "Der Merengue wird hier mit deutlich mehr Hüftbetonung getanzt als im Warm-Up. Der Marsch-Grundschritt bekommt starken Schwung und abwechselnd werden Schritte nach vorne gesetzt. Die Arme wechseln zwischen hoch und tief – energiereich und ausdrucksstark.",
+      steps: ["Merengue-Marsch mit kräftigem Hüftschwung", "Abwechselnd einen Schritt nach vorne setzen", "Arme abwechselnd hoch und tief führen", "Tempo und Schwung steigern"],
+      tip: "Mehr Energie als im Warm-Up – die Hüfte darf jetzt richtig arbeiten."
+    },
+    {
+      name: "Cumbia mit Drehung",
+      duration: "4 min", level: "mittel", muscle: "Core & Beine",
+      beschreibung: "Der Cumbia-Grundschritt wird mit einer 180-Grad-Drehung kombiniert. Nach vier Schritten dreht man sich um und tanzt in die andere Richtung weiter. Die Arme helfen dabei als Schwungmasse. Das schult Balance, Orientierung und stärkt den Rumpf.",
+      steps: ["Cumbia-Grundschritt für 4 Counts", "Drehung um 180 Grad mit Armschwung", "Cumbia-Schritt in neue Richtung fortsetzen", "Abwechselnd rechts und links drehen"],
+      tip: "Einen Punkt fixieren beim Drehen – das verhindert Schwindel."
+    },
+    {
+      name: "Samba-Schritt",
+      duration: "4 min", level: "aktiv", muscle: "Waden & Hüfte",
+      beschreibung: "Der brasilianische Samba-Schritt ist ein schnelles Dreier-Muster auf den Fußballen. Die Hüfte pendelt dabei stark von Seite zu Seite, der Oberkörper bewegt sich gegenteilig. Eine intensive Übung, die Waden und Hüften formt und das Gleichgewicht schult.",
+      steps: ["Schnelles Dreier-Schritt-Muster (links-rechts-links)", "Gewicht stark auf die Fußballen verlagern", "Hüfte kräftig seitlich pendeln lassen", "Oberkörper in Gegenrichtung zur Hüfte bewegen"],
+      tip: "Auf den Zehenspitzen zu arbeiten stärkt die Waden und gibt Leichtigkeit."
+    },
+    {
+      name: "Afrobeats Groove",
+      duration: "4 min", level: "mittel", muscle: "Ganzkörper",
+      beschreibung: "Ein ausdrucksstarker Tanz im Afrobeats-Stil mit Stampfbewegungen, Arm-Waves und fließenden Körperwellen. Man geht tief und kommt wieder hoch – der ganze Körper ist im Einsatz. Diese Übung macht besonders viel Spaß und lässt Kreativität zu.",
+      steps: ["Rechts stampfen, Hüfte zur Seite raus", "Arm-Wave: Welle durch den Arm laufen lassen", "Tief gehen, langsam wieder hochkommen", "Arme frei und ausdrucksstark bewegen"],
+      tip: "Hier darf man ausdrucksstark tanzen – Perfektion ist nicht gefragt, Freude schon."
+    },
+    {
+      name: "Bollywood-Armbewegungen",
+      duration: "3 min", level: "mittel", muscle: "Arme & Schultern",
+      beschreibung: "Inspiriert vom indischen Bollywood-Tanz, bei dem die Arme die Hauptrolle spielen. Elegante Arm- und Handbewegungen werden mit Seitschritten kombiniert. Der Kopf bewegt sich ausdrucksvoll mit. Eine wunderschöne, geschmeidige Sequenz für Schultern und Arme.",
+      steps: ["Seitschritt rechts mit dem rechten Arm nach oben führen", "Hand elegante Geste (Finger spreizen, dann schließen)", "Kopf sanft zur Seite neigen", "Zur anderen Seite wiederholen"],
+      tip: "Arme sind das Herzstück – ausdrucksvoll einsetzen und mit den Augen führen."
+    },
+    {
+      name: "Shuffle mit Armkreis",
+      duration: "4 min", level: "mittel", muscle: "Beine & Core",
+      beschreibung: "Der Shuffle ist eine schnelle Drei-Schritt-Seitwärtsbewegung, bekannt aus Hip-Hop und Popmusik. Man shuffelt zweimal nach rechts, tippt links an, dann zweimal nach links, tippt rechts an – dazu ein großer Armkreis. Koordinationsübung mit Spaßgarantie.",
+      steps: ["Shuffle rechts: drei schnelle Schritte nach rechts", "Linken Fuß antippen", "Shuffle links: drei schnelle Schritte nach links", "Rechten Fuß antippen + gleichzeitig Armkreis"],
+      tip: "Flüssige Übergänge zwischen den Shuffles – nicht zu sehr anhalten."
+    },
+    {
+      name: "Cha-Cha mit Drehung",
+      duration: "3 min", level: "mittel", muscle: "Hüfte & Beine",
+      beschreibung: "Der Cha-Cha-Grundschritt wird mit einem Fersen-Pivot kombiniert: Nach dem Cha-Cha-Cha dreht man sich auf den Fersen und wechselt die Richtung. Die Hüfte zeichnet dabei einen Kreis. Diese Variante bringt mehr Dynamik und schult das Gleichgewicht.",
+      steps: ["Cha-Cha-Cha Grundschritt vor-zurück", "Nach dem Cha-Cha auf Fersen drehen (Pivot)", "Hüftkreis während der Drehung", "Arme in Boxform halten"],
+      tip: "Beim Pivot drehen sich die Fersen – nicht die Zehen. Das schont die Knie."
+    },
+    {
+      name: "Kizomba Gleiten",
+      duration: "4 min", level: "leicht", muscle: "Core & Balance",
+      beschreibung: "Kizomba ist ein langsamer, anmutiger Tanz aus Angola. Beim Gleiten zieht man den Fuß langsam und kontrolliert seitlich heraus, die Hüfte sinkt dabei sanft ab. Die Bewegung sieht elegant aus und trainiert Körperspannung, Balance und den tiefen Bauchmuskel.",
+      steps: ["Gleitschritt seitlich nach rechts, Fuß langsam herausziehen", "Hüfte sanft absinken lassen", "Linken Fuß heranziehen, kurze Pause", "Zur linken Seite wiederholen"],
+      tip: "Langsam und kontrolliert ist hier der Schlüssel – die Kraft liegt im Gleiten."
+    },
+    {
+      name: "Reggae Schaukeln",
+      duration: "3 min", level: "leicht", muscle: "Oberkörper",
+      beschreibung: "Im Reggae-Stil schaukelt der Körper sanft vor und zurück, die Schultern heben sich abwechselnd. Die Hüfte bewegt sich im Offbeat – also genau zwischen den Hauptbeats der Musik. Eine entspannte, schwungvolle Übung, die den Oberkörper lockert.",
+      steps: ["Schaukelnder Schritt vor und zurück", "Schultern abwechselnd nach oben ziehen", "Arme locker seitlich hängen lassen", "Hüfte auf den Offbeat (zwischen die Beats) bewegen"],
+      tip: "Reggae lebt vom Offbeat – wer zwischen die Beats tanzt, hat das Gefühl gefunden."
+    },
+    {
+      name: "Salsa mit Drehung",
+      duration: "4 min", level: "aktiv", muscle: "Ganzkörper",
+      beschreibung: "Der Salsa-Grundschritt wird intensiviert: Nach je acht Counts kommt eine komplette Drehung. Dazu werden aktive Armbewegungen hinzugefügt. Optional gibt es eine Sprung-Variation für Fortgeschrittene. Eine der energiereichsten Sequenzen der Stunde.",
+      steps: ["Schneller Salsa-Grundschritt für 8 Counts", "Drehung um 360 Grad mit Armschwung", "Aktive Armbewegungen in die Grundschritte einbauen", "Optional: kleine Sprünge beim Salsa-Schritt"],
+      tip: "Beim Landen nach dem Sprung immer weiche Knie – nie hart aufkommen."
+    },
+    {
+      name: "Dancehall Stampfer",
+      duration: "4 min", level: "aktiv", muscle: "Beine & Gesäß",
+      beschreibung: "Im jamaikanischen Dancehall-Stil geht man in die Breite, beugt die Knie tief und stampft abwechselnd rechts und links. Der Oberkörper lehnt leicht zurück, die Arme sind charismatisch eingesetzt. Eine intensive Übung für Beine und Gesäß mit viel Charakter.",
+      steps: ["Breiten Stand einnehmen, Knie deutlich beugen", "Abwechselnd rechts und links stampfen", "Oberkörper leicht nach hinten lehnen", "Arme ausdrucksstark einsetzen"],
+      tip: "Die tiefe Kniebeuge durchhalten – wer aufgibt, verliert die Wirkung."
+    },
+    {
+      name: "Motown Soul Step",
+      duration: "3 min", level: "leicht", muscle: "Schultern & Arme",
+      beschreibung: "Inspiriert von den Soul- und Motown-Tänzen der 60er Jahre. Ein einfacher Seitschritt mit Schulter-Rolls und einem Finger-Snap auf Zählzeit 2 und 4 – genau wie im echten Soul. Dazu ein leichtes Hüftwackeln. Locker, freudig und voller Charme.",
+      steps: ["Seitschritt rechts mit Schulterroll nach vorne", "Finger-Snap auf Zählzeit 2 und 4", "Hüfte leicht wackeln lassen", "Zur linken Seite wiederholen"],
+      tip: "Leichtigkeit und Freude ausstrahlen – Soul-Tanzen ist ein Lächeln mit dem Körper."
+    },
+    {
+      name: "Flamenco-Fusion",
+      duration: "4 min", level: "mittel", muscle: "Arme & Core",
+      beschreibung: "Anleihen aus dem spanischen Flamenco: kraftvolle Stampfbewegungen, weit geöffnete Arme, elegante Bogenformen. Drehungen mit Arm-Bögen geben der Sequenz Dramatik. Wer sich aufrichtet und Haltung zeigt, tanzt echten Flamenco-Geist.",
+      steps: ["Kräftiger Stampf rechts, gleichzeitig Arme weit öffnen", "Drehung mit Arm-Bogen über dem Kopf", "Stampf links, Arme zur Körpermitte schließen", "Stolze, aufrechte Haltung durchgängig beibehalten"],
+      tip: "Brust raus, Kinn hoch – Flamenco ist in erster Linie eine Frage der Haltung."
+    },
+    {
+      name: "Bhangra Schulter-Pump",
+      duration: "3 min", level: "aktiv", muscle: "Schultern & Arme",
+      beschreibung: "Bhangra ist ein fröhlicher Ernte-Tanz aus dem Punjab in Indien. Der charakteristische Arm bewegt sich wie beim Sprungseil nach oben, die Schultern pumpen energisch mit. Die Bewegung ist ansteckend fröhlich und stärkt effektiv die Schulter- und Armmuskulatur.",
+      steps: ["Rechten Arm nach oben schwingen wie beim Sprungseil", "Schulter kräftig nach oben pumpen", "Zur linken Seite wechseln", "Knieheben als Beinarbeit hinzufügen"],
+      tip: "Die ganze Energie in die Arme stecken – Bhangra ist feurig und freudig."
+    },
+    {
+      name: "Kubanischer Grundschritt",
+      duration: "3 min", level: "mittel", muscle: "Beine & Balance",
+      beschreibung: "Der Son-Cubano ist der Ursprung vieler lateinamerikanischer Tänze. Das Körpergewicht fließt bei diesem Schritt wie Wasser – nie steil, immer fließend. Eine strahlende Haltung ist Pflicht. Wer diesen Schritt beherrscht, hat eine breite Basis für viele andere Tänze.",
+      steps: ["Son-Grundschritt: vor-zusammen-zurück-zusammen", "Körpergewicht fließend wechseln, nie ruckartig", "Aufrechte, strahlende Haltung beibehalten", "Arme locker und elegant mitschwingen"],
+      tip: "Ein leichter Widerstand im Schritt schafft die typische Eleganz des Son."
+    }
   ],
   cooldown: [
-    { name: "Slow Merengue Flow", duration: "3 min", level: "leicht", muscle: "Ganzkörper", steps: ["Merengue im halben Tempo", "Arme weit und fließend", "Atemrhythmus einhalten", "Bewegungen weicher werden lassen"], tip: "Atmung verlangsamen – ins Abkühlen kommen." },
-    { name: "Wirbelsäulen-Welle", duration: "2 min", level: "leicht", muscle: "Rücken", steps: ["Beine schulterbreit", "Oberkörper nach vorn rollen", "Wirbel für Wirbel aufrollen", "Am Ende Schulterdehnung"], tip: "Sehr langsam, nie ruckartig." },
-    { name: "Hüftkreise", duration: "2 min", level: "leicht", muscle: "Hüftbeuger", steps: ["Hände in Hüfte", "Große Kreise rechts x8", "Pause – dann links x8", "Kleiner werden lassen"], tip: "Bauchnabel einziehen für mehr Wirkung." },
-    { name: "Butterfly Stretch", duration: "2 min", level: "leicht", muscle: "Innenschenkel", steps: ["Sitzen, Fußsohlen zusammen", "Knie sanft zum Boden drücken", "Oberkörper leicht vorbeugen", "30 Sek halten, wiederholen"], tip: "Nie Knie nach unten drücken – sanft leiten." },
-    { name: "Salsa Soft Cool-Down", duration: "3 min", level: "leicht", muscle: "Beine", steps: ["Salsa sehr langsam", "Fokus auf Dehnung der Beinrückseite", "Schrittweise vereinfachen", "Ausatmen bei jedem Schritt"], tip: "Die letzten Minuten gehören der Ruhe." },
-    { name: "Schulter & Nacken Lösung", duration: "2 min", level: "leicht", muscle: "Schultern & Nacken", steps: ["Kopf seitlich neigen links", "10 Sek halten", "Rechts wiederholen", "Schultern kreisen rückwärts"], tip: "Nacken ist Spannungsspeicher – Zeit nehmen." },
-    { name: "Stehende Vorbeuge", duration: "2 min", level: "leicht", muscle: "Rücken & Hamstrings", steps: ["Beine leicht gebeugt", "Oberkörper locker nach vorn hängen", "Kopf hängt schwer", "Langsam aufrollen"], tip: "Auf Schwindel achten – langsam aufrichten." },
-    { name: "Gratitude Flow", duration: "3 min", level: "leicht", muscle: "Ganzkörper", steps: ["Arme öffnen wie Flügel", "Tiefer Atemzug", "Arme sinken beim Ausatmen", "3x Dankbarkeits-Atemzug"], tip: "Klasse mit Lächeln und Dankbarkeit beenden." }
+    {
+      name: "Langsamer Merengue",
+      duration: "3 min", level: "leicht", muscle: "Ganzkörper",
+      beschreibung: "Der vertraute Merengue-Marsch, jetzt im halben Tempo. Die Arme bewegen sich weit und fließend, die Atmung verlangsamt sich bewusst. Diese Übung leitet sanft vom aktiven Tanzen ins Abkühlen über und gibt dem Körper Zeit, sich zu erholen.",
+      steps: ["Merengue-Marsch im halben Tempo", "Arme weit und fließend bewegen", "Bewusst ein- und ausatmen im Rhythmus", "Bewegungen Schritt für Schritt weicher werden lassen"],
+      tip: "Die Atmung bewusst verlangsamen – das signalisiert dem Körper: Erholung beginnt."
+    },
+    {
+      name: "Wirbelsäulen-Welle",
+      duration: "2 min", level: "leicht", muscle: "Rücken",
+      beschreibung: "Eine geführte Bewegung, bei der die Wirbelsäule Wirbel für Wirbel aufgerollt und wieder aufgerichtet wird. Diese Übung mobilisiert die Wirbelsäule, löst Verspannungen im Rücken und dehnt die Rückenmuskulatur sanft und effektiv.",
+      steps: ["Beine schulterbreit, Knie leicht gebeugt", "Oberkörper Wirbel für Wirbel nach vorne rollen lassen", "Kopf und Arme hängen locker nach unten", "Langsam Wirbel für Wirbel aufrichten"],
+      tip: "Sehr langsam ausführen – nie ruckartig. Die Wirbelsäule braucht Zeit."
+    },
+    {
+      name: "Hüftkreise",
+      duration: "2 min", level: "leicht", muscle: "Hüftbeuger",
+      beschreibung: "Langsame, große Kreisbewegungen mit der Hüfte lockern die Hüftbeuger, die beim Tanzen stark beansprucht werden. Die Hände liegen dabei auf der Hüfte, der Oberkörper bleibt ruhig. Eine einfache, wohltuende Übung.",
+      steps: ["Hände auf die Hüfte legen", "Acht große Kreise nach rechts beschreiben", "Kurze Pause – dann acht Kreise nach links", "Kreise zum Ende hin kleiner werden lassen"],
+      tip: "Den Bauchnabel leicht einziehen gibt der Übung mehr Tiefe und Wirkung."
+    },
+    {
+      name: "Schmetterlings-Dehnung",
+      duration: "2 min", level: "leicht", muscle: "Innenschenkel",
+      beschreibung: "Im Sitzen werden die Fußsohlen zusammengebracht und die Knie öffnen sich nach außen wie Schmetterlingsflügel. Diese Dehnposition öffnet die Hüfte und dehnt die Innenschenkel, die beim Tanzen oft wenig beachtet werden. Sehr angenehm nach einer aktiven Stunde.",
+      steps: ["Hinsetzen und Fußsohlen aneinanderlegen", "Knie sanft nach außen unten sinken lassen", "Oberkörper leicht nach vorne beugen", "Position 30 Sekunden halten, zweimal wiederholen"],
+      tip: "Die Knie nie aktiv nach unten drücken – einfach schwer werden lassen."
+    },
+    {
+      name: "Sanfte Salsa zum Abschluss",
+      duration: "3 min", level: "leicht", muscle: "Beine",
+      beschreibung: "Der Salsa-Grundschritt im sehr langsamen Tempo als bewusster Übergang zur Ruhe. Jeder Schritt wird mit einer langen Ausatmung verbunden. Die Bewegungen werden schrittweise vereinfacht, bis nur noch ein sanftes Wiegen übrig bleibt.",
+      steps: ["Salsa-Grundschritt sehr langsam ausführen", "Bei jedem Schritt bewusst ausatmen", "Schrittweise vereinfachen – nur noch Gewicht wechseln", "Am Ende: nur noch sanftes Wiegen von links nach rechts"],
+      tip: "Diese letzten Minuten gehören der Ruhe – nichts mehr beweisen müssen."
+    },
+    {
+      name: "Schulter & Nacken lösen",
+      duration: "2 min", level: "leicht", muscle: "Schultern & Nacken",
+      beschreibung: "Gezielte Dehnungen für Schultern und Nacken, die häufigsten Verspannungszonen. Der Kopf neigt sich zur Seite, Schultern kreisen rückwärts. Diese Übung ist für viele Teilnehmerinnen besonders wohltuend, da Büroarbeit und Stress sich oft im Nacken festsetzen.",
+      steps: ["Kopf sanft zur rechten Seite neigen, 10 Sekunden halten", "Zur linken Seite wiederholen", "Schultern langsam rückwärts kreisen lassen", "Arme locker fallen lassen, Schultern tief sinken"],
+      tip: "Der Nacken ist ein Spannungsspeicher – hier Zeit zu nehmen ist echte Fürsorge."
+    },
+    {
+      name: "Vorbeuge im Stehen",
+      duration: "2 min", level: "leicht", muscle: "Rücken & Beinrückseite",
+      beschreibung: "Mit leicht gebeugten Knien lässt man den Oberkörper locker nach vorne fallen. Kopf und Arme hängen schwer. Diese Position dehnt die Beinrückseite und gibt dem Rücken eine wohltuende Pause. Das langsame Aufrichten schließt die Dehnung ab.",
+      steps: ["Beine schulterbreit, Knie leicht beugen", "Oberkörper locker nach vorne fallen lassen", "Kopf hängt schwer, Arme baumeln", "Sehr langsam Wirbel für Wirbel aufrichten"],
+      tip: "Wer schwindelig wird, richtet sich noch langsamer auf und atmet tief durch."
+    },
+    {
+      name: "Dankbarkeits-Atemübung",
+      duration: "3 min", level: "leicht", muscle: "Ganzkörper",
+      beschreibung: "Ein bewusster, meditativer Abschluss: Die Arme öffnen sich beim Einatmen weit wie Flügel und sinken beim Ausatmen sanft wieder. Drei tiefe Atemzüge mit dem Gedanken: was hat mir diese Stunde gegeben? Schließt die Stunde mit Würde und Gemeinschaft.",
+      steps: ["Arme beim Einatmen weit öffnen wie Flügel", "Arme beim Ausatmen langsam sinken lassen", "Drei volle, tiefe Atemzüge nehmen", "Optional: stilles Lächeln – die Stunde feiern"],
+      tip: "Die Stunde mit Dankbarkeit und einem Lächeln zu beenden gibt allen etwas mit nach Hause."
+    }
   ]
 };
 
@@ -547,11 +739,16 @@ function renderPhase(label, icon, color, exercises, music, duration, phaseKey, s
   `;
 }
 
+const ALL_EXERCISES = [...EXERCISES.warmup, ...EXERCISES.main, ...EXERCISES.cooldown];
+const exRegistry = {};
+ALL_EXERCISES.forEach(e => { exRegistry[e.name] = e; });
+
 function renderExercise(ex, phaseKey, idx) {
   const isFav = favorites.some(f => f.name === ex.name);
+  const safeName = encodeURIComponent(ex.name);
   return `
     <div class="exercise-item" id="ex-${phaseKey}-${idx}">
-      <div class="exercise-info" onclick="openModal(${JSON.stringify(ex).replace(/'/g,"&#39;")})">
+      <div class="exercise-info" onclick="openModal(decodeURIComponent('${safeName}'))" style="cursor:pointer;">
         <div class="exercise-name">${ex.name}</div>
         <div class="exercise-tags">
           <span class="tag ${levelClass(ex.level)}">${ex.level}</span>
@@ -559,7 +756,7 @@ function renderExercise(ex, phaseKey, idx) {
           <span class="tag tag-duration">${ex.duration}</span>
         </div>
       </div>
-      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(${JSON.stringify(ex).replace(/'/g,"&#39;")}, this)" title="Favorit">♥</button>
+      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(decodeURIComponent('${safeName}'), this)" title="Favorit">♥</button>
       <button class="swap-btn" onclick="swapExercise('${phaseKey}', ${idx})" title="Austauschen">⇄</button>
     </div>
   `;
@@ -581,14 +778,16 @@ function swapExercise(phaseKey, idx) {
   renderSession();
 }
 
-function openModal(ex) {
-  if (typeof ex === 'string') ex = JSON.parse(ex);
+function openModal(name) {
+  const ex = exRegistry[name];
+  if (!ex) return;
   document.getElementById('modal-title').textContent = ex.name;
   document.getElementById('modal-tags').innerHTML = `
     <span class="tag ${levelClass(ex.level)}">${ex.level}</span>
     <span class="tag tag-muscle">${ex.muscle}</span>
     <span class="tag tag-duration">${ex.duration}</span>
   `;
+  document.getElementById('modal-beschreibung').textContent = ex.beschreibung || '';
   document.getElementById('modal-steps').innerHTML = ex.steps.map((s, i) => `<li data-num="${i+1}">${s}</li>`).join('');
   document.getElementById('modal-tip').textContent = ex.tip;
   document.getElementById('modal').classList.add('open');
@@ -598,9 +797,10 @@ function closeModal(e) {
   if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
 }
 
-function toggleFav(ex, btn) {
-  if (typeof ex === 'string') ex = JSON.parse(ex);
-  const idx = favorites.findIndex(f => f.name === ex.name);
+function toggleFav(name, btn) {
+  const ex = exRegistry[name];
+  if (!ex) return;
+  const idx = favorites.findIndex(f => f.name === name);
   if (idx >= 0) {
     favorites.splice(idx, 1);
     btn.classList.remove('active');
@@ -662,15 +862,17 @@ function renderFavorites() {
     c.innerHTML = '<div class="empty-state"><div class="empty-icon">🤍</div><h3>Keine Favoriten</h3><p>Tippe auf das Herz bei einer Übung, um sie hier zu speichern.</p></div>';
     return;
   }
-  c.innerHTML = favorites.map(f => `
+  c.innerHTML = favorites.map(f => {
+    const safeName = encodeURIComponent(f.name);
+    return `
     <div class="fav-card">
-      <div class="fav-card-info" onclick="openModal(${JSON.stringify(f).replace(/'/g,"&#39;")})">
+      <div class="fav-card-info" onclick="openModal(decodeURIComponent('${safeName}'))" style="cursor:pointer;">
         <div class="fav-card-name">${f.name}</div>
         <div class="fav-card-meta">${f.level} · ${f.muscle} · ${f.duration}</div>
       </div>
-      <button class="remove-fav" onclick="removeFav('${f.name.replace(/'/g,"&#39;")}')">✕</button>
+      <button class="remove-fav" onclick="removeFav(decodeURIComponent('${safeName}'))">✕</button>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function switchTab(name) {
