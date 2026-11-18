@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zumba Planer</title>
+<meta name="theme-color" content="#2d1f14">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -305,6 +307,111 @@
     margin: 1.2rem 0 0.6rem;
     font-weight: 600;
   }
+
+  /* ---- Verbesserungen ---- */
+  body { -webkit-font-smoothing: antialiased; background-attachment: fixed; }
+  .header {
+    background: linear-gradient(135deg, #3a2618 0%, #5a3e2b 55%, #7d5a8f 100%);
+    color: var(--cream);
+    padding: 2.2rem 1.5rem 1.8rem;
+    border-bottom: none;
+  }
+  .header h1 { color: #fff; font-size: 2.1rem; }
+  .header p { color: rgba(245,239,232,0.8); }
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(45,31,20,0.06);
+  }
+  .nav button:focus-visible, .gen-btn:focus-visible, .chip:focus-visible,
+  .swap-btn:focus-visible, .fav-btn:focus-visible, .action-btn:focus-visible { outline: 2px solid var(--lilac-dark); outline-offset: 2px; }
+  .gen-btn {
+    background: linear-gradient(135deg, var(--brown) 0%, var(--brown-mid) 100%);
+    box-shadow: 0 6px 18px rgba(45,31,20,0.22);
+    margin-bottom: 1rem;
+  }
+  .gen-btn:hover { box-shadow: 0 8px 22px rgba(45,31,20,0.28); }
+
+  .controls { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+  .controls .lbl { font-size: 0.8rem; color: var(--gray-soft); font-weight: 600; margin-right: 0.2rem; }
+  .chip {
+    border: 1px solid var(--border); background: rgba(255,255,255,0.8);
+    border-radius: 20px; padding: 5px 14px; font: inherit; font-size: 0.82rem;
+    color: var(--brown-mid); cursor: pointer; transition: all 0.15s;
+  }
+  .chip:hover { background: var(--rose-light); }
+  .chip.active { background: var(--brown); color: var(--cream); border-color: var(--brown); }
+
+  .summary {
+    display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center;
+  }
+  .summary .stat {
+    flex: 1; min-width: 80px; text-align: center; background: var(--card-bg);
+    border: 1px solid var(--border); border-radius: 14px; padding: 0.6rem 0.4rem;
+  }
+  .stat b { display: block; font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 500; }
+  .stat span { font-size: 0.72rem; color: var(--gray-soft); text-transform: uppercase; letter-spacing: 0.4px; }
+  .actions { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+  .action-btn {
+    flex: 1; padding: 0.6rem; border-radius: 12px; border: 1px solid var(--border);
+    background: rgba(255,255,255,0.8); font: inherit; font-size: 0.85rem; color: var(--brown-mid);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .action-btn:hover { background: var(--rose-light); border-color: var(--rose-dark); }
+
+  .phase-card {
+    border-left: 5px solid var(--accent, var(--rose));
+    box-shadow: 0 2px 12px rgba(45,31,20,0.05);
+    animation: rise 0.35s ease both;
+  }
+  .phase-card:nth-child(2) { animation-delay: 0.05s; }
+  .phase-card:nth-child(3) { animation-delay: 0.1s; }
+  .phase-card:nth-child(4) { animation-delay: 0.15s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .phase-icon { font-size: 1.15rem; }
+  .phase-meta {
+    background: rgba(255,255,255,0.8); border: 1px solid var(--border);
+    padding: 2px 10px; border-radius: 20px; font-weight: 600;
+  }
+  .exercise-name { font-weight: 600; }
+  .exercise-info:hover .exercise-name { color: var(--lilac-dark); }
+  .exercise-info::after { content: ''; }
+  .swap-btn:active { transform: rotate(180deg); }
+  .fav-btn { color: #bbb; }
+  .fav-btn.active { color: #e91e63; }
+  .tip-box { box-shadow: 0 2px 10px rgba(45,31,20,0.04); }
+
+  .history-card { display: flex; align-items: center; gap: 0.75rem; }
+  .history-main { flex: 1; min-width: 0; }
+  .history-card:hover { transform: translateY(-1px); }
+  .del-btn {
+    width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border);
+    background: none; cursor: pointer; color: var(--gray-soft); flex-shrink: 0;
+  }
+  .del-btn:hover { background: #fce4ec; color: #c62828; }
+  .link-btn { background: none; border: none; color: var(--gray-soft); font: inherit; font-size: 0.8rem; text-decoration: underline; cursor: pointer; margin-top: 0.5rem; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 1.5rem; transform: translate(-50%, 20px);
+    background: var(--brown); color: var(--cream); padding: 0.65rem 1.2rem; border-radius: 24px;
+    font-size: 0.88rem; opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  .modal { animation: pop 0.2s ease both; }
+  @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+  @media (max-width: 520px) {
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal { border-radius: 22px 22px 0 0; max-height: 92vh; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  @media print {
+    .nav, .gen-btn, .controls, .actions, .swap-btn, .fav-btn, .music-row a, .header p { display: none !important; }
+    body { background: #fff; }
+    .header { background: none; color: #000; padding: 0.5rem; } .header h1 { color: #000; }
+    .phase-card { break-inside: avoid; box-shadow: none; }
+  }
 </style>
 </head>
 <body>
@@ -324,6 +431,13 @@
   <!-- Plan Tab -->
   <div id="tab-plan" class="tab-content active">
     <button class="gen-btn" onclick="generateSession()">✦ Neue Zumba-Stunde erstellen</button>
+    <div class="controls" role="group" aria-label="Intensität">
+      <span class="lbl">Intensität:</span>
+      <button class="chip active" data-level="alle" onclick="setLevel('alle')">Alle</button>
+      <button class="chip" data-level="leicht" onclick="setLevel('leicht')">Sanft</button>
+      <button class="chip" data-level="mittel" onclick="setLevel('mittel')">Mittel</button>
+      <button class="chip" data-level="aktiv" onclick="setLevel('aktiv')">Power</button>
+    </div>
     <div id="session-container">
       <div class="empty-state">
         <div class="empty-icon">💃</div>
@@ -359,9 +473,9 @@
 </div>
 
 <!-- Modal -->
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+<div class="modal-overlay" id="modal" onclick="closeModal(event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal">
-    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <button class="modal-close" aria-label="Schließen" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
     <h3 id="modal-title"></h3>
     <div id="modal-tags" class="modal-tags"></div>
     <p id="modal-beschreibung" style="font-size:0.9rem;color:var(--brown-mid);line-height:1.6;margin-bottom:1rem;"></p>
@@ -836,17 +950,42 @@ function pick(arr, n) { return shuffle(arr).slice(0, n); }
 function pickOne(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 let currentSession = null;
-let favorites = JSON.parse(localStorage.getItem('zumba-favs') || '[]');
-let history = JSON.parse(localStorage.getItem('zumba-history') || '[]');
+function loadStore(key) {
+  try { const v = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(v) ? v : []; }
+  catch (e) { return []; }
+}
+function saveStore(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* z. B. privater Modus */ }
+}
+let favorites = loadStore('zumba-favs');
+let history = loadStore('zumba-history');
+let levelFilter = 'alle';
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function setLevel(l) {
+  levelFilter = l;
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.level === l));
+}
+// Übungen nach Intensität filtern; Fallback auf alle, falls zu wenige übrig sind
+function filtered(arr, min) {
+  if (levelFilter === 'alle') return arr;
+  const f = arr.filter(e => e.level === levelFilter);
+  return f.length >= min ? f : arr;
+}
 
 function levelClass(l) { return 'tag-level-' + l; }
 
 function generateSession() {
-  const warmupEx = pick(EXERCISES.warmup, 3);
-  const main1Ex = pick(EXERCISES.main, 5);
-  const remainMain = EXERCISES.main.filter(e => !main1Ex.includes(e));
-  const main2Ex = pick(remainMain.length >= 4 ? remainMain : EXERCISES.main, 4);
-  const coolEx = pick(EXERCISES.cooldown, 3);
+  const mainPool = filtered(EXERCISES.main, 9);
+  const warmupEx = pick(filtered(EXERCISES.warmup, 3), 3);
+  const main1Ex = pick(mainPool, 5);
+  const remainMain = mainPool.filter(e => !main1Ex.includes(e));
+  const main2Ex = pick(remainMain.length >= 4 ? remainMain : EXERCISES.main.filter(e => !main1Ex.includes(e)), 4);
+  const coolEx = pick(filtered(EXERCISES.cooldown, 3), 3);
 
   currentSession = {
     warmup: warmupEx, main1: main1Ex, main2: main2Ex, cooldown: coolEx,
@@ -857,6 +996,7 @@ function generateSession() {
       cooldown: pickOne(MUSIC.cooldown)
     },
     tip: pickOne(TIPS),
+    id: Date.now(),
     date: new Date().toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   };
 
@@ -869,7 +1009,17 @@ function renderSession() {
   const { warmup, main1, main2, cooldown, music, tip } = currentSession;
   const container = document.getElementById('session-container');
 
+  const total = warmup.length + main1.length + main2.length + cooldown.length;
   container.innerHTML = `
+    <div class="summary">
+      <div class="stat"><b>55</b><span>Minuten</span></div>
+      <div class="stat"><b>${total}</b><span>Übungen</span></div>
+      <div class="stat"><b>4</b><span>Phasen</span></div>
+    </div>
+    <div class="actions">
+      <button class="action-btn" onclick="copyPlan()">📋 Kopieren</button>
+      <button class="action-btn" onclick="window.print()">🖨️ Drucken</button>
+    </div>
     ${renderPhase('Warm-Up', '🌸', '#e8c5b0', warmup, music.warmup, '10 min', 'warmup', 0)}
     ${renderPhase('Hauptteil I', '🔥', '#c9b8d8', main1, music.main1, '20 min', 'main1', 0)}
     ${renderPhase('Hauptteil II', '⚡', '#d4b8c9', main2, music.main2, '17 min', 'main2', 0)}
@@ -882,9 +1032,9 @@ function renderPhase(label, icon, color, exercises, music, duration, phaseKey, s
   const rows = exercises.map((ex, i) => renderExercise(ex, phaseKey, i)).join('');
   const bpmLabel = { ruhig: '♩ ruhig', mittel: '♪ mittel', schnell: '♫ schnell', 'sehr schnell': '♫♫ sehr schnell' }[music.bpm] || music.bpm;
   return `
-    <div class="phase-card">
-      <div class="phase-header" style="background:${color}22;">
-        <div class="phase-dot" style="background:${color};"></div>
+    <div class="phase-card" style="--accent:${color};">
+      <div class="phase-header" style="background:${color}33;">
+        <span class="phase-icon" aria-hidden="true">${icon}</span>
         <h3>${label}</h3>
         <span class="phase-meta">${duration}</span>
       </div>
@@ -915,8 +1065,8 @@ function renderExercise(ex, phaseKey, idx) {
           <span class="tag tag-duration">${ex.duration}</span>
         </div>
       </div>
-      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(decodeURIComponent('${safeName}'), this)" title="Favorit">♥</button>
-      <button class="swap-btn" onclick="swapExercise('${phaseKey}', ${idx})" title="Austauschen">⇄</button>
+      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(decodeURIComponent('${safeName}'), this)" title="Favorit" aria-label="Favorit">♥</button>
+      <button class="swap-btn" onclick="swapExercise('${phaseKey}', ${idx})" title="Austauschen" aria-label="Übung austauschen">⇄</button>
     </div>
   `;
 }
@@ -935,6 +1085,7 @@ function swapExercise(phaseKey, idx) {
   if (!available.length) return;
   currentSession[phaseKey][idx] = available[Math.floor(Math.random() * available.length)];
   renderSession();
+  updateCurrentHistory();
 }
 
 function openModal(name) {
@@ -970,15 +1121,53 @@ function toggleFav(name, btn) {
     favorites.push(ex);
     btn.classList.add('active');
   }
-  localStorage.setItem('zumba-favs', JSON.stringify(favorites));
+  saveStore('zumba-favs', favorites);
   renderFavorites();
 }
 
 function removeFav(name) {
   favorites = favorites.filter(f => f.name !== name);
-  localStorage.setItem('zumba-favs', JSON.stringify(favorites));
+  saveStore('zumba-favs', favorites);
   renderFavorites();
   if (currentSession) renderSession();
+}
+
+function sessionNames(session) {
+  return [...session.warmup, ...session.main1, ...session.main2, ...session.cooldown].map(e => e.name);
+}
+// Getauschte Übungen auch im Verlauf aktualisieren
+function updateCurrentHistory() {
+  const i = history.findIndex(h => h.session && h.session.id === currentSession.id);
+  if (i < 0) return;
+  history[i] = { date: currentSession.date, exercises: sessionNames(currentSession), session: currentSession };
+  saveStore('zumba-history', history);
+  renderHistory();
+}
+function copyPlan() {
+  if (!currentSession) return;
+  const s = currentSession;
+  const part = (label, dur, list, m) =>
+    `${label} (${dur})\n♬ ${m.title}\n` + list.map((e, i) => `  ${i + 1}. ${e.name} – ${e.duration}`).join('\n');
+  const text = [
+    `Zumba-Stunde ${s.date}`,
+    part('Warm-Up', '10 min', s.warmup, s.music.warmup),
+    part('Hauptteil I', '20 min', s.main1, s.music.main1),
+    part('Hauptteil II', '17 min', s.main2, s.music.main2),
+    part('Cool-Down', '8 min', s.cooldown, s.music.cooldown)
+  ].join('\n\n');
+  const done = () => toast('Plan kopiert ✓');
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => toast('Kopieren nicht möglich'));
+  else toast('Kopieren nicht möglich');
+}
+function deleteHistory(i, ev) {
+  ev.stopPropagation();
+  history.splice(i, 1);
+  saveStore('zumba-history', history);
+  renderHistory();
+}
+function clearHistory() {
+  if (!confirm('Gesamten Verlauf löschen?')) return;
+  history = []; saveStore('zumba-history', history); renderHistory();
 }
 
 function saveToHistory(session) {
@@ -994,7 +1183,7 @@ function saveToHistory(session) {
   };
   history.unshift(entry);
   if (history.length > 10) history = history.slice(0, 10);
-  localStorage.setItem('zumba-history', JSON.stringify(history));
+  saveStore('zumba-history', history);
   renderHistory();
 }
 
@@ -1006,10 +1195,13 @@ function renderHistory() {
   }
   c.innerHTML = history.map((h, i) => `
     <div class="history-card" onclick="loadHistorySession(${i})">
-      <div class="history-date">${h.date}</div>
-      <div class="history-exercises">${h.exercises.slice(0, 5).join(' · ')}${h.exercises.length > 5 ? ' …' : ''}</div>
+      <div class="history-main">
+        <div class="history-date">${h.date}</div>
+        <div class="history-exercises">${h.exercises.slice(0, 5).join(' · ')}${h.exercises.length > 5 ? ' …' : ''}</div>
+      </div>
+      <button class="del-btn" aria-label="Eintrag löschen" onclick="deleteHistory(${i}, event)">✕</button>
     </div>
-  `).join('');
+  `).join('') + '<div style="text-align:center"><button class="link-btn" onclick="clearHistory()">Verlauf leeren</button></div>';
 }
 
 function loadHistorySession(i) {
@@ -1037,16 +1229,22 @@ function renderFavorites() {
   `}).join('');
 }
 
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('modal').classList.remove('open');
+});
+
 function switchTab(name) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach((b, i) => {
     b.classList.toggle('active', ['plan','history','favorites'][i] === name);
   });
   document.getElementById('tab-' + name).classList.add('active');
+  window.scrollTo({ top: 0 });
 }
 
 renderHistory();
 renderFavorites();
 </script>
+<div class="toast" id="toast" role="status"></div>
 </body>
 </html>
