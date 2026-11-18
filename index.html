@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='11' fill='%232d1f14'/%3E%3Cg fill='none' stroke='%23e8c5b0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='24' cy='24' r='15'/%3E%3Cpath d='M14 26.5c3-7 6-7 10 0s7 7 10 0'/%3E%3C/g%3E%3Ccircle cx='24' cy='16.5' r='2.4' fill='%23e8c5b0'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -537,14 +537,123 @@
     html[data-theme="dark"] body { background: #fff; }
     .start-btn, .notes, .player, .badge { display: none !important; }
   }
+
+  /* ================= V4 – Corporate Design ================= */
+  :root { --accent: #7a5a96; --accent-soft: rgba(122,90,150,.12); }
+  html[data-theme="dark"] { --accent: #b79bd3; --accent-soft: rgba(183,155,211,.16); }
+
+  .ic { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; vertical-align: -.22em; }
+  .ic.sm { width: 1em; height: 1em; }
+  button, .yt-link, .btn-outline { -webkit-tap-highlight-color: transparent; }
+
+  /* Marke */
+  .brand { display: flex; align-items: center; justify-content: center; gap: .8rem; }
+  .brand .logo { width: 48px; height: 48px; color: #e8c5b0; stroke-width: 1.4; }
+  .brand .logo circle.dot { fill: currentColor; stroke: none; }
+  .brand h1 { line-height: 1; }
+  .header p { text-transform: uppercase; letter-spacing: 2.5px; font-size: .72rem; margin-top: .7rem; }
+
+  /* Icon-Buttons */
+  .hbtn, .swap-btn, .fav-btn, .remove-fav, .del-btn, .modal-close, .p-x { display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+  .hbtn .ic, .p-x .ic { width: 1.15rem; height: 1.15rem; }
+  .swap-btn .ic, .fav-btn .ic, .remove-fav .ic, .del-btn .ic, .modal-close .ic { width: 1rem; height: 1rem; }
+  .fav-btn { color: var(--gray-soft); }
+  .fav-btn.active, .modal-fav.active, html[data-theme="dark"] .fav-btn.active, html[data-theme="dark"] .modal-fav.active {
+    background: var(--accent-soft); border-color: var(--accent); color: var(--accent);
+  }
+  .fav-btn.active .ic, .modal-fav.active .ic { fill: currentColor; }
+  .modal-fav { display: flex; align-items: center; justify-content: center; gap: .5rem; font-weight: 600; }
+  .swap-btn:active { transform: none; }
+
+  /* Hauptbuttons */
+  .gen-btn { display: flex; align-items: center; justify-content: center; gap: .6rem; }
+  .start-btn { display: flex; align-items: center; justify-content: center; gap: .6rem; background: var(--accent); box-shadow: 0 6px 18px var(--accent-soft); }
+  .start-btn:hover { box-shadow: 0 8px 22px var(--accent-soft); filter: brightness(1.06); }
+  html[data-theme="dark"] .start-btn { color: #1d1712; }
+  .action-btn { display: flex; align-items: center; justify-content: center; gap: .5rem; font-weight: 600; }
+  .chip { display: inline-flex; align-items: center; gap: .4rem; }
+  .toggle .ic { color: var(--accent); }
+
+  /* Musik-/Video-Links (einheitlich, ohne Rot) */
+  .yt-link { display: inline-flex; align-items: center; gap: .35rem; padding: .32rem .8rem; border-radius: 20px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-size: .78rem; font-weight: 700; text-decoration: none; flex-shrink: 0; transition: background .15s; }
+  .yt-link:hover { background: var(--accent-soft); }
+  .btn-outline { display: flex; align-items: center; justify-content: center; gap: .5rem; padding: .75rem 1rem; border-radius: 12px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-size: .95rem; font-weight: 700; text-decoration: none; transition: background .15s; }
+  .btn-outline:hover { background: var(--accent-soft); }
+  .music-icon { display: inline-flex; color: var(--accent); }
+  .music-row { background: var(--accent-soft); }
+  .music-row .bpm { color: var(--gray-soft); font-size: .78rem; }
+
+  /* Tags ruhiger */
+  .tag { display: inline-flex; align-items: center; gap: 4px; }
+  .tag-muscle, .tag-duration, html[data-theme="dark"] .tag-muscle, html[data-theme="dark"] .tag-duration { background: var(--accent-soft); color: var(--brown-mid); }
+  .tag .ic { width: .85em; height: .85em; }
+  .phase-icon { display: inline-flex; color: var(--accent); }
+  .phase-icon .ic { width: 1.25rem; height: 1.25rem; }
+  .badge, html[data-theme="dark"] .badge { display: inline-flex; align-items: center; gap: 4px; background: var(--accent-soft); color: var(--accent); }
+
+  /* Leere Zustände */
+  .empty-icon { display: flex; justify-content: center; color: var(--accent); opacity: .75; }
+  .empty-icon .ic { width: 2.8rem; height: 2.8rem; stroke-width: 1.3; }
+
+  /* Sterne */
+  .stars button { display: inline-flex; color: #cfc6bd; }
+  .stars button .ic { width: 1.9rem; height: 1.9rem; stroke-width: 1.5; }
+  .stars button.on, html[data-theme="dark"] .stars button.on { color: var(--accent); }
+  .stars button.on .ic { fill: currentColor; }
+  .player .stars button { color: rgba(255,255,255,.3); }
+  .player .stars button.on { color: #e8c5b0; }
+  .mini-stars { display: inline-flex; vertical-align: middle; color: var(--accent); letter-spacing: 0; gap: 1px; }
+  .mini-stars .ic { width: .8rem; height: .8rem; fill: currentColor; }
+  .history-date .ic { width: .95em; height: .95em; color: var(--accent); }
+
+  /* Kursmodus */
+  .p-controls button { display: flex; align-items: center; justify-content: center; padding: 0; }
+  .p-controls .ic { width: 1.5rem; height: 1.5rem; }
+  .p-controls button.big { background: #e8c5b0; color: #2d1f14; }
+  .p-controls button.big .ic { width: 2rem; height: 2rem; }
+  .p-music { border: 1px solid rgba(255,255,255,.2); }
+  .p-music > span { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; }
+  .p-music > span > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .p-music em { font-style: normal; display: inline-flex; align-items: center; gap: .3rem; flex-shrink: 0; color: #e8c5b0; font-weight: 700; font-size: .78rem; }
+  .done-badge { width: 84px; height: 84px; border-radius: 50%; border: 2px solid #e8c5b0; color: #e8c5b0; background: rgba(232,197,176,.12); display: flex; align-items: center; justify-content: center; }
+  .done-badge .ic { width: 2.6rem; height: 2.6rem; stroke-width: 2; }
+  .p-x { color: #fff; }
 </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<symbol id="i-logo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5"/><path d="M6.5 13.5c1.8-4 3.6-4 5.5 0s3.7 4 5.5 0"/><circle class="dot" cx="12" cy="7.4" r="1.3"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-prev" viewBox="0 0 24 24"><path d="M18 5v14l-9-7z" fill="currentColor" stroke="none"/><path d="M6 5v14"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="M6 5v14l9-7z" fill="currentColor" stroke="none"/><path d="M18 5v14"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24"><path d="M5 8h13l-3-3M19 16H6l3 3"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></symbol>
+<symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4M4 4l16 16"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+<symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor"/></symbol>
+<symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></symbol>
+<symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2"/><rect x="7" y="14" width="10" height="6" rx="1"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
+<symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
+<symbol id="i-external" viewBox="0 0 24 24"><path d="M8 16L17 7M9 7h8v8"/></symbol>
+<symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c.8 3.6 5.5 5.4 5.5 10.2a5.5 5.5 0 0 1-11 0c0-2.2 1-3.6 2.2-4.6.2 1.6.9 2.6 2 2.9C10.4 8.6 10.6 5.8 12 3z"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5.5 13.5h5.8L10.5 21 18.5 10.5h-5.8z"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19C5 10.5 10.5 5 19 5c0 8.500-5.500 14-14 14z"/><path d="M5 19c2.500-4.500 5.500-7.500 9.500-9.500"/></symbol>
+</svg>
 
 <div class="header">
-  <button class="hbtn" id="theme-btn" onclick="cycleTheme()" aria-label="Design wechseln" title="Hell / Dunkel">🌓</button>
-  <h1>Zumba Planer</h1>
-  <p>Deine persönliche Kursassistentin</p>
+  <button class="hbtn" id="theme-btn" onclick="cycleTheme()" aria-label="Design wechseln" title="Hell / Dunkel / Automatisch"><svg class="ic" aria-hidden="true"><use href="#i-auto"/></svg></button>
+  <div class="brand"><svg class="ic logo" aria-hidden="true"><use href="#i-logo"/></svg><h1>Zumba Planer</h1></div>
+  <p>Deine Kursassistentin</p>
 </div>
 
 <nav class="nav" aria-label="Bereiche">
@@ -556,7 +665,7 @@
 
 <div class="main">
   <div id="tab-plan" class="tab-content active">
-    <button class="gen-btn" onclick="generateSession()">✦ Neue Zumba-Stunde erstellen</button>
+    <button class="gen-btn" onclick="generateSession()"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg> Neue Stunde erstellen</button>
     <section class="settings" aria-label="Einstellungen">
       <div class="row"><span class="lbl">Dauer</span><div class="chips">
         <button class="chip" data-set="dur" data-val="30" onclick="setSetting('dur',30)">30 min</button>
@@ -570,7 +679,7 @@
         <button class="chip" data-set="level" data-val="mittel" onclick="setSetting('level','mittel')">Mittel</button>
         <button class="chip" data-set="level" data-val="aktiv" onclick="setSetting('level','aktiv')">Power</button>
       </div></div>
-      <label class="toggle"><input type="checkbox" id="favpref" onchange="setSetting('favPref', this.checked)"> ♥ Favoriten bevorzugen</label>
+      <label class="toggle"><input type="checkbox" id="favpref" onchange="setSetting('favPref', this.checked)"> <svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg> Favoriten bevorzugen</label>
     </section>
     <div id="session-container"></div>
   </div>
@@ -579,9 +688,9 @@
     <input type="search" class="search" id="lib-q" placeholder="Übung oder Muskelgruppe suchen …" aria-label="Suchen" oninput="renderLibrary()">
     <div class="chips-row">
       <button class="chip" data-lib="alle" onclick="setLib('alle')">Alle</button>
-      <button class="chip" data-lib="warmup" onclick="setLib('warmup')">🌸 Warm-Up</button>
-      <button class="chip" data-lib="main" onclick="setLib('main')">🔥 Hauptteil</button>
-      <button class="chip" data-lib="cooldown" onclick="setLib('cooldown')">🌿 Cool-Down</button>
+      <button class="chip" data-lib="warmup" onclick="setLib('warmup')"><svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg> Warm-Up</button>
+      <button class="chip" data-lib="main" onclick="setLib('main')"><svg class="ic" aria-hidden="true"><use href="#i-flame"/></svg> Hauptteil</button>
+      <button class="chip" data-lib="cooldown" onclick="setLib('cooldown')"><svg class="ic" aria-hidden="true"><use href="#i-leaf"/></svg> Cool-Down</button>
     </div>
     <div id="library-container"></div>
   </div>
@@ -601,9 +710,9 @@
 <!-- Kursmodus -->
 <div class="player" id="player" hidden role="dialog" aria-modal="true" aria-label="Kursmodus">
   <div class="p-top">
-    <button class="p-x" onclick="closePlayer()" aria-label="Beenden">✕</button>
+    <button class="p-x" onclick="closePlayer()" aria-label="Beenden"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
     <div class="p-phase"><i id="p-dot"></i><span id="p-phase"></span></div>
-    <button class="p-x" id="p-sound" onclick="toggleSound()" aria-label="Ton an/aus">🔔</button>
+    <button class="p-x" id="p-sound" onclick="toggleSound()" aria-label="Ton an/aus"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg></button>
   </div>
   <div class="p-bar"><div id="p-bar-fill"></div></div>
   <div id="p-main">
@@ -614,17 +723,17 @@
       <div class="time" id="p-time" aria-live="off"></div>
     </div>
     <p class="p-tip" id="p-tip"></p>
-    <a class="p-music" id="p-music" target="_blank" rel="noopener"><span>♬ <span id="p-song"></span></span><b>▶ YouTube</b></a>
+    <a class="p-music" id="p-music" target="_blank" rel="noopener"><span><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg><span id="p-song"></span></span><em>Öffnen <svg class="ic sm" aria-hidden="true"><use href="#i-external"/></svg></em></a>
     <div class="p-controls">
-      <button onclick="playerPrev()" aria-label="Zurück">⏮</button>
-      <button class="big" id="p-play" onclick="togglePlay()" aria-label="Start / Pause">▶</button>
-      <button onclick="playerNext()" aria-label="Weiter">⏭</button>
+      <button onclick="playerPrev()" aria-label="Zurück"><svg class="ic" aria-hidden="true"><use href="#i-prev"/></svg></button>
+      <button class="big" id="p-play" onclick="togglePlay()" aria-label="Start / Pause"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg></button>
+      <button onclick="playerNext()" aria-label="Weiter"><svg class="ic" aria-hidden="true"><use href="#i-next"/></svg></button>
     </div>
     <button class="p-link" onclick="openModal(P.tl[P.i].ex.name)">Anleitung ansehen</button>
     <div class="p-next" id="p-next"></div>
   </div>
   <div id="p-done" hidden>
-    <div style="font-size:3rem">🎉</div>
+    <div class="done-badge"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></div>
     <h2>Geschafft!</h2>
     <p class="p-tip">Tolle Stunde. Wie war sie?</p>
     <div class="stars" id="p-stars"></div>
@@ -635,7 +744,7 @@
 <!-- Modal -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal">
-    <button class="modal-close" aria-label="Schließen" onclick="closeModal()">✕</button>
+    <button class="modal-close" aria-label="Schließen" onclick="closeModal()"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
     <h3 id="modal-title"></h3>
     <div id="modal-tags" class="modal-tags"></div>
     <p id="modal-beschreibung" style="font-size:0.9rem;color:var(--brown-mid);line-height:1.6;margin-bottom:1rem;"></p>
@@ -649,11 +758,9 @@
       <p id="modal-tip" style="font-size:0.9rem;color:var(--brown-mid);background:var(--lilac-light);padding:0.7rem 0.9rem;border-radius:8px;"></p>
     </div>
     <div class="modal-section">
-      <h4>Video-Tutorial</h4>
-      <a id="modal-video" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;background:#ff0000;color:#fff;border-radius:10px;padding:0.7rem 1rem;font-size:0.95rem;font-weight:600;text-decoration:none;">
-        <span style="font-size:1.1rem;">▶</span> Auf YouTube ansehen
-      </a>
-      <p style="font-size:0.78rem;color:var(--gray-soft);margin-top:0.5rem;text-align:center;">Öffnet passende Tutorials in einem neuen Tab</p>
+      <h4>Video</h4>
+      <a id="modal-video" class="btn-outline" href="#" target="_blank" rel="noopener"><svg class="ic sm" aria-hidden="true"><use href="#i-play"/></svg> Video-Tutorial ansehen</a>
+      <p style="font-size:0.78rem;color:var(--gray-soft);margin-top:0.5rem;text-align:center;">Öffnet eine YouTube-Suche in einem neuen Tab</p>
     </div>
   </div>
 </div>
@@ -1134,10 +1241,10 @@ function toast(msg) {
 
 /* ---------- Aufbau der Stunde ---------- */
 const PHASES = [
-  { key: 'warmup',   label: 'Warm-Up',     icon: '🌸', color: '#e8c5b0', pool: 'warmup' },
-  { key: 'main1',    label: 'Hauptteil I',  icon: '🔥', color: '#c9b8d8', pool: 'main' },
-  { key: 'main2',    label: 'Hauptteil II', icon: '⚡', color: '#d4b8c9', pool: 'main' },
-  { key: 'cooldown', label: 'Cool-Down',   icon: '🌿', color: '#b8d4c9', pool: 'cooldown' }
+  { key: 'warmup',   label: 'Warm-Up',     icon: 'sun', color: '#e8c5b0', pool: 'warmup' },
+  { key: 'main1',    label: 'Hauptteil I',  icon: 'flame', color: '#c9b8d8', pool: 'main' },
+  { key: 'main2',    label: 'Hauptteil II', icon: 'bolt', color: '#d4b8c9', pool: 'main' },
+  { key: 'cooldown', label: 'Cool-Down',   icon: 'leaf', color: '#b8d4c9', pool: 'cooldown' }
 ];
 const PROFILES = {
   30: { mins: [5, 10, 10, 5],   n: [2, 3, 3, 2] },
@@ -1182,7 +1289,7 @@ function renderSession(animate) {
   const s = currentSession;
   if (!s) {
     c.className = '';
-    c.innerHTML = `<div class="empty-state"><div class="empty-icon">💃</div><h3>Bereit für eine neue Stunde?</h3>
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">${ic('logo')}</div><h3>Bereit für eine neue Stunde?</h3>
       <p>Wähle Dauer und Intensität und tippe oben auf den Button. Danach führt dich der Kursmodus mit Timer durch die Stunde.</p></div>`;
     return;
   }
@@ -1190,16 +1297,16 @@ function renderSession(animate) {
   const mins = s.dur || 55;
   c.className = animate ? 'session-enter' : '';
   c.innerHTML = `
-    <div class="session-head"><span class="date">${esc(s.date)}</span>${s.done ? '<span class="badge">✓ gemacht</span>' : ''}</div>
+    <div class="session-head"><span class="date">${esc(s.date)}</span>${s.done ? `<span class="badge">${ic('check','sm')} gemacht</span>` : ''}</div>
     <div class="summary">
       <div class="stat"><b>${mins}</b><span>Minuten</span></div>
       <div class="stat"><b>${total}</b><span>Übungen</span></div>
       <div class="stat"><b>4</b><span>Phasen</span></div>
     </div>
-    <button class="start-btn" onclick="openPlayer()">▶ Kursmodus starten</button>
+    <button class="start-btn" onclick="openPlayer()">${ic('play')} Kursmodus starten</button>
     <div class="actions">
-      <button class="action-btn" onclick="copyPlan()">📋 Kopieren</button>
-      <button class="action-btn" onclick="window.print()">🖨️ Drucken</button>
+      <button class="action-btn" onclick="copyPlan()">${ic('copy')} Kopieren</button>
+      <button class="action-btn" onclick="window.print()">${ic('print')} Drucken</button>
     </div>
     ${PHASES.map((ph, i) => renderPhase(ph, i, s)).join('')}
     <div class="tip-box"><strong>Tipp für heute:</strong> ${esc(s.tip)}</div>
@@ -1210,19 +1317,19 @@ function renderSession(animate) {
 function renderPhase(ph, i, s) {
   const per = phaseSecs(s, i);
   const music = s.music[ph.key];
-  const bpmLabel = { ruhig: '♩ ruhig', mittel: '♪ mittel', schnell: '♫ schnell', 'sehr schnell': '♫♫ sehr schnell' }[music.bpm] || music.bpm;
+  const bpmLabel = music.bpm;
   const rows = s[ph.key].map((ex, idx) => renderExercise(ex, ph.key, idx, per)).join('');
   return `
     <div class="phase-card" style="--accent:${ph.color};animation-delay:${i * 0.06}s">
       <div class="phase-header" style="background:${ph.color}33;">
-        <span class="phase-icon" aria-hidden="true">${ph.icon}</span>
+        <span class="phase-icon">${ic(ph.icon)}</span>
         <h3>${ph.label}</h3>
         <span class="phase-meta">${profileOf(s).mins[i]} min</span>
       </div>
       <div class="music-row">
-        <span class="music-icon">♬</span>
-        <span style="flex:1;"><strong>${esc(music.title)}</strong> – ${bpmLabel}</span>
-        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(music.yt)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;background:#ff0000;color:#fff;border-radius:6px;padding:3px 9px;font-size:0.75rem;font-weight:600;text-decoration:none;flex-shrink:0;">▶ YouTube</a>
+        <span class="music-icon">${ic('music')}</span>
+        <span style="flex:1;"><strong>${esc(music.title)}</strong> <span class="bpm">· ${esc(bpmLabel)}</span></span>
+        <a class="yt-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(music.yt)}" target="_blank" rel="noopener">${ic('play','sm')} Anhören</a>
       </div>
       ${rows}
     </div>`;
@@ -1232,6 +1339,7 @@ const ALL_EXERCISES = [...EXERCISES.warmup.map(e => ({ ...e, phase: 'warmup' }))
 const exRegistry = {};
 ALL_EXERCISES.forEach(e => { exRegistry[e.name] = e; });
 const q = name => encodeURIComponent(name);
+const ic = (n, c = '') => `<svg class="ic${c ? ' ' + c : ''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 
 function renderExercise(ex, phaseKey, idx, secs) {
   const fav = isFav(ex.name);
@@ -1242,11 +1350,11 @@ function renderExercise(ex, phaseKey, idx, secs) {
         <div class="exercise-tags">
           <span class="tag ${levelClass(ex.level)}">${esc(ex.level)}</span>
           <span class="tag tag-muscle">${esc(ex.muscle)}</span>
-          <span class="tag tag-duration">⏱ ${fmt(secs)}</span>
+          <span class="tag tag-duration">${ic('clock')} ${fmt(secs)}</span>
         </div>
       </div>
-      <button class="fav-btn ${fav ? 'active' : ''}" onclick="toggleFav(decodeURIComponent('${q(ex.name)}'))" title="Favorit" aria-label="Favorit" aria-pressed="${fav}">♥</button>
-      <button class="swap-btn" onclick="swapExercise('${phaseKey}', ${idx})" title="Austauschen" aria-label="Übung austauschen">⇄</button>
+      <button class="fav-btn ${fav ? 'active' : ''}" onclick="toggleFav(decodeURIComponent('${q(ex.name)}'))" title="Favorit" aria-label="Favorit" aria-pressed="${fav}">${ic('heart')}</button>
+      <button class="swap-btn" onclick="swapExercise('${phaseKey}', ${idx})" title="Austauschen" aria-label="Übung austauschen">${ic('swap')}</button>
     </div>`;
 }
 
@@ -1268,10 +1376,10 @@ function copyPlan() {
   if (!currentSession) return;
   const s = currentSession;
   const text = [`Zumba-Stunde ${s.date} (${s.dur || 55} min)`,
-    ...PHASES.map((ph, i) => `${ph.label} (${profileOf(s).mins[i]} min)\n♬ ${s.music[ph.key].title}\n` +
+    ...PHASES.map((ph, i) => `${ph.label} (${profileOf(s).mins[i]} min)\nMusik: ${s.music[ph.key].title}\n` +
       s[ph.key].map((e, n) => `  ${n + 1}. ${e.name} – ${fmt(phaseSecs(s, i))}`).join('\n'))
   ].join('\n\n') + (s.notes ? `\n\nNotizen: ${s.notes}` : '');
-  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast('Plan kopiert ✓'), () => toast('Kopieren nicht möglich'));
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast('Plan kopiert'), () => toast('Kopieren nicht möglich'));
   else toast('Kopieren nicht möglich');
 }
 
@@ -1292,7 +1400,7 @@ function openModal(name) {
 function syncModalFav() {
   const b = $('modal-fav'); if (!modalName) return;
   const f = isFav(modalName);
-  b.classList.toggle('active', f); b.textContent = f ? '♥ In Favoriten' : '♡ Zu Favoriten hinzufügen';
+  b.classList.toggle('active', f); b.innerHTML = ic('heart') + ' ' + (f ? 'In Favoriten' : 'Zu Favoriten hinzufügen');
 }
 function closeModal(e) {
   if (!e || e.target === $('modal')) $('modal').classList.remove('open');
@@ -1310,7 +1418,7 @@ function toggleFav(name) {
 function renderFavorites() {
   const c = $('favorites-container');
   if (!favorites.length) {
-    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🤍</div><h3>Keine Favoriten</h3><p>Tippe auf das Herz bei einer Übung, um sie hier zu speichern.</p></div>';
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">' + ic('heart') + '</div><h3>Keine Favoriten</h3><p>Tippe auf das Herz bei einer Übung, um sie hier zu speichern.</p></div>';
     return;
   }
   c.innerHTML = favorites.map(f => `
@@ -1319,7 +1427,7 @@ function renderFavorites() {
         <div class="fav-card-name">${esc(f.name)}</div>
         <div class="fav-card-meta">${esc(f.level)} · ${esc(f.muscle)}</div>
       </div>
-      <button class="remove-fav" aria-label="Entfernen" onclick="toggleFav(decodeURIComponent('${q(f.name)}'))">✕</button>
+      <button class="remove-fav" aria-label="Entfernen" onclick="toggleFav(decodeURIComponent('${q(f.name)}'))">${ic('close')}</button>
     </div>`).join('');
 }
 
@@ -1336,9 +1444,9 @@ function renderLibrary() {
         <div class="fav-card-name">${esc(e.name)}</div>
         <div class="exercise-tags"><span class="tag ${levelClass(e.level)}">${esc(e.level)}</span><span class="tag tag-muscle">${esc(e.muscle)}</span></div>
       </div>
-      <button class="fav-btn ${isFav(e.name) ? 'active' : ''}" aria-label="Favorit" onclick="event.stopPropagation();toggleFav(decodeURIComponent('${q(e.name)}'))">♥</button>
+      <button class="fav-btn ${isFav(e.name) ? 'active' : ''}" aria-label="Favorit" onclick="event.stopPropagation();toggleFav(decodeURIComponent('${q(e.name)}'))">${ic('heart')}</button>
     </div>`).join('')
-    : '<div class="empty-state"><div class="empty-icon">🔎</div><h3>Nichts gefunden</h3><p>Versuche einen anderen Suchbegriff.</p></div>';
+    : '<div class="empty-state"><div class="empty-icon">' + ic('search') + '</div><h3>Nichts gefunden</h3><p>Versuche einen anderen Suchbegriff.</p></div>';
 }
 
 /* ---------- Verlauf ---------- */
@@ -1358,7 +1466,7 @@ function renderHistory() {
   const done = sessions.filter(s => s.done);
   if (!history.length) {
     st.innerHTML = '';
-    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🗓️</div><h3>Noch keine Stunden</h3><p>Erstelle deine erste Zumba-Stunde, sie erscheint hier.</p></div>';
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">' + ic('calendar') + '</div><h3>Noch keine Stunden</h3><p>Erstelle deine erste Zumba-Stunde, sie erscheint hier.</p></div>';
     return;
   }
   const count = {};
@@ -1374,10 +1482,10 @@ function renderHistory() {
     const s = h.session || {};
     return `<div class="history-card" onclick="loadHistorySession(${i})">
       <div class="history-main">
-        <div class="history-date">${esc(h.date)} · ${s.dur || 55} min ${s.done ? '· ✓' : ''} ${s.rating ? `<span class="mini-stars">${'★'.repeat(s.rating)}</span>` : ''}</div>
+        <div class="history-date">${esc(h.date)} · ${s.dur || 55} min ${s.done ? ic('check') : ''} ${s.rating ? `<span class="mini-stars">${ic('star').repeat(s.rating)}</span>` : ''}</div>
         <div class="history-exercises">${esc(h.exercises.slice(0, 5).join(' · '))}${h.exercises.length > 5 ? ' …' : ''}</div>
       </div>
-      <button class="del-btn" aria-label="Eintrag löschen" onclick="deleteHistory(${i}, event)">✕</button>
+      <button class="del-btn" aria-label="Eintrag löschen" onclick="deleteHistory(${i}, event)">${ic('close')}</button>
     </div>`;
   }).join('') + '<div style="text-align:center"><button class="link-btn" onclick="clearHistory()">Verlauf leeren</button></div>';
 }
@@ -1410,7 +1518,7 @@ function openPlayer() {
   P.remaining = P.tl[0].secs * 1000;
   $('p-main').hidden = false; $('p-done').hidden = true;
   $('player').hidden = false; document.body.style.overflow = 'hidden';
-  $('p-sound').textContent = settings.sound ? '🔔' : '🔕';
+  $('p-sound').innerHTML = ic(settings.sound ? 'bell' : 'bell-off');
   playerRender();
 }
 function closePlayer(finished) {
@@ -1428,7 +1536,7 @@ function playerRender() {
   $('p-music').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(cur.music.yt);
   const nx = P.tl[P.i + 1];
   $('p-next').textContent = nx ? `Als Nächstes: ${nx.ex.name}` + (nx.ph !== cur.ph ? ` (${nx.ph.label})` : '') : 'Letzte Übung – gleich geschafft!';
-  $('p-play').textContent = P.running ? '⏸' : '▶';
+  $('p-play').innerHTML = ic(P.running ? 'pause' : 'play');
   timerRender();
 }
 function timerRender() {
@@ -1442,12 +1550,12 @@ function timerRender() {
 function startTimer() {
   P.running = true; P.endAt = Date.now() + P.remaining;
   clearInterval(P.timer); P.timer = setInterval(tick, 250);
-  requestWake(); $('p-play').textContent = '⏸';
+  requestWake(); $('p-play').innerHTML = ic('pause');
 }
 function pauseTimer() {
   if (P.running) P.remaining = Math.max(0, P.endAt - Date.now());
   P.running = false; clearInterval(P.timer); releaseWake();
-  $('p-play').textContent = '▶';
+  $('p-play').innerHTML = ic('play');
 }
 function togglePlay() { P.running ? pauseTimer() : startTimer(); timerRender(); }
 function tick() {
@@ -1480,10 +1588,10 @@ function finishClass() {
 }
 function renderStars() {
   const r = currentSession.rating || 0;
-  $('p-stars').innerHTML = [1, 2, 3, 4, 5].map(n => `<button class="${n <= r ? 'on' : ''}" aria-label="${n} Sterne" onclick="rate(${n})">★</button>`).join('');
+  $('p-stars').innerHTML = [1, 2, 3, 4, 5].map(n => `<button class="${n <= r ? 'on' : ''}" aria-label="${n} Sterne" onclick="rate(${n})">${ic('star')}</button>`).join('');
 }
 function rate(n) { currentSession.rating = n; persistHistory(); renderStars(); }
-function toggleSound() { settings.sound = !settings.sound; persistSettings(); $('p-sound').textContent = settings.sound ? '🔔' : '🔕'; }
+function toggleSound() { settings.sound = !settings.sound; persistSettings(); $('p-sound').innerHTML = ic(settings.sound ? 'bell' : 'bell-off'); }
 function beep(freq, dur) {
   if (!settings.sound) return;
   try {
@@ -1508,7 +1616,7 @@ const darkMq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : 
 function applyTheme() {
   const dark = settings.theme === 'dark' || (settings.theme === 'auto' && darkMq.matches);
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  $('theme-btn').textContent = settings.theme === 'auto' ? '🌓' : dark ? '🌙' : '☀️';
+  $('theme-btn').innerHTML = ic(settings.theme === 'auto' ? 'auto' : dark ? 'moon' : 'sun');
   const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = dark ? '#17120e' : '#2d1f14';
 }
 function cycleTheme() {
