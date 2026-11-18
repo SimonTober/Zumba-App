@@ -614,6 +614,15 @@
   .p-controls button.big { background: #e8c5b0; color: #2d1f14; }
   .p-controls button.big .ic { width: 2rem; height: 2rem; }
   .p-music { border: 1px solid rgba(255,255,255,.2); }
+  .p-links { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
+  .p-links .p-music em { color: #e8c5b0; }
+  .p-songline { display: inline-flex; align-items: center; gap: .5rem; font-size: .92rem; opacity: .9; max-width: 100%; }
+  .p-songline span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .p-hint { font-size: .74rem; opacity: .6; max-width: 360px; line-height: 1.4; }
+  .music-links { display: flex; gap: .4rem; flex-shrink: 0; }
+  .yt-link.primary { background: var(--accent); color: #fff; }
+  html[data-theme="dark"] .yt-link.primary { color: #1d1712; }
+  .hint { font-size: .76rem; color: var(--gray-soft); line-height: 1.45; }
   .p-music > span { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; }
   .p-music > span > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .p-music em { font-style: normal; display: inline-flex; align-items: center; gap: .3rem; flex-shrink: 0; color: #e8c5b0; font-weight: 700; font-size: .78rem; }
@@ -681,6 +690,10 @@
         <button class="chip" data-set="level" data-val="mittel" onclick="setSetting('level','mittel')">Mittel</button>
         <button class="chip" data-set="level" data-val="aktiv" onclick="setSetting('level','aktiv')">Power</button>
       </div></div>
+      <div class="row"><span class="lbl">Musik</span><div class="chips">
+        <button class="chip" data-set="music" data-val="spotify" onclick="setSetting('music','spotify')">Spotify zuerst</button>
+        <button class="chip" data-set="music" data-val="youtube" onclick="setSetting('music','youtube')">YouTube zuerst</button>
+      </div></div>
       <label class="toggle"><input type="checkbox" id="trendpref" onchange="setSetting('trendPref', this.checked)"> <svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg> Trend-Übungen bevorzugen</label>
       <label class="toggle"><input type="checkbox" id="favpref" onchange="setSetting('favPref', this.checked)"> <svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg> Favoriten bevorzugen</label>
     </section>
@@ -727,7 +740,12 @@
       <div class="time" id="p-time" aria-live="off"></div>
     </div>
     <p class="p-tip" id="p-tip"></p>
-    <a class="p-music" id="p-music" target="_blank" rel="noopener"><span><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg><span id="p-song"></span></span><em>YouTube <svg class="ic sm" aria-hidden="true"><use href="#i-external"/></svg></em></a>
+    <div class="p-songline"><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg><span id="p-song"></span></div>
+    <div class="p-links">
+      <a class="p-music" id="p-sp" href="#" onclick="return openSpotify(event, P.tl[P.i].music.title)"><span>Spotify</span><em>öffnen <svg class="ic sm" aria-hidden="true"><use href="#i-external"/></svg></em></a>
+      <a class="p-music" id="p-music" target="_blank" rel="noopener"><span>YouTube</span><em><svg class="ic sm" aria-hidden="true"><use href="#i-external"/></svg></em></a>
+    </div>
+    <p class="p-hint">Spotify öffnet die Suche zum Song. Tippe dort auf den Titel, dann zurück in die App wechseln – der Timer läuft weiter.</p>
     <div class="p-controls">
       <button onclick="playerPrev()" aria-label="Zurück"><svg class="ic" aria-hidden="true"><use href="#i-prev"/></svg></button>
       <button class="big" id="p-play" onclick="togglePlay()" aria-label="Start / Pause"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg></button>
@@ -1188,7 +1206,42 @@ const MUSIC = {
     { title: "Love Nwantiti – CKay", bpm: "mittel", yt: "Love Nwantiti CKay Zumba" },
     { title: "Propuesta Indecente – Romeo Santos", bpm: "mittel", yt: "Propuesta Indecente Romeo Santos Zumba" },
     { title: "Darte un Beso – Prince Royce", bpm: "mittel", yt: "Darte un Beso Prince Royce Zumba" },
-    { title: "La Bachata – Manuel Turizo", bpm: "mittel", yt: "La Bachata Manuel Turizo Zumba" }
+    { title: "La Bachata – Manuel Turizo", bpm: "mittel", yt: "La Bachata Manuel Turizo Zumba" },
+    { title: "Obsesión – Aventura", bpm: "mittel", yt: "Obsesión Aventura Zumba" },
+    { title: "Eres Mía – Romeo Santos", bpm: "mittel", yt: "Eres Mía Romeo Santos Zumba" },
+    { title: "Stand By Me – Prince Royce", bpm: "mittel", yt: "Stand By Me Prince Royce Zumba" },
+    { title: "Súbeme la Radio – Enrique Iglesias", bpm: "mittel", yt: "Súbeme la Radio Enrique Iglesias Zumba" },
+    { title: "Duele el Corazón – Enrique Iglesias", bpm: "mittel", yt: "Duele el Corazón Enrique Iglesias Zumba" },
+    { title: "Bailamos – Enrique Iglesias", bpm: "mittel", yt: "Bailamos Enrique Iglesias Zumba" },
+    { title: "Sofía – Álvaro Soler", bpm: "mittel", yt: "Sofía Álvaro Soler Zumba" },
+    { title: "El Mismo Sol – Álvaro Soler", bpm: "mittel", yt: "El Mismo Sol Álvaro Soler Zumba" },
+    { title: "Sin Pijama – Becky G & Natti Natasha", bpm: "mittel", yt: "Sin Pijama Becky G & Natti Natasha Zumba" },
+    { title: "Callaíta – Bad Bunny & Tainy", bpm: "mittel", yt: "Callaíta Bad Bunny & Tainy Zumba" },
+    { title: "Me Gusta – Shakira & Anuel AA", bpm: "mittel", yt: "Me Gusta Shakira & Anuel AA Zumba" },
+    { title: "Clandestino – Shakira & Maluma", bpm: "mittel", yt: "Clandestino Shakira & Maluma Zumba" },
+    { title: "La Tortura – Shakira ft. Alejandro Sanz", bpm: "mittel", yt: "La Tortura Shakira ft. Alejandro Sanz Zumba" },
+    { title: "Ojos Así – Shakira", bpm: "mittel", yt: "Ojos Así Shakira Zumba" },
+    { title: "Whenever, Wherever – Shakira", bpm: "mittel", yt: "Whenever, Wherever Shakira Zumba" },
+    { title: "Suerte – Shakira", bpm: "mittel", yt: "Suerte Shakira Zumba" },
+    { title: "Vente Pa' Ca – Ricky Martin & Maluma", bpm: "mittel", yt: "Vente Pa' Ca Ricky Martin & Maluma Zumba" },
+    { title: "Bailar – Deorro ft. Elvis Crespo", bpm: "mittel", yt: "Bailar Deorro ft. Elvis Crespo Zumba" },
+    { title: "Colgando en Tus Manos – Carlos Baute & Marta Sánchez", bpm: "mittel", yt: "Colgando en Tus Manos Carlos Baute & Marta Sánchez Zumba" },
+    { title: "A Dios le Pido – Juanes", bpm: "mittel", yt: "A Dios le Pido Juanes Zumba" },
+    { title: "Fotografía – Juanes & Nelly Furtado", bpm: "mittel", yt: "Fotografía Juanes & Nelly Furtado Zumba" },
+    { title: "La Colegiala – Rodolfo Aicardi", bpm: "mittel", yt: "La Colegiala Rodolfo Aicardi Zumba" },
+    { title: "El Africano – Wilfrido Vargas", bpm: "mittel", yt: "El Africano Wilfrido Vargas Zumba" },
+    { title: "La Dueña del Swing – Los Hermanos Rosario", bpm: "mittel", yt: "La Dueña del Swing Los Hermanos Rosario Zumba" },
+    { title: "Juana la Cubana – Fonseca", bpm: "mittel", yt: "Juana la Cubana Fonseca Zumba" },
+    { title: "Te Mando Flores – Fonseca", bpm: "mittel", yt: "Te Mando Flores Fonseca Zumba" },
+    { title: "Burbujas de Amor – Juan Luis Guerra", bpm: "mittel", yt: "Burbujas de Amor Juan Luis Guerra Zumba" },
+    { title: "La Bilirrubina – Juan Luis Guerra", bpm: "mittel", yt: "La Bilirrubina Juan Luis Guerra Zumba" },
+    { title: "Ojalá Que Llueva Café – Juan Luis Guerra", bpm: "mittel", yt: "Ojalá Que Llueva Café Juan Luis Guerra Zumba" },
+    { title: "Pedro Navaja – Rubén Blades", bpm: "mittel", yt: "Pedro Navaja Rubén Blades Zumba" },
+    { title: "Che Che Colé – Willie Colón", bpm: "mittel", yt: "Che Che Colé Willie Colón Zumba" },
+    { title: "Sopa de Caracol – Banda Blanca", bpm: "mittel", yt: "Sopa de Caracol Banda Blanca Zumba" },
+    { title: "Oye Mi Canto – N.O.R.E.", bpm: "mittel", yt: "Oye Mi Canto N.O.R.E. Zumba" },
+    { title: "Hasta el Amanecer – Nicky Jam", bpm: "mittel", yt: "Hasta el Amanecer Nicky Jam Zumba" },
+    { title: "Jerusalema – Master KG ft. Nomcebo Zikode", bpm: "mittel", yt: "Jerusalema Master KG ft. Nomcebo Zikode Zumba" }
   ],
   main1: [
     { title: "Despacito – Luis Fonsi ft. Daddy Yankee", bpm: "schnell", yt: "Despacito Luis Fonsi Daddy Yankee Zumba" },
@@ -1249,7 +1302,46 @@ const MUSIC = {
     { title: "Last Last – Burna Boy", bpm: "schnell", yt: "Last Last Burna Boy Zumba" },
     { title: "Essence – Wizkid ft. Tems", bpm: "schnell", yt: "Essence Wizkid Tems Zumba" },
     { title: "Unavailable – Davido", bpm: "schnell", yt: "Unavailable Davido Zumba" },
-    { title: "APT. – ROSÉ & Bruno Mars", bpm: "schnell", yt: "APT Rose Bruno Mars Zumba" }
+    { title: "APT. – ROSÉ & Bruno Mars", bpm: "schnell", yt: "APT Rose Bruno Mars Zumba" },
+    { title: "Mayores – Becky G & Bad Bunny", bpm: "schnell", yt: "Mayores Becky G & Bad Bunny Zumba" },
+    { title: "Dura – Daddy Yankee", bpm: "schnell", yt: "Dura Daddy Yankee Zumba" },
+    { title: "Shaky Shaky – Daddy Yankee", bpm: "schnell", yt: "Shaky Shaky Daddy Yankee Zumba" },
+    { title: "Zum Zum – Daddy Yankee, RKM & Ken-Y, Arcángel", bpm: "schnell", yt: "Zum Zum Daddy Yankee, RKM & Ken-Y, Arcángel Zumba" },
+    { title: "Hasta Abajo – Don Omar", bpm: "schnell", yt: "Hasta Abajo Don Omar Zumba" },
+    { title: "Dutty Love – Don Omar", bpm: "schnell", yt: "Dutty Love Don Omar Zumba" },
+    { title: "Sensualidad – Bad Bunny, Prince Royce & J Balvin", bpm: "schnell", yt: "Sensualidad Bad Bunny, Prince Royce & J Balvin Zumba" },
+    { title: "Safaera – Bad Bunny, Jowell & Randy, Ñengo Flow", bpm: "schnell", yt: "Safaera Bad Bunny, Jowell & Randy, Ñengo Flow Zumba" },
+    { title: "Yo Perreo Sola – Bad Bunny", bpm: "schnell", yt: "Yo Perreo Sola Bad Bunny Zumba" },
+    { title: "Yonaguni – Bad Bunny", bpm: "schnell", yt: "Yonaguni Bad Bunny Zumba" },
+    { title: "Me Porto Bonito – Bad Bunny & Chencho Corleone", bpm: "schnell", yt: "Me Porto Bonito Bad Bunny & Chencho Corleone Zumba" },
+    { title: "Party – Bad Bunny & Rauw Alejandro", bpm: "schnell", yt: "Party Bad Bunny & Rauw Alejandro Zumba" },
+    { title: "Qué Pretendes – J Balvin & Bad Bunny", bpm: "schnell", yt: "Qué Pretendes J Balvin & Bad Bunny Zumba" },
+    { title: "6 AM – J Balvin & Farruko", bpm: "schnell", yt: "6 AM J Balvin & Farruko Zumba" },
+    { title: "Blanco – J Balvin", bpm: "schnell", yt: "Blanco J Balvin Zumba" },
+    { title: "Rojo – J Balvin", bpm: "schnell", yt: "Rojo J Balvin Zumba" },
+    { title: "In da Getto – J Balvin & Skrillex", bpm: "schnell", yt: "In da Getto J Balvin & Skrillex Zumba" },
+    { title: "Si Tu Novio Te Deja Sola – J Balvin & Bad Bunny", bpm: "schnell", yt: "Si Tu Novio Te Deja Sola J Balvin & Bad Bunny Zumba" },
+    { title: "Dollar – Becky G & Myke Towers", bpm: "schnell", yt: "Dollar Becky G & Myke Towers Zumba" },
+    { title: "Travesuras – Nicky Jam", bpm: "schnell", yt: "Travesuras Nicky Jam Zumba" },
+    { title: "Baila Baila Baila – Ozuna", bpm: "schnell", yt: "Baila Baila Baila Ozuna Zumba" },
+    { title: "Te Boté – Casper Mágico, Nio García, Darell, Nicky Jam, Ozuna & Bad Bunny", bpm: "schnell", yt: "Te Boté Casper Mágico, Nio García, Darell, Nicky Jam, Ozuna & Bad Bunny Zumba" },
+    { title: "Ahora Dice – Chris Jeday, J Balvin, Ozuna & Arcángel", bpm: "schnell", yt: "Ahora Dice Chris Jeday, J Balvin, Ozuna & Arcángel Zumba" },
+    { title: "Adictiva – Daddy Yankee & Anuel AA", bpm: "schnell", yt: "Adictiva Daddy Yankee & Anuel AA Zumba" },
+    { title: "Soy Yo – Bomba Estéreo", bpm: "schnell", yt: "Soy Yo Bomba Estéreo Zumba" },
+    { title: "Rush – Ayra Starr", bpm: "schnell", yt: "Rush Ayra Starr Zumba" },
+    { title: "Soweto – Victony & Tempoe", bpm: "schnell", yt: "Soweto Victony & Tempoe Zumba" },
+    { title: "Peru – Fireboy DML & Ed Sheeran", bpm: "schnell", yt: "Peru Fireboy DML & Ed Sheeran Zumba" },
+    { title: "Ye – Burna Boy", bpm: "schnell", yt: "Ye Burna Boy Zumba" },
+    { title: "Monalisa – Lojay & Sarz", bpm: "schnell", yt: "Monalisa Lojay & Sarz Zumba" },
+    { title: "Terminator – Asake", bpm: "schnell", yt: "Terminator Asake Zumba" },
+    { title: "Organise – Asake", bpm: "schnell", yt: "Organise Asake Zumba" },
+    { title: "Tshwala Bam – TitoM & Yuppe", bpm: "schnell", yt: "Tshwala Bam TitoM & Yuppe Zumba" },
+    { title: "Mnike – Tyler ICU & Tumelo_za", bpm: "schnell", yt: "Mnike Tyler ICU & Tumelo_za Zumba" },
+    { title: "Kala Chashma – Badshah & Neha Kakkar", bpm: "schnell", yt: "Kala Chashma Badshah & Neha Kakkar Zumba" },
+    { title: "Badtameez Dil – Benny Dayal", bpm: "schnell", yt: "Badtameez Dil Benny Dayal Zumba" },
+    { title: "London Thumakda – Labh Janjua & Neha Kakkar", bpm: "schnell", yt: "London Thumakda Labh Janjua & Neha Kakkar Zumba" },
+    { title: "Chaiyya Chaiyya – Sukhwinder Singh", bpm: "schnell", yt: "Chaiyya Chaiyya Sukhwinder Singh Zumba" },
+    { title: "Nagada Sang Dhol – Shreya Ghoshal & Osman Mir", bpm: "schnell", yt: "Nagada Sang Dhol Shreya Ghoshal & Osman Mir Zumba" }
   ],
   main2: [
     { title: "Mi Gente – J. Balvin", bpm: "sehr schnell", yt: "Mi Gente J Balvin Zumba" },
@@ -1308,7 +1400,54 @@ const MUSIC = {
     { title: "Despechá – Rosalía", bpm: "sehr schnell", yt: "Despecha Rosalia Zumba" },
     { title: "Agua – Tainy & J Balvin", bpm: "sehr schnell", yt: "Agua Tainy J Balvin Zumba" },
     { title: "Gata Only – FloyyMenor & Cris MJ", bpm: "sehr schnell", yt: "Gata Only FloyyMenor Zumba" },
-    { title: "Houdini – Dua Lipa", bpm: "sehr schnell", yt: "Houdini Dua Lipa Zumba" }
+    { title: "Houdini – Dua Lipa", bpm: "sehr schnell", yt: "Houdini Dua Lipa Zumba" },
+    { title: "Levitating – Dua Lipa", bpm: "sehr schnell", yt: "Levitating Dua Lipa Zumba" },
+    { title: "Don't Start Now – Dua Lipa", bpm: "sehr schnell", yt: "Don't Start Now Dua Lipa Zumba" },
+    { title: "Physical – Dua Lipa", bpm: "sehr schnell", yt: "Physical Dua Lipa Zumba" },
+    { title: "Dance the Night – Dua Lipa", bpm: "sehr schnell", yt: "Dance the Night Dua Lipa Zumba" },
+    { title: "Blinding Lights – The Weeknd", bpm: "sehr schnell", yt: "Blinding Lights The Weeknd Zumba" },
+    { title: "As It Was – Harry Styles", bpm: "sehr schnell", yt: "As It Was Harry Styles Zumba" },
+    { title: "Watermelon Sugar – Harry Styles", bpm: "sehr schnell", yt: "Watermelon Sugar Harry Styles Zumba" },
+    { title: "Cruel Summer – Taylor Swift", bpm: "sehr schnell", yt: "Cruel Summer Taylor Swift Zumba" },
+    { title: "Flowers – Miley Cyrus", bpm: "sehr schnell", yt: "Flowers Miley Cyrus Zumba" },
+    { title: "About Damn Time – Lizzo", bpm: "sehr schnell", yt: "About Damn Time Lizzo Zumba" },
+    { title: "Good as Hell – Lizzo", bpm: "sehr schnell", yt: "Good as Hell Lizzo Zumba" },
+    { title: "Juice – Lizzo", bpm: "sehr schnell", yt: "Juice Lizzo Zumba" },
+    { title: "Break My Soul – Beyoncé", bpm: "sehr schnell", yt: "Break My Soul Beyoncé Zumba" },
+    { title: "Dance Monkey – Tones and I", bpm: "sehr schnell", yt: "Dance Monkey Tones and I Zumba" },
+    { title: "Gangnam Style – PSY", bpm: "sehr schnell", yt: "Gangnam Style PSY Zumba" },
+    { title: "Gentleman – PSY", bpm: "sehr schnell", yt: "Gentleman PSY Zumba" },
+    { title: "Boy With Luv – BTS ft. Halsey", bpm: "sehr schnell", yt: "Boy With Luv BTS ft. Halsey Zumba" },
+    { title: "Permission to Dance – BTS", bpm: "sehr schnell", yt: "Permission to Dance BTS Zumba" },
+    { title: "Naatu Naatu – Rahul Sipligunj & Kaala Bhairava", bpm: "sehr schnell", yt: "Naatu Naatu Rahul Sipligunj & Kaala Bhairava Zumba" },
+    { title: "Jai Ho – A. R. Rahman & The Pussycat Dolls", bpm: "sehr schnell", yt: "Jai Ho A. R. Rahman & The Pussycat Dolls Zumba" },
+    { title: "Shut Up and Dance – Walk the Moon", bpm: "sehr schnell", yt: "Shut Up and Dance Walk the Moon Zumba" },
+    { title: "Can't Hold Us – Macklemore & Ryan Lewis", bpm: "sehr schnell", yt: "Can't Hold Us Macklemore & Ryan Lewis Zumba" },
+    { title: "Wake Me Up – Avicii", bpm: "sehr schnell", yt: "Wake Me Up Avicii Zumba" },
+    { title: "Levels – Avicii", bpm: "sehr schnell", yt: "Levels Avicii Zumba" },
+    { title: "Satisfaction – Benny Benassi", bpm: "sehr schnell", yt: "Satisfaction Benny Benassi Zumba" },
+    { title: "Where Them Girls At – David Guetta ft. Nicki Minaj & Flo Rida", bpm: "sehr schnell", yt: "Where Them Girls At David Guetta ft. Nicki Minaj & Flo Rida Zumba" },
+    { title: "Sexy and I Know It – LMFAO", bpm: "sehr schnell", yt: "Sexy and I Know It LMFAO Zumba" },
+    { title: "Party Rock Anthem – LMFAO", bpm: "sehr schnell", yt: "Party Rock Anthem LMFAO Zumba" },
+    { title: "I Gotta Feeling – The Black Eyed Peas", bpm: "sehr schnell", yt: "I Gotta Feeling The Black Eyed Peas Zumba" },
+    { title: "Pump It – The Black Eyed Peas", bpm: "sehr schnell", yt: "Pump It The Black Eyed Peas Zumba" },
+    { title: "Wannabe – Spice Girls", bpm: "sehr schnell", yt: "Wannabe Spice Girls Zumba" },
+    { title: "Just Dance – Lady Gaga", bpm: "sehr schnell", yt: "Just Dance Lady Gaga Zumba" },
+    { title: "Poker Face – Lady Gaga", bpm: "sehr schnell", yt: "Poker Face Lady Gaga Zumba" },
+    { title: "Raise Your Glass – P!nk", bpm: "sehr schnell", yt: "Raise Your Glass P!nk Zumba" },
+    { title: "Firework – Katy Perry", bpm: "sehr schnell", yt: "Firework Katy Perry Zumba" },
+    { title: "Last Friday Night (T.G.I.F.) – Katy Perry", bpm: "sehr schnell", yt: "Last Friday Night (T.G.I.F.) Katy Perry Zumba" },
+    { title: "We Found Love – Rihanna & Calvin Harris", bpm: "sehr schnell", yt: "We Found Love Rihanna & Calvin Harris Zumba" },
+    { title: "Only Girl (In the World) – Rihanna", bpm: "sehr schnell", yt: "Only Girl (In the World) Rihanna Zumba" },
+    { title: "Dance Again – Jennifer Lopez ft. Pitbull", bpm: "sehr schnell", yt: "Dance Again Jennifer Lopez ft. Pitbull Zumba" },
+    { title: "Papi – Jennifer Lopez", bpm: "sehr schnell", yt: "Papi Jennifer Lopez Zumba" },
+    { title: "Let's Get Loud – Jennifer Lopez", bpm: "sehr schnell", yt: "Let's Get Loud Jennifer Lopez Zumba" },
+    { title: "Jenny from the Block – Jennifer Lopez", bpm: "sehr schnell", yt: "Jenny from the Block Jennifer Lopez Zumba" },
+    { title: "Waiting for Tonight – Jennifer Lopez", bpm: "sehr schnell", yt: "Waiting for Tonight Jennifer Lopez Zumba" },
+    { title: "Fantasías – Rauw Alejandro & Farruko", bpm: "sehr schnell", yt: "Fantasías Rauw Alejandro & Farruko Zumba" },
+    { title: "Efecto – Bad Bunny", bpm: "sehr schnell", yt: "Efecto Bad Bunny Zumba" },
+    { title: "Reggaetón – J Balvin", bpm: "sehr schnell", yt: "Reggaetón J Balvin Zumba" },
+    { title: "Hola – Dalex", bpm: "sehr schnell", yt: "Hola Dalex Zumba" }
   ],
   cooldown: [
     { title: "La Isla Bonita – Madonna", bpm: "ruhig", yt: "La Isla Bonita Madonna" },
@@ -1338,7 +1477,28 @@ const MUSIC = {
     { title: "Perhaps Perhaps Perhaps – Doris Day", bpm: "ruhig", yt: "Perhaps Perhaps Perhaps Doris Day" },
     { title: "Lovely Day – Bill Withers", bpm: "ruhig", yt: "Lovely Day Bill Withers" },
     { title: "Banana Pancakes – Jack Johnson", bpm: "ruhig", yt: "Banana Pancakes Jack Johnson" },
-    { title: "Ojitos Lindos – Bad Bunny & Bomba Estéreo", bpm: "ruhig", yt: "Ojitos Lindos Bad Bunny Bomba Estereo" }
+    { title: "Ojitos Lindos – Bad Bunny & Bomba Estéreo", bpm: "ruhig", yt: "Ojitos Lindos Bad Bunny Bomba Estereo" },
+    { title: "Three Little Birds – Bob Marley & The Wailers", bpm: "ruhig", yt: "Three Little Birds Bob Marley & The Wailers" },
+    { title: "Is This Love – Bob Marley & The Wailers", bpm: "ruhig", yt: "Is This Love Bob Marley & The Wailers" },
+    { title: "Redemption Song – Bob Marley & The Wailers", bpm: "ruhig", yt: "Redemption Song Bob Marley & The Wailers" },
+    { title: "Stand By Me – Ben E. King", bpm: "ruhig", yt: "Stand By Me Ben E. King" },
+    { title: "Somewhere Over the Rainbow – Israel Kamakawiwo'ole", bpm: "ruhig", yt: "Somewhere Over the Rainbow Israel Kamakawiwo'ole" },
+    { title: "Clair de Lune – Claude Debussy", bpm: "ruhig", yt: "Clair de Lune Claude Debussy" },
+    { title: "Gymnopédie No. 1 – Erik Satie", bpm: "ruhig", yt: "Gymnopédie No. 1 Erik Satie" },
+    { title: "Spiegel im Spiegel – Arvo Pärt", bpm: "ruhig", yt: "Spiegel im Spiegel Arvo Pärt" },
+    { title: "River Flows in You – Yiruma", bpm: "ruhig", yt: "River Flows in You Yiruma" },
+    { title: "Comptine d'un autre été – Yann Tiersen", bpm: "ruhig", yt: "Comptine d'un autre été Yann Tiersen" },
+    { title: "Experience – Ludovico Einaudi", bpm: "ruhig", yt: "Experience Ludovico Einaudi" },
+    { title: "Nuvole Bianche – Ludovico Einaudi", bpm: "ruhig", yt: "Nuvole Bianche Ludovico Einaudi" },
+    { title: "Una Mattina – Ludovico Einaudi", bpm: "ruhig", yt: "Una Mattina Ludovico Einaudi" },
+    { title: "Hallelujah – Jeff Buckley", bpm: "ruhig", yt: "Hallelujah Jeff Buckley" },
+    { title: "Dream a Little Dream of Me – Ella Fitzgerald & Louis Armstrong", bpm: "ruhig", yt: "Dream a Little Dream of Me Ella Fitzgerald & Louis Armstrong" },
+    { title: "Cheek to Cheek – Ella Fitzgerald & Louis Armstrong", bpm: "ruhig", yt: "Cheek to Cheek Ella Fitzgerald & Louis Armstrong" },
+    { title: "Sway – Dean Martin", bpm: "ruhig", yt: "Sway Dean Martin" },
+    { title: "Chega de Saudade – João Gilberto", bpm: "ruhig", yt: "Chega de Saudade João Gilberto" },
+    { title: "Manhã de Carnaval – Luiz Bonfá", bpm: "ruhig", yt: "Manhã de Carnaval Luiz Bonfá" },
+    { title: "Sunday Morning – Maroon 5", bpm: "ruhig", yt: "Sunday Morning Maroon 5" },
+    { title: "Over the Rainbow – Judy Garland", bpm: "ruhig", yt: "Over the Rainbow Judy Garland" }
   ]
 };
 
@@ -1366,7 +1526,7 @@ const asArray = v => Array.isArray(v) ? v : [];
 
 let favorites = asArray(loadStore('zumba-favs', []));
 let history = asArray(loadStore('zumba-history', []));
-let settings = Object.assign({ dur: 55, level: 'alle', favPref: false, trendPref: false, theme: 'auto', sound: true }, loadStore('zumba-settings', {}));
+let settings = Object.assign({ dur: 55, level: 'alle', favPref: false, trendPref: false, music: 'spotify', theme: 'auto', sound: true }, loadStore('zumba-settings', {}));
 let currentSession = null;
 let libPhase = 'alle';
 const persistHistory = () => saveStore('zumba-history', history);
@@ -1478,7 +1638,7 @@ function renderPhase(ph, i, s) {
       <div class="music-row">
         <span class="music-icon">${ic('music')}</span>
         <span style="flex:1;"><strong>${esc(music.title)}</strong> <span class="bpm">· ${esc(bpmLabel)}</span></span>
-        <a class="yt-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(music.yt)}" target="_blank" rel="noopener">${ic('play','sm')} YouTube</a>
+        <span class="music-links">${musicLinks(music)}</span>
       </div>
       ${rows}
     </div>`;
@@ -1488,6 +1648,26 @@ const ALL_EXERCISES = [...EXERCISES.warmup.map(e => ({ ...e, phase: 'warmup' }))
 const exRegistry = {};
 ALL_EXERCISES.forEach(e => { exRegistry[e.name] = e; });
 const q = name => encodeURIComponent(name);
+const spotifyQuery = title => title.replace(/ – /, ' ').replace(/\s*\((Remix|Latin Remix|langsam)\)\s*/i, ' ').trim();
+const spotifyWeb = title => 'https://open.spotify.com/search/' + encodeURIComponent(spotifyQuery(title));
+const spotifyApp = title => 'spotify:search:' + encodeURIComponent(spotifyQuery(title));
+// Öffnet die Spotify-App (iOS/Android); ohne App Fallback auf Spotify im Browser
+function openSpotify(ev, title) {
+  if (ev) ev.preventDefault();
+  P.away = Date.now();
+  let left = false;
+  const mark = () => { left = true; };
+  document.addEventListener('visibilitychange', mark, { once: true });
+  window.addEventListener('pagehide', mark, { once: true });
+  location.href = spotifyApp(title);
+  setTimeout(() => { if (!left && !document.hidden) window.open(spotifyWeb(title), '_blank', 'noopener'); }, 1600);
+  return false;
+}
+function musicLinks(m) {
+  const sp = `<a class="yt-link${settings.music === 'spotify' ? ' primary' : ''}" href="${spotifyWeb(m.title)}" onclick="return openSpotify(event, decodeURIComponent('${encodeURIComponent(m.title)}'))">${ic('play','sm')} Spotify</a>`;
+  const yt = `<a class="yt-link${settings.music === 'youtube' ? ' primary' : ''}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.yt)}" target="_blank" rel="noopener">${ic('play','sm')} YouTube</a>`;
+  return settings.music === 'youtube' ? yt + sp : sp + yt;
+}
 const ic = (n, c = '') => `<svg class="ic${c ? ' ' + c : ''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 
 function renderExercise(ex, phaseKey, idx, secs) {
@@ -1684,6 +1864,7 @@ function playerRender() {
   $('p-tip').textContent = cur.ex.tip;
   $('p-song').textContent = cur.music.title;
   $('p-music').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(cur.music.yt);
+  $('p-sp').href = spotifyWeb(cur.music.title);
   const nx = P.tl[P.i + 1];
   $('p-next').textContent = nx ? `Als Nächstes: ${nx.ex.name}` + (nx.ph !== cur.ph ? ` (${nx.ph.label})` : '') : 'Letzte Übung – gleich geschafft!';
   $('p-play').innerHTML = ic(P.running ? 'pause' : 'play');
@@ -1710,9 +1891,22 @@ function pauseTimer() {
 function togglePlay() { P.running ? pauseTimer() : startTimer(); timerRender(); }
 function tick() {
   P.remaining = Math.max(0, P.endAt - Date.now());
+  // War die App im Hintergrund (z. B. Spotify), ggf. mehrere Übungen überspringen
+  while (P.remaining <= 0) {
+    const over = Date.now() - P.endAt;
+    if (P.i >= P.tl.length - 1) { finishClass(); return; }
+    P.i++; P.lastTick = 0;
+    P.endAt = P.endAt + P.tl[P.i].secs * 1000;
+    P.remaining = Math.max(0, P.endAt - Date.now());
+    P.skipped = true;
+  }
   const sec = Math.ceil(P.remaining / 1000);
+  if (P.skipped) {
+    P.skipped = false; P.lastTick = sec;
+    beep(880, 0.15); if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+    playerRender(); return;
+  }
   if (sec <= 3 && sec > 0 && sec !== P.lastTick) { P.lastTick = sec; beep(660, 0.07); }
-  if (P.remaining <= 0) { advance(true); return; }
   timerRender();
 }
 function advance(auto) {
@@ -1754,10 +1948,14 @@ function beep(freq, dur) {
 }
 async function requestWake() { try { if (navigator.wakeLock && !P.wake) P.wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
 function releaseWake() { try { if (P.wake) P.wake.release(); } catch (e) {} P.wake = null; }
-document.addEventListener('visibilitychange', () => { if (!document.hidden && P.running) { tick(); requestWake(); } });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) return;
+  if (P.running) { tick(); requestWake(); }
+  if (P.away && Date.now() - P.away < 6 * 3600e3) { P.away = 0; if (!$('player').hidden) toast('Willkommen zurück – der Timer läuft weiter'); }
+});
 
 /* ---------- Einstellungen, Design, Tabs ---------- */
-function setSetting(k, v) { settings[k] = v; persistSettings(); syncControls(); }
+function setSetting(k, v) { settings[k] = v; persistSettings(); syncControls(); if (k === 'music' && currentSession) renderSession(); }
 function syncControls() {
   document.querySelectorAll('[data-set]').forEach(b => b.classList.toggle('active', String(settings[b.dataset.set]) === b.dataset.val));
   $('favpref').checked = !!settings.favPref; $('trendpref').checked = !!settings.trendPref;
