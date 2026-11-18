@@ -622,6 +622,16 @@
   .music-links { display: flex; gap: .4rem; flex-shrink: 0; }
   .yt-link.primary { background: var(--accent); color: #fff; }
   html[data-theme="dark"] .yt-link.primary { color: #1d1712; }
+  .pl { border-top: 1px solid var(--border); padding-top: .7rem; }
+  .pl summary { cursor: pointer; font-size: .85rem; font-weight: 600; color: var(--brown-mid); }
+  .pl .hint { margin: .5rem 0; }
+  .pl-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .45rem; font-size: .8rem; color: var(--gray-soft); }
+  .pl-row span { width: 82px; flex-shrink: 0; }
+  .pl-row input { flex: 1; min-width: 0; padding: .5rem .7rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); color: var(--brown); font: inherit; font-size: .82rem; }
+  .pl-row input.ok { border-color: var(--accent); }
+  .pl-row input.bad { border-color: #c62828; }
+  #p-embed { width: 100%; max-width: 560px; border-radius: 14px; overflow: hidden; }
+  #p-embed iframe { display: block; border: 0; border-radius: 14px; background: rgba(255,255,255,.06); }
   .hint { font-size: .76rem; color: var(--gray-soft); line-height: 1.45; }
   .p-music > span { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; }
   .p-music > span > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -695,6 +705,10 @@
         <button class="chip" data-set="music" data-val="youtube" onclick="setSetting('music','youtube')">YouTube zuerst</button>
       </div></div>
       <label class="toggle"><input type="checkbox" id="trendpref" onchange="setSetting('trendPref', this.checked)"> <svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg> Trend-Übungen bevorzugen</label>
+      <details class="pl"><summary>Spotify-Playlists: Musik direkt in der App</summary>
+        <p class="hint">In Spotify bei einer Playlist auf Teilen und Link kopieren tippen, hier einfügen. Im Kursmodus läuft die Musik dann in der App, ohne Wechsel.</p>
+        <div id="pl-inputs"></div>
+      </details>
       <label class="toggle"><input type="checkbox" id="favpref" onchange="setSetting('favPref', this.checked)"> <svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg> Favoriten bevorzugen</label>
     </section>
     <div id="session-container"></div>
@@ -745,7 +759,8 @@
       <a class="p-music" id="p-sp" href="#" onclick="return openSpotify(event, P.tl[P.i].music.title)"><span>Spotify</span><em>öffnen <svg class="ic sm" aria-hidden="true"><use href="#i-external"/></svg></em></a>
       <a class="p-music" id="p-music" target="_blank" rel="noopener"><span>YouTube</span><em><svg class="ic sm" aria-hidden="true"><use href="#i-external"/></svg></em></a>
     </div>
-    <p class="p-hint">Spotify öffnet die Suche zum Song. Tippe dort auf den Titel, dann zurück in die App wechseln – der Timer läuft weiter.</p>
+    <div id="p-embed" hidden><iframe id="p-frame" title="Spotify" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+    <p class="p-hint" id="p-hint">Spotify öffnet die Suche zum Song. Tippe dort auf den Titel, dann zurück in die App wechseln – der Timer läuft weiter.</p>
     <div class="p-controls">
       <button onclick="playerPrev()" aria-label="Zurück"><svg class="ic" aria-hidden="true"><use href="#i-prev"/></svg></button>
       <button class="big" id="p-play" onclick="togglePlay()" aria-label="Start / Pause"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg></button>
@@ -1526,7 +1541,8 @@ const asArray = v => Array.isArray(v) ? v : [];
 
 let favorites = asArray(loadStore('zumba-favs', []));
 let history = asArray(loadStore('zumba-history', []));
-let settings = Object.assign({ dur: 55, level: 'alle', favPref: false, trendPref: false, music: 'spotify', theme: 'auto', sound: true }, loadStore('zumba-settings', {}));
+let settings = Object.assign({ dur: 55, level: 'alle', favPref: false, trendPref: false, music: 'spotify', playlists: {}, theme: 'auto', sound: true }, loadStore('zumba-settings', {}));
+if (!settings.playlists || typeof settings.playlists !== 'object') settings.playlists = {};
 let currentSession = null;
 let libPhase = 'alle';
 const persistHistory = () => saveStore('zumba-history', history);
@@ -1663,6 +1679,28 @@ function openSpotify(ev, title) {
   setTimeout(() => { if (!left && !document.hidden) window.open(spotifyWeb(title), '_blank', 'noopener'); }, 1600);
   return false;
 }
+const SP_RE = /(?:open\.spotify\.com\/(?:intl-[a-z]+\/)?|spotify:)(playlist|album|track|artist)[\/:]([A-Za-z0-9]{10,})/;
+function spotifyEmbed(url) { const m = SP_RE.exec(url || ''); return m ? `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator` : ''; }
+function renderPlaylistInputs() {
+  $('pl-inputs').innerHTML = PHASES.map(ph => {
+    const v = settings.playlists[ph.key] || '';
+    return `<label class="pl-row"><span>${ph.label}</span><input type="url" inputmode="url" autocomplete="off" placeholder="Spotify-Link einfügen" value="${esc(v)}" class="${v ? (spotifyEmbed(v) ? 'ok' : 'bad') : ''}" oninput="setPlaylist('${ph.key}', this)"></label>`;
+  }).join('');
+}
+function setPlaylist(key, el) {
+  settings.playlists[key] = el.value.trim(); persistSettings();
+  el.className = el.value.trim() ? (spotifyEmbed(el.value) ? 'ok' : 'bad') : '';
+}
+function updateEmbed(cur) {
+  const url = spotifyEmbed(settings.playlists[cur.ph.key]);
+  $('p-embed').hidden = !url;
+  if (url && P.embedUrl !== url) { P.embedUrl = url; $('p-frame').src = url; }
+  if (!url && P.embedUrl) { P.embedUrl = ''; $('p-frame').src = 'about:blank'; }
+  $('p-hint').textContent = url
+    ? 'Die Musik läuft direkt in der App, ein Wechsel ist nicht nötig. Tippe im Player einmal auf Play. Die Playlist läuft über die Übungen einer Phase weiter.'
+    : 'Spotify öffnet die Suche zum Song. Tippe dort auf den Titel, dann zurück in die App wechseln – der Timer läuft weiter. Tipp: Unter „Spotify-Playlists“ kannst du Musik direkt in der App einbetten.';
+}
+function stopEmbed() { P.embedUrl = ''; const f = $('p-frame'); if (f) f.src = 'about:blank'; }
 function musicLinks(m) {
   const sp = `<a class="yt-link${settings.music === 'spotify' ? ' primary' : ''}" href="${spotifyWeb(m.title)}" onclick="return openSpotify(event, decodeURIComponent('${encodeURIComponent(m.title)}'))">${ic('play','sm')} Spotify</a>`;
   const yt = `<a class="yt-link${settings.music === 'youtube' ? ' primary' : ''}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.yt)}" target="_blank" rel="noopener">${ic('play','sm')} YouTube</a>`;
@@ -1844,7 +1882,7 @@ function buildTimeline(s) {
 }
 function openPlayer() {
   if (!currentSession) return;
-  P.tl = buildTimeline(currentSession); P.i = 0; P.running = false;
+  P.tl = buildTimeline(currentSession); P.i = 0; P.running = false; P.embedUrl = '';
   P.remaining = P.tl[0].secs * 1000;
   $('p-main').hidden = false; $('p-done').hidden = true;
   $('player').hidden = false; document.body.style.overflow = 'hidden';
@@ -1853,7 +1891,7 @@ function openPlayer() {
 }
 function closePlayer(finished) {
   if (!finished && P.i > 0 && !$('p-main').hidden && !confirm('Kursmodus beenden?')) return;
-  pauseTimer(); $('player').hidden = true; document.body.style.overflow = '';
+  pauseTimer(); stopEmbed(); $('player').hidden = true; document.body.style.overflow = '';
   if (finished) { renderSession(); renderHistory(); }
 }
 function playerRender() {
@@ -1865,6 +1903,7 @@ function playerRender() {
   $('p-song').textContent = cur.music.title;
   $('p-music').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(cur.music.yt);
   $('p-sp').href = spotifyWeb(cur.music.title);
+  updateEmbed(cur);
   const nx = P.tl[P.i + 1];
   $('p-next').textContent = nx ? `Als Nächstes: ${nx.ex.name}` + (nx.ph !== cur.ph ? ` (${nx.ph.label})` : '') : 'Letzte Übung – gleich geschafft!';
   $('p-play').innerHTML = ic(P.running ? 'pause' : 'play');
@@ -1987,7 +2026,7 @@ document.addEventListener('keydown', e => {
 });
 
 /* ---------- Start ---------- */
-applyTheme(); syncControls(); renderSession(); renderLibrary(); renderHistory(); renderFavorites();
+applyTheme(); syncControls(); renderPlaylistInputs(); renderSession(); renderLibrary(); renderHistory(); renderFavorites();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
