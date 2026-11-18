@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zumba Planer</title>
 <meta name="theme-color" content="#2d1f14">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💃</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -412,73 +416,230 @@
     .header { background: none; color: #000; padding: 0.5rem; } .header h1 { color: #000; }
     .phase-card { break-inside: avoid; box-shadow: none; }
   }
+
+  /* ================= V3 ================= */
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  .header { position: relative; }
+  .hbtn {
+    position: absolute; top: 0.9rem; right: 0.9rem; width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.12); color: #fff;
+    font-size: 1.05rem; cursor: pointer; transition: background .15s;
+  }
+  .hbtn:hover { background: rgba(255,255,255,0.25); }
+  .nav button { min-width: 88px; }
+
+  /* Einstellungen */
+  .settings { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 0.9rem 1rem; margin-bottom: 1.2rem; display: grid; gap: 0.7rem; }
+  .settings .row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .settings .lbl { font-size: 0.78rem; color: var(--gray-soft); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; width: 82px; flex-shrink: 0; }
+  .settings .chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .toggle { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: var(--brown-mid); cursor: pointer; }
+  .toggle input { accent-color: var(--lilac-dark); width: 18px; height: 18px; }
+  .chip { background: var(--card-bg); }
+
+  /* Session */
+  .session-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .7rem; }
+  .session-head .date { font-size: .82rem; color: var(--gray-soft); }
+  .badge { background: #e8f5e9; color: #2e7d32; font-size: .74rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .start-btn {
+    width: 100%; padding: 1rem; margin-bottom: .6rem; border: none; border-radius: 14px; cursor: pointer;
+    font: inherit; font-size: 1.05rem; font-weight: 700; color: #fff; letter-spacing: .3px;
+    background: linear-gradient(135deg, #a8704f 0%, #7d62a0 100%);
+    box-shadow: 0 6px 18px rgba(155,132,184,.4); transition: transform .15s, box-shadow .15s;
+  }
+  .start-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(155,132,184,.5); }
+  .phase-card { animation: none; }
+  .session-enter .phase-card { animation: rise .4s ease both; }
+  .notes { width: 100%; margin-top: 1rem; min-height: 80px; resize: vertical; border-radius: 14px; border: 1px solid var(--border); background: var(--card-bg); color: var(--brown); font: inherit; font-size: .9rem; padding: .8rem 1rem; }
+  .notes:focus, .search:focus { outline: 2px solid var(--lilac-dark); outline-offset: 1px; }
+  .stars { display: inline-flex; gap: 2px; }
+  .stars button { background: none; border: none; font-size: 1.9rem; line-height: 1; cursor: pointer; color: #cfc6bd; transition: transform .12s; padding: 2px; }
+  .stars button.on { color: #f5b301; }
+  .stars button:hover { transform: scale(1.15); }
+  .mini-stars { color: #f5b301; font-size: .8rem; letter-spacing: 1px; }
+
+  /* Bibliothek */
+  .search { width: 100%; padding: .8rem 1rem; border-radius: 14px; border: 1px solid var(--border); background: var(--card-bg); color: var(--brown); font: inherit; font-size: .95rem; margin-bottom: .8rem; }
+  .chips-row { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .lib-card { cursor: pointer; transition: transform .12s, background .15s; }
+  .lib-card:hover { transform: translateY(-1px); background: rgba(232,197,176,0.2); }
+  .lib-card .exercise-tags { margin-top: .35rem; }
+
+  /* Statistik */
+  .stats-row { display: flex; gap: .6rem; margin-bottom: 1rem; }
+  .stats-row .stat { flex: 1; text-align: center; background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: .6rem .3rem; }
+  .top-ex { font-size: .82rem; color: var(--gray-soft); text-align: center; margin-bottom: 1rem; }
+
+  /* Modal */
+  .modal-overlay { z-index: 300; }
+  .modal-fav { width: 100%; margin: .2rem 0 1rem; padding: .6rem; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--brown-mid); font: inherit; cursor: pointer; }
+  .modal-fav.active { background: #fce4ec; border-color: #f48fb1; color: #c2185b; }
+
+  /* Kursmodus */
+  .player { position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column; padding: 1rem 1.2rem calc(1rem + env(safe-area-inset-bottom)); background: linear-gradient(160deg, #2d1f14 0%, #4a3350 100%); color: #f5efe8; overflow-y: auto; }
+  .p-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; max-width: 560px; width: 100%; margin: 0 auto; }
+  .p-x { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color: #fff; font-size: 1rem; cursor: pointer; }
+  .p-phase { font-size: .9rem; font-weight: 700; letter-spacing: .5px; display: flex; align-items: center; gap: .5rem; }
+  .p-phase i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .p-bar { height: 5px; background: rgba(255,255,255,.15); border-radius: 5px; margin: .9rem auto 0; max-width: 560px; width: 100%; overflow: hidden; }
+  #p-bar-fill { height: 100%; width: 0; background: linear-gradient(90deg, #e8c5b0, #c9b8d8); transition: width .3s linear; }
+  #p-main, #p-done { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: .8rem; max-width: 560px; width: 100%; margin: 0 auto; padding: .8rem 0; }
+  .p-count { font-size: .82rem; opacity: .7; letter-spacing: 1px; text-transform: uppercase; }
+  #p-name, #p-done h2 { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 1.8rem; line-height: 1.2; }
+  .ring { position: relative; width: min(62vw, 250px); aspect-ratio: 1; }
+  .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 9; }
+  .ring .bg { stroke: rgba(255,255,255,.12); }
+  .ring .fg { stroke: #e8c5b0; stroke-linecap: round; stroke-dasharray: 553; stroke-dashoffset: 0; transition: stroke-dashoffset .3s linear; }
+  .ring .time { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .p-tip { font-size: .92rem; opacity: .85; max-width: 420px; line-height: 1.5; }
+  .p-music { display: inline-flex; align-items: center; gap: .5rem; padding: .45rem .9rem; border-radius: 22px; background: rgba(255,255,255,.1); color: #fff; font-size: .85rem; text-decoration: none; max-width: 100%; }
+  .p-music span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .p-music b { background: #f00; border-radius: 5px; padding: 1px 7px; font-size: .72rem; flex-shrink: 0; }
+  .p-controls { display: flex; align-items: center; gap: 1.2rem; margin-top: .4rem; }
+  .p-controls button { border: none; cursor: pointer; border-radius: 50%; color: #fff; background: rgba(255,255,255,.12); width: 56px; height: 56px; font-size: 1.2rem; }
+  .p-controls button.big { width: 78px; height: 78px; font-size: 1.8rem; background: linear-gradient(135deg, #c4997a, #9b84b8); box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+  .p-link { background: none; border: none; color: #e8c5b0; text-decoration: underline; font: inherit; font-size: .85rem; cursor: pointer; }
+  .p-next { font-size: .85rem; opacity: .7; min-height: 1.3em; }
+  .p-done-actions { display: flex; gap: .6rem; margin-top: .6rem; }
+  .p-done-actions button { padding: .75rem 1.4rem; border-radius: 12px; border: none; font: inherit; font-weight: 700; cursor: pointer; background: #f5efe8; color: #2d1f14; }
+
+  /* Dark Mode */
+  html[data-theme="dark"] { color-scheme: dark; }
+  html[data-theme="dark"] {
+    --cream: #1d1712; --rose-light: #2e251d; --lilac-light: #2b2437;
+    --brown: #f3ebe3; --brown-mid: #d6c8ba; --gray-soft: #a89b8e;
+    --white: #261e17; --card-bg: rgba(46,37,29,0.88); --border: rgba(255,240,225,0.13);
+  }
+  html[data-theme="dark"] body { background: linear-gradient(135deg, #17120e 0%, #1f1827 50%, #17120e 100%); background-attachment: fixed; }
+  html[data-theme="dark"] .nav { background: rgba(29,23,18,.88); }
+  html[data-theme="dark"] .nav button.active { background: rgba(255,255,255,.06); }
+  html[data-theme="dark"] .phase-meta { background: rgba(255,255,255,.08); }
+  html[data-theme="dark"] .tag-level-leicht { background: #1f3a24; color: #8fd19a; }
+  html[data-theme="dark"] .tag-level-mittel { background: #44301a; color: #ffb74d; }
+  html[data-theme="dark"] .tag-level-aktiv { background: #47222c; color: #ff8a9b; }
+  html[data-theme="dark"] .tag-muscle { background: #35294a; color: #cdb4ee; }
+  html[data-theme="dark"] .tag-duration { background: #3a2d22; color: #e3cdb9; }
+  html[data-theme="dark"] .modal-steps li::before { color: #2d1f14; }
+  html[data-theme="dark"] .fav-btn.active, html[data-theme="dark"] .modal-fav.active { background: #47222c; }
+  html[data-theme="dark"] .swap-btn { color: var(--brown-mid); }
+  html[data-theme="dark"] .badge { background: #1f3a24; color: #8fd19a; }
+  html[data-theme="dark"] .chip { color: var(--brown-mid); }
+  html[data-theme="dark"] .chip.active { color: #1d1712; }
+  html[data-theme="dark"] .action-btn { background: var(--card-bg); color: var(--brown-mid); }
+  html[data-theme="dark"] .gen-btn { color: #1d1712; background: linear-gradient(135deg, #f3ebe3, #d6c8ba); }
+  html[data-theme="dark"] .toast { color: #1d1712; }
+  html[data-theme="dark"] .stars button { color: #5c5047; }
+  html[data-theme="dark"] .stars button.on { color: #f5b301; }
+  @media print {
+    html[data-theme="dark"] { --brown:#2d1f14; --brown-mid:#5a3e2b; --gray-soft:#7a6e65; --card-bg:#fff; --white:#fff; --border:rgba(45,31,20,.12); }
+    html[data-theme="dark"] body { background: #fff; }
+    .start-btn, .notes, .player, .badge { display: none !important; }
+  }
 </style>
 </head>
 <body>
 
 <div class="header">
+  <button class="hbtn" id="theme-btn" onclick="cycleTheme()" aria-label="Design wechseln" title="Hell / Dunkel">🌓</button>
   <h1>Zumba Planer</h1>
   <p>Deine persönliche Kursassistentin</p>
 </div>
 
-<nav class="nav">
-  <button class="active" onclick="switchTab('plan')">Stunde planen</button>
+<nav class="nav" aria-label="Bereiche">
+  <button class="active" onclick="switchTab('plan')">Stunde</button>
+  <button onclick="switchTab('library')">Übungen</button>
   <button onclick="switchTab('history')">Verlauf</button>
   <button onclick="switchTab('favorites')">Favoriten</button>
 </nav>
 
 <div class="main">
-  <!-- Plan Tab -->
   <div id="tab-plan" class="tab-content active">
     <button class="gen-btn" onclick="generateSession()">✦ Neue Zumba-Stunde erstellen</button>
-    <div class="controls" role="group" aria-label="Intensität">
-      <span class="lbl">Intensität:</span>
-      <button class="chip active" data-level="alle" onclick="setLevel('alle')">Alle</button>
-      <button class="chip" data-level="leicht" onclick="setLevel('leicht')">Sanft</button>
-      <button class="chip" data-level="mittel" onclick="setLevel('mittel')">Mittel</button>
-      <button class="chip" data-level="aktiv" onclick="setLevel('aktiv')">Power</button>
-    </div>
-    <div id="session-container">
-      <div class="empty-state">
-        <div class="empty-icon">💃</div>
-        <h3>Bereit für eine neue Stunde?</h3>
-        <p>Klick auf den Button oben, um eine individuell zusammengestellte 55-Minuten-Stunde zu generieren.</p>
-      </div>
-    </div>
+    <section class="settings" aria-label="Einstellungen">
+      <div class="row"><span class="lbl">Dauer</span><div class="chips">
+        <button class="chip" data-set="dur" data-val="30" onclick="setSetting('dur',30)">30 min</button>
+        <button class="chip" data-set="dur" data-val="45" onclick="setSetting('dur',45)">45 min</button>
+        <button class="chip" data-set="dur" data-val="55" onclick="setSetting('dur',55)">55 min</button>
+        <button class="chip" data-set="dur" data-val="60" onclick="setSetting('dur',60)">60 min</button>
+      </div></div>
+      <div class="row"><span class="lbl">Intensität</span><div class="chips">
+        <button class="chip" data-set="level" data-val="alle" onclick="setSetting('level','alle')">Alle</button>
+        <button class="chip" data-set="level" data-val="leicht" onclick="setSetting('level','leicht')">Sanft</button>
+        <button class="chip" data-set="level" data-val="mittel" onclick="setSetting('level','mittel')">Mittel</button>
+        <button class="chip" data-set="level" data-val="aktiv" onclick="setSetting('level','aktiv')">Power</button>
+      </div></div>
+      <label class="toggle"><input type="checkbox" id="favpref" onchange="setSetting('favPref', this.checked)"> ♥ Favoriten bevorzugen</label>
+    </section>
+    <div id="session-container"></div>
   </div>
 
-  <!-- History Tab -->
+  <div id="tab-library" class="tab-content">
+    <input type="search" class="search" id="lib-q" placeholder="Übung oder Muskelgruppe suchen …" aria-label="Suchen" oninput="renderLibrary()">
+    <div class="chips-row">
+      <button class="chip" data-lib="alle" onclick="setLib('alle')">Alle</button>
+      <button class="chip" data-lib="warmup" onclick="setLib('warmup')">🌸 Warm-Up</button>
+      <button class="chip" data-lib="main" onclick="setLib('main')">🔥 Hauptteil</button>
+      <button class="chip" data-lib="cooldown" onclick="setLib('cooldown')">🌿 Cool-Down</button>
+    </div>
+    <div id="library-container"></div>
+  </div>
+
   <div id="tab-history" class="tab-content">
-    <p class="section-label">Letzte Sessions</p>
-    <div id="history-container">
-      <div class="empty-state">
-        <div class="empty-icon">🗓️</div>
-        <h3>Noch keine Sessions</h3>
-        <p>Erstelle deine erste Zumba-Stunde und sie erscheint hier.</p>
-      </div>
-    </div>
+    <div id="history-stats"></div>
+    <p class="section-label">Letzte Stunden</p>
+    <div id="history-container"></div>
   </div>
 
-  <!-- Favorites Tab -->
   <div id="tab-favorites" class="tab-content">
     <p class="section-label">Gespeicherte Übungen</p>
-    <div id="favorites-container">
-      <div class="empty-state">
-        <div class="empty-icon">🤍</div>
-        <h3>Keine Favoriten</h3>
-        <p>Tippe auf das Herz bei einer Übung, um sie hier zu speichern.</p>
-      </div>
+    <div id="favorites-container"></div>
+  </div>
+</div>
+
+<!-- Kursmodus -->
+<div class="player" id="player" hidden role="dialog" aria-modal="true" aria-label="Kursmodus">
+  <div class="p-top">
+    <button class="p-x" onclick="closePlayer()" aria-label="Beenden">✕</button>
+    <div class="p-phase"><i id="p-dot"></i><span id="p-phase"></span></div>
+    <button class="p-x" id="p-sound" onclick="toggleSound()" aria-label="Ton an/aus">🔔</button>
+  </div>
+  <div class="p-bar"><div id="p-bar-fill"></div></div>
+  <div id="p-main">
+    <div class="p-count" id="p-count"></div>
+    <h2 id="p-name"></h2>
+    <div class="ring">
+      <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="bg" cx="100" cy="100" r="88"/><circle class="fg" id="p-ring" cx="100" cy="100" r="88"/></svg>
+      <div class="time" id="p-time" aria-live="off"></div>
     </div>
+    <p class="p-tip" id="p-tip"></p>
+    <a class="p-music" id="p-music" target="_blank" rel="noopener"><span>♬ <span id="p-song"></span></span><b>▶ YouTube</b></a>
+    <div class="p-controls">
+      <button onclick="playerPrev()" aria-label="Zurück">⏮</button>
+      <button class="big" id="p-play" onclick="togglePlay()" aria-label="Start / Pause">▶</button>
+      <button onclick="playerNext()" aria-label="Weiter">⏭</button>
+    </div>
+    <button class="p-link" onclick="openModal(P.tl[P.i].ex.name)">Anleitung ansehen</button>
+    <div class="p-next" id="p-next"></div>
+  </div>
+  <div id="p-done" hidden>
+    <div style="font-size:3rem">🎉</div>
+    <h2>Geschafft!</h2>
+    <p class="p-tip">Tolle Stunde. Wie war sie?</p>
+    <div class="stars" id="p-stars"></div>
+    <div class="p-done-actions"><button onclick="closePlayer(true)">Fertig</button></div>
   </div>
 </div>
 
 <!-- Modal -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal">
-    <button class="modal-close" aria-label="Schließen" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <button class="modal-close" aria-label="Schließen" onclick="closeModal()">✕</button>
     <h3 id="modal-title"></h3>
     <div id="modal-tags" class="modal-tags"></div>
     <p id="modal-beschreibung" style="font-size:0.9rem;color:var(--brown-mid);line-height:1.6;margin-bottom:1rem;"></p>
+    <button class="modal-fav" id="modal-fav" onclick="toggleFav(modalName)"></button>
     <div class="modal-section">
       <h4>Ausführung Schritt für Schritt</h4>
       <ol class="modal-steps" id="modal-steps"></ol>
@@ -489,13 +650,14 @@
     </div>
     <div class="modal-section">
       <h4>Video-Tutorial</h4>
-      <a id="modal-video" href="#" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;background:#ff0000;color:#fff;border-radius:10px;padding:0.7rem 1rem;font-size:0.95rem;font-weight:600;text-decoration:none;transition:all 0.15s;">
+      <a id="modal-video" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;background:#ff0000;color:#fff;border-radius:10px;padding:0.7rem 1rem;font-size:0.95rem;font-weight:600;text-decoration:none;">
         <span style="font-size:1.1rem;">▶</span> Auf YouTube ansehen
       </a>
       <p style="font-size:0.78rem;color:var(--gray-soft);margin-top:0.5rem;text-align:center;">Öffnet passende Tutorials in einem neuen Tab</p>
     </div>
   </div>
 </div>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
 const EXERCISES = {
@@ -937,314 +1099,440 @@ const TIPS = [
   "Die Gemeinschaft ist das Herzstück von Zumba – nutze die Zeit nach dem Kurs für kurzen Austausch."
 ];
 
+const $ = id => document.getElementById(id);
+const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- Speicher ---------- */
+function loadStore(key, fallback) {
+  try { const v = JSON.parse(localStorage.getItem(key)); return v == null ? fallback : v; } catch (e) { return fallback; }
+}
+function saveStore(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+const asArray = v => Array.isArray(v) ? v : [];
+
+let favorites = asArray(loadStore('zumba-favs', []));
+let history = asArray(loadStore('zumba-history', []));
+let settings = Object.assign({ dur: 55, level: 'alle', favPref: false, theme: 'auto', sound: true }, loadStore('zumba-settings', {}));
+let currentSession = null;
+let libPhase = 'alle';
+const persistHistory = () => saveStore('zumba-history', history);
+const persistSettings = () => saveStore('zumba-settings', settings);
+
+/* ---------- Hilfen ---------- */
 function shuffle(arr) {
   const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
   return a;
 }
-
-function pick(arr, n) { return shuffle(arr).slice(0, n); }
-function pickOne(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-let currentSession = null;
-function loadStore(key) {
-  try { const v = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(v) ? v : []; }
-  catch (e) { return []; }
-}
-function saveStore(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* z. B. privater Modus */ }
-}
-let favorites = loadStore('zumba-favs');
-let history = loadStore('zumba-history');
-let levelFilter = 'alle';
-
+const pickOne = arr => arr[Math.floor(Math.random() * arr.length)];
+const levelClass = l => 'tag-level-' + l;
+const isFav = name => favorites.some(f => f.name === name);
+const fmt = secs => { const m = Math.floor(secs / 60), s = Math.round(secs % 60); return m + ':' + String(s).padStart(2, '0'); };
 function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2200);
 }
-function setLevel(l) {
-  levelFilter = l;
-  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.level === l));
-}
-// Übungen nach Intensität filtern; Fallback auf alle, falls zu wenige übrig sind
-function filtered(arr, min) {
-  if (levelFilter === 'alle') return arr;
-  const f = arr.filter(e => e.level === levelFilter);
-  return f.length >= min ? f : arr;
-}
 
-function levelClass(l) { return 'tag-level-' + l; }
+/* ---------- Aufbau der Stunde ---------- */
+const PHASES = [
+  { key: 'warmup',   label: 'Warm-Up',     icon: '🌸', color: '#e8c5b0', pool: 'warmup' },
+  { key: 'main1',    label: 'Hauptteil I',  icon: '🔥', color: '#c9b8d8', pool: 'main' },
+  { key: 'main2',    label: 'Hauptteil II', icon: '⚡', color: '#d4b8c9', pool: 'main' },
+  { key: 'cooldown', label: 'Cool-Down',   icon: '🌿', color: '#b8d4c9', pool: 'cooldown' }
+];
+const PROFILES = {
+  30: { mins: [5, 10, 10, 5],   n: [2, 3, 3, 2] },
+  45: { mins: [8, 15, 14, 8],   n: [3, 4, 4, 3] },
+  55: { mins: [10, 20, 17, 8],  n: [3, 5, 4, 3] },
+  60: { mins: [10, 22, 20, 8],  n: [3, 5, 5, 3] }
+};
+const profileOf = s => PROFILES[s.dur] || PROFILES[55];
+
+// Wählt n Übungen: passende Intensität zuerst, optional Favoriten bevorzugt
+function choose(pool, n, used = []) {
+  let cand = pool.filter(e => !used.includes(e.name));
+  if (cand.length < n) cand = pool;
+  const rank = e => (settings.level !== 'alle' && e.level !== settings.level ? 2 : 0)
+                  + (settings.favPref && !isFav(e.name) && Math.random() < 0.7 ? 1 : 0);
+  return shuffle(cand).map(e => [rank(e), e]).sort((a, b) => a[0] - b[0]).slice(0, n).map(x => x[1]);
+}
 
 function generateSession() {
-  const mainPool = filtered(EXERCISES.main, 9);
-  const warmupEx = pick(filtered(EXERCISES.warmup, 3), 3);
-  const main1Ex = pick(mainPool, 5);
-  const remainMain = mainPool.filter(e => !main1Ex.includes(e));
-  const main2Ex = pick(remainMain.length >= 4 ? remainMain : EXERCISES.main.filter(e => !main1Ex.includes(e)), 4);
-  const coolEx = pick(filtered(EXERCISES.cooldown, 3), 3);
-
+  const p = PROFILES[settings.dur] || PROFILES[55];
+  const warmup = choose(EXERCISES.warmup, p.n[0]);
+  const main1 = choose(EXERCISES.main, p.n[1]);
+  const main2 = choose(EXERCISES.main, p.n[2], main1.map(e => e.name));
+  const cooldown = choose(EXERCISES.cooldown, p.n[3]);
   currentSession = {
-    warmup: warmupEx, main1: main1Ex, main2: main2Ex, cooldown: coolEx,
-    music: {
-      warmup: pickOne(MUSIC.warmup),
-      main1: pickOne(MUSIC.main1),
-      main2: pickOne(MUSIC.main2),
-      cooldown: pickOne(MUSIC.cooldown)
-    },
-    tip: pickOne(TIPS),
-    id: Date.now(),
+    id: Date.now(), dur: settings.dur, warmup, main1, main2, cooldown,
+    music: { warmup: pickOne(MUSIC.warmup), main1: pickOne(MUSIC.main1), main2: pickOne(MUSIC.main2), cooldown: pickOne(MUSIC.cooldown) },
+    tip: pickOne(TIPS), notes: '',
     date: new Date().toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   };
-
-  renderSession();
   saveToHistory(currentSession);
+  renderSession(true);
 }
 
-function renderSession() {
-  if (!currentSession) return;
-  const { warmup, main1, main2, cooldown, music, tip } = currentSession;
-  const container = document.getElementById('session-container');
+const phaseSecs = (s, i) => {
+  const n = s[PHASES[i].key].length || 1;
+  return Math.max(30, Math.round(profileOf(s).mins[i] * 60 / n / 5) * 5);
+};
 
-  const total = warmup.length + main1.length + main2.length + cooldown.length;
-  container.innerHTML = `
+function renderSession(animate) {
+  const c = $('session-container');
+  const s = currentSession;
+  if (!s) {
+    c.className = '';
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">💃</div><h3>Bereit für eine neue Stunde?</h3>
+      <p>Wähle Dauer und Intensität und tippe oben auf den Button. Danach führt dich der Kursmodus mit Timer durch die Stunde.</p></div>`;
+    return;
+  }
+  const total = PHASES.reduce((n, ph) => n + s[ph.key].length, 0);
+  const mins = s.dur || 55;
+  c.className = animate ? 'session-enter' : '';
+  c.innerHTML = `
+    <div class="session-head"><span class="date">${esc(s.date)}</span>${s.done ? '<span class="badge">✓ gemacht</span>' : ''}</div>
     <div class="summary">
-      <div class="stat"><b>55</b><span>Minuten</span></div>
+      <div class="stat"><b>${mins}</b><span>Minuten</span></div>
       <div class="stat"><b>${total}</b><span>Übungen</span></div>
       <div class="stat"><b>4</b><span>Phasen</span></div>
     </div>
+    <button class="start-btn" onclick="openPlayer()">▶ Kursmodus starten</button>
     <div class="actions">
       <button class="action-btn" onclick="copyPlan()">📋 Kopieren</button>
       <button class="action-btn" onclick="window.print()">🖨️ Drucken</button>
     </div>
-    ${renderPhase('Warm-Up', '🌸', '#e8c5b0', warmup, music.warmup, '10 min', 'warmup', 0)}
-    ${renderPhase('Hauptteil I', '🔥', '#c9b8d8', main1, music.main1, '20 min', 'main1', 0)}
-    ${renderPhase('Hauptteil II', '⚡', '#d4b8c9', main2, music.main2, '17 min', 'main2', 0)}
-    ${renderPhase('Cool-Down', '🌿', '#b8d4c9', cooldown, music.cooldown, '8 min', 'cooldown', 0)}
-    <div class="tip-box"><strong>Tipp für heute:</strong> ${tip}</div>
+    ${PHASES.map((ph, i) => renderPhase(ph, i, s)).join('')}
+    <div class="tip-box"><strong>Tipp für heute:</strong> ${esc(s.tip)}</div>
+    <textarea class="notes" id="notes" placeholder="Notizen zur Stunde …" aria-label="Notizen" oninput="saveNotes(this.value)">${esc(s.notes || '')}</textarea>
   `;
 }
 
-function renderPhase(label, icon, color, exercises, music, duration, phaseKey, start) {
-  const rows = exercises.map((ex, i) => renderExercise(ex, phaseKey, i)).join('');
+function renderPhase(ph, i, s) {
+  const per = phaseSecs(s, i);
+  const music = s.music[ph.key];
   const bpmLabel = { ruhig: '♩ ruhig', mittel: '♪ mittel', schnell: '♫ schnell', 'sehr schnell': '♫♫ sehr schnell' }[music.bpm] || music.bpm;
+  const rows = s[ph.key].map((ex, idx) => renderExercise(ex, ph.key, idx, per)).join('');
   return `
-    <div class="phase-card" style="--accent:${color};">
-      <div class="phase-header" style="background:${color}33;">
-        <span class="phase-icon" aria-hidden="true">${icon}</span>
-        <h3>${label}</h3>
-        <span class="phase-meta">${duration}</span>
+    <div class="phase-card" style="--accent:${ph.color};animation-delay:${i * 0.06}s">
+      <div class="phase-header" style="background:${ph.color}33;">
+        <span class="phase-icon" aria-hidden="true">${ph.icon}</span>
+        <h3>${ph.label}</h3>
+        <span class="phase-meta">${profileOf(s).mins[i]} min</span>
       </div>
       <div class="music-row">
         <span class="music-icon">♬</span>
-        <span style="flex:1;"><strong>${music.title}</strong> – ${bpmLabel}</span>
-        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(music.yt)}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:#ff0000;color:#fff;border-radius:6px;padding:3px 9px;font-size:0.75rem;font-weight:600;text-decoration:none;flex-shrink:0;">▶ YouTube</a>
+        <span style="flex:1;"><strong>${esc(music.title)}</strong> – ${bpmLabel}</span>
+        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(music.yt)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;background:#ff0000;color:#fff;border-radius:6px;padding:3px 9px;font-size:0.75rem;font-weight:600;text-decoration:none;flex-shrink:0;">▶ YouTube</a>
       </div>
       ${rows}
-    </div>
-  `;
+    </div>`;
 }
 
-const ALL_EXERCISES = [...EXERCISES.warmup, ...EXERCISES.main, ...EXERCISES.cooldown];
+const ALL_EXERCISES = [...EXERCISES.warmup.map(e => ({ ...e, phase: 'warmup' })), ...EXERCISES.main.map(e => ({ ...e, phase: 'main' })), ...EXERCISES.cooldown.map(e => ({ ...e, phase: 'cooldown' }))];
 const exRegistry = {};
 ALL_EXERCISES.forEach(e => { exRegistry[e.name] = e; });
+const q = name => encodeURIComponent(name);
 
-function renderExercise(ex, phaseKey, idx) {
-  const isFav = favorites.some(f => f.name === ex.name);
-  const safeName = encodeURIComponent(ex.name);
+function renderExercise(ex, phaseKey, idx, secs) {
+  const fav = isFav(ex.name);
   return `
-    <div class="exercise-item" id="ex-${phaseKey}-${idx}">
-      <div class="exercise-info" onclick="openModal(decodeURIComponent('${safeName}'))" style="cursor:pointer;">
-        <div class="exercise-name">${ex.name}</div>
+    <div class="exercise-item">
+      <div class="exercise-info" onclick="openModal(decodeURIComponent('${q(ex.name)}'))">
+        <div class="exercise-name">${esc(ex.name)}</div>
         <div class="exercise-tags">
-          <span class="tag ${levelClass(ex.level)}">${ex.level}</span>
-          <span class="tag tag-muscle">${ex.muscle}</span>
-          <span class="tag tag-duration">${ex.duration}</span>
+          <span class="tag ${levelClass(ex.level)}">${esc(ex.level)}</span>
+          <span class="tag tag-muscle">${esc(ex.muscle)}</span>
+          <span class="tag tag-duration">⏱ ${fmt(secs)}</span>
         </div>
       </div>
-      <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFav(decodeURIComponent('${safeName}'), this)" title="Favorit" aria-label="Favorit">♥</button>
+      <button class="fav-btn ${fav ? 'active' : ''}" onclick="toggleFav(decodeURIComponent('${q(ex.name)}'))" title="Favorit" aria-label="Favorit" aria-pressed="${fav}">♥</button>
       <button class="swap-btn" onclick="swapExercise('${phaseKey}', ${idx})" title="Austauschen" aria-label="Übung austauschen">⇄</button>
-    </div>
-  `;
+    </div>`;
 }
 
 function swapExercise(phaseKey, idx) {
   if (!currentSession) return;
-  const pool = EXERCISES[phaseKey === 'main1' || phaseKey === 'main2' ? 'main' : phaseKey];
-  const current = currentSession[phaseKey][idx];
-  const available = pool.filter(e => {
-    const inMain1 = currentSession.main1.map(x => x.name);
-    const inMain2 = currentSession.main2.map(x => x.name);
-    if (phaseKey === 'main1') return !inMain1.includes(e.name);
-    if (phaseKey === 'main2') return !inMain2.includes(e.name);
-    return e.name !== current.name;
-  });
-  if (!available.length) return;
-  currentSession[phaseKey][idx] = available[Math.floor(Math.random() * available.length)];
+  const pool = EXERCISES[PHASES.find(p => p.key === phaseKey).pool];
+  const used = PHASES.flatMap(p => currentSession[p.key]).map(e => e.name);
+  let cand = pool.filter(e => !used.includes(e.name));
+  if (!cand.length) cand = pool.filter(e => e.name !== currentSession[phaseKey][idx].name);
+  if (!cand.length) return;
+  currentSession[phaseKey][idx] = choose(cand, 1)[0];
+  persistHistory(); refreshHistoryEntry();
   renderSession();
-  updateCurrentHistory();
 }
 
-function openModal(name) {
-  const ex = exRegistry[name];
-  if (!ex) return;
-  document.getElementById('modal-title').textContent = ex.name;
-  document.getElementById('modal-tags').innerHTML = `
-    <span class="tag ${levelClass(ex.level)}">${ex.level}</span>
-    <span class="tag tag-muscle">${ex.muscle}</span>
-    <span class="tag tag-duration">${ex.duration}</span>
-  `;
-  document.getElementById('modal-beschreibung').textContent = ex.beschreibung || '';
-  document.getElementById('modal-steps').innerHTML = ex.steps.map((s, i) => `<li data-num="${i+1}">${s}</li>`).join('');
-  document.getElementById('modal-tip').textContent = ex.tip;
-  // Video-Suchlink setzen (Fallback: Übungsname)
-  const ytQuery = ex.yt || (ex.name + ' dance tutorial');
-  document.getElementById('modal-video').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(ytQuery);
-  document.getElementById('modal').classList.add('open');
-}
+function saveNotes(v) { if (currentSession) { currentSession.notes = v; persistHistory(); } }
 
-function closeModal(e) {
-  if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
-}
-
-function toggleFav(name, btn) {
-  const ex = exRegistry[name];
-  if (!ex) return;
-  const idx = favorites.findIndex(f => f.name === name);
-  if (idx >= 0) {
-    favorites.splice(idx, 1);
-    btn.classList.remove('active');
-  } else {
-    favorites.push(ex);
-    btn.classList.add('active');
-  }
-  saveStore('zumba-favs', favorites);
-  renderFavorites();
-}
-
-function removeFav(name) {
-  favorites = favorites.filter(f => f.name !== name);
-  saveStore('zumba-favs', favorites);
-  renderFavorites();
-  if (currentSession) renderSession();
-}
-
-function sessionNames(session) {
-  return [...session.warmup, ...session.main1, ...session.main2, ...session.cooldown].map(e => e.name);
-}
-// Getauschte Übungen auch im Verlauf aktualisieren
-function updateCurrentHistory() {
-  const i = history.findIndex(h => h.session && h.session.id === currentSession.id);
-  if (i < 0) return;
-  history[i] = { date: currentSession.date, exercises: sessionNames(currentSession), session: currentSession };
-  saveStore('zumba-history', history);
-  renderHistory();
-}
 function copyPlan() {
   if (!currentSession) return;
   const s = currentSession;
-  const part = (label, dur, list, m) =>
-    `${label} (${dur})\n♬ ${m.title}\n` + list.map((e, i) => `  ${i + 1}. ${e.name} – ${e.duration}`).join('\n');
-  const text = [
-    `Zumba-Stunde ${s.date}`,
-    part('Warm-Up', '10 min', s.warmup, s.music.warmup),
-    part('Hauptteil I', '20 min', s.main1, s.music.main1),
-    part('Hauptteil II', '17 min', s.main2, s.music.main2),
-    part('Cool-Down', '8 min', s.cooldown, s.music.cooldown)
-  ].join('\n\n');
-  const done = () => toast('Plan kopiert ✓');
-  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => toast('Kopieren nicht möglich'));
+  const text = [`Zumba-Stunde ${s.date} (${s.dur || 55} min)`,
+    ...PHASES.map((ph, i) => `${ph.label} (${profileOf(s).mins[i]} min)\n♬ ${s.music[ph.key].title}\n` +
+      s[ph.key].map((e, n) => `  ${n + 1}. ${e.name} – ${fmt(phaseSecs(s, i))}`).join('\n'))
+  ].join('\n\n') + (s.notes ? `\n\nNotizen: ${s.notes}` : '');
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast('Plan kopiert ✓'), () => toast('Kopieren nicht möglich'));
   else toast('Kopieren nicht möglich');
 }
-function deleteHistory(i, ev) {
-  ev.stopPropagation();
-  history.splice(i, 1);
-  saveStore('zumba-history', history);
-  renderHistory();
+
+/* ---------- Modal ---------- */
+let modalName = null;
+function openModal(name) {
+  const ex = exRegistry[name]; if (!ex) return;
+  modalName = name;
+  $('modal-title').textContent = ex.name;
+  $('modal-tags').innerHTML = `<span class="tag ${levelClass(ex.level)}">${esc(ex.level)}</span><span class="tag tag-muscle">${esc(ex.muscle)}</span><span class="tag tag-duration">${esc(ex.duration)}</span>`;
+  $('modal-beschreibung').textContent = ex.beschreibung || '';
+  $('modal-steps').innerHTML = ex.steps.map((s, i) => `<li data-num="${i + 1}">${esc(s)}</li>`).join('');
+  $('modal-tip').textContent = ex.tip;
+  $('modal-video').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(ex.yt || (ex.name + ' dance tutorial'));
+  syncModalFav();
+  $('modal').classList.add('open');
 }
-function clearHistory() {
-  if (!confirm('Gesamten Verlauf löschen?')) return;
-  history = []; saveStore('zumba-history', history); renderHistory();
+function syncModalFav() {
+  const b = $('modal-fav'); if (!modalName) return;
+  const f = isFav(modalName);
+  b.classList.toggle('active', f); b.textContent = f ? '♥ In Favoriten' : '♡ Zu Favoriten hinzufügen';
+}
+function closeModal(e) {
+  if (!e || e.target === $('modal')) $('modal').classList.remove('open');
 }
 
-function saveToHistory(session) {
-  const entry = {
-    date: session.date,
-    exercises: [
-      ...session.warmup.map(e => e.name),
-      ...session.main1.map(e => e.name),
-      ...session.main2.map(e => e.name),
-      ...session.cooldown.map(e => e.name)
-    ],
-    session
-  };
-  history.unshift(entry);
-  if (history.length > 10) history = history.slice(0, 10);
-  saveStore('zumba-history', history);
-  renderHistory();
+/* ---------- Favoriten ---------- */
+function toggleFav(name) {
+  const ex = exRegistry[name]; if (!ex) return;
+  const i = favorites.findIndex(f => f.name === name);
+  if (i >= 0) favorites.splice(i, 1); else favorites.push(ex);
+  saveStore('zumba-favs', favorites);
+  syncModalFav(); renderFavorites(); renderLibrary();
+  if (currentSession) { const y = window.scrollY; renderSession(); window.scrollTo(0, y); }
 }
-
-function renderHistory() {
-  const c = document.getElementById('history-container');
-  if (!history.length) {
-    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🗓️</div><h3>Noch keine Sessions</h3><p>Erstelle deine erste Zumba-Stunde und sie erscheint hier.</p></div>';
-    return;
-  }
-  c.innerHTML = history.map((h, i) => `
-    <div class="history-card" onclick="loadHistorySession(${i})">
-      <div class="history-main">
-        <div class="history-date">${h.date}</div>
-        <div class="history-exercises">${h.exercises.slice(0, 5).join(' · ')}${h.exercises.length > 5 ? ' …' : ''}</div>
-      </div>
-      <button class="del-btn" aria-label="Eintrag löschen" onclick="deleteHistory(${i}, event)">✕</button>
-    </div>
-  `).join('') + '<div style="text-align:center"><button class="link-btn" onclick="clearHistory()">Verlauf leeren</button></div>';
-}
-
-function loadHistorySession(i) {
-  currentSession = history[i].session;
-  switchTab('plan');
-  renderSession();
-}
-
 function renderFavorites() {
-  const c = document.getElementById('favorites-container');
+  const c = $('favorites-container');
   if (!favorites.length) {
     c.innerHTML = '<div class="empty-state"><div class="empty-icon">🤍</div><h3>Keine Favoriten</h3><p>Tippe auf das Herz bei einer Übung, um sie hier zu speichern.</p></div>';
     return;
   }
-  c.innerHTML = favorites.map(f => {
-    const safeName = encodeURIComponent(f.name);
-    return `
+  c.innerHTML = favorites.map(f => `
     <div class="fav-card">
-      <div class="fav-card-info" onclick="openModal(decodeURIComponent('${safeName}'))" style="cursor:pointer;">
-        <div class="fav-card-name">${f.name}</div>
-        <div class="fav-card-meta">${f.level} · ${f.muscle} · ${f.duration}</div>
+      <div class="fav-card-info" onclick="openModal(decodeURIComponent('${q(f.name)}'))" style="cursor:pointer;">
+        <div class="fav-card-name">${esc(f.name)}</div>
+        <div class="fav-card-meta">${esc(f.level)} · ${esc(f.muscle)}</div>
       </div>
-      <button class="remove-fav" onclick="removeFav(decodeURIComponent('${safeName}'))">✕</button>
-    </div>
-  `}).join('');
+      <button class="remove-fav" aria-label="Entfernen" onclick="toggleFav(decodeURIComponent('${q(f.name)}'))">✕</button>
+    </div>`).join('');
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('modal').classList.remove('open');
-});
+/* ---------- Bibliothek ---------- */
+function setLib(v) { libPhase = v; renderLibrary(); }
+function renderLibrary() {
+  document.querySelectorAll('[data-lib]').forEach(b => b.classList.toggle('active', b.dataset.lib === libPhase));
+  const term = ($('lib-q').value || '').trim().toLowerCase();
+  const list = ALL_EXERCISES.filter(e => (libPhase === 'alle' || e.phase === libPhase) &&
+    (!term || (e.name + ' ' + e.muscle + ' ' + e.level + ' ' + (e.beschreibung || '')).toLowerCase().includes(term)));
+  $('library-container').innerHTML = list.length ? list.map(e => `
+    <div class="fav-card lib-card" onclick="openModal(decodeURIComponent('${q(e.name)}'))">
+      <div class="fav-card-info">
+        <div class="fav-card-name">${esc(e.name)}</div>
+        <div class="exercise-tags"><span class="tag ${levelClass(e.level)}">${esc(e.level)}</span><span class="tag tag-muscle">${esc(e.muscle)}</span></div>
+      </div>
+      <button class="fav-btn ${isFav(e.name) ? 'active' : ''}" aria-label="Favorit" onclick="event.stopPropagation();toggleFav(decodeURIComponent('${q(e.name)}'))">♥</button>
+    </div>`).join('')
+    : '<div class="empty-state"><div class="empty-icon">🔎</div><h3>Nichts gefunden</h3><p>Versuche einen anderen Suchbegriff.</p></div>';
+}
 
+/* ---------- Verlauf ---------- */
+function saveToHistory(session) {
+  history.unshift({ date: session.date, exercises: sessionNames(session), session });
+  if (history.length > 30) history = history.slice(0, 30);
+  persistHistory(); renderHistory();
+}
+function sessionNames(s) { return PHASES.flatMap(p => asArray(s[p.key])).map(e => e.name); }
+function refreshHistoryEntry() {
+  const e = history.find(h => h.session === currentSession || (h.session && currentSession && h.session.id === currentSession.id));
+  if (e) { e.exercises = sessionNames(currentSession); e.session = currentSession; persistHistory(); renderHistory(); }
+}
+function renderHistory() {
+  const c = $('history-container'), st = $('history-stats');
+  const sessions = history.map(h => h.session).filter(Boolean);
+  const done = sessions.filter(s => s.done);
+  if (!history.length) {
+    st.innerHTML = '';
+    c.innerHTML = '<div class="empty-state"><div class="empty-icon">🗓️</div><h3>Noch keine Stunden</h3><p>Erstelle deine erste Zumba-Stunde, sie erscheint hier.</p></div>';
+    return;
+  }
+  const count = {};
+  sessions.forEach(s => sessionNames(s).forEach(n => count[n] = (count[n] || 0) + 1));
+  const top = Object.entries(count).sort((a, b) => b[1] - a[1])[0];
+  const mins = done.reduce((n, s) => n + (s.dur || 55), 0);
+  st.innerHTML = `<div class="stats-row">
+      <div class="stat"><b>${history.length}</b><span>Geplant</span></div>
+      <div class="stat"><b>${done.length}</b><span>Gemacht</span></div>
+      <div class="stat"><b>${mins}</b><span>Minuten</span></div></div>
+    ${top && top[1] > 1 ? `<p class="top-ex">Häufigste Übung: <strong>${esc(top[0])}</strong> (${top[1]}×)</p>` : ''}`;
+  c.innerHTML = history.map((h, i) => {
+    const s = h.session || {};
+    return `<div class="history-card" onclick="loadHistorySession(${i})">
+      <div class="history-main">
+        <div class="history-date">${esc(h.date)} · ${s.dur || 55} min ${s.done ? '· ✓' : ''} ${s.rating ? `<span class="mini-stars">${'★'.repeat(s.rating)}</span>` : ''}</div>
+        <div class="history-exercises">${esc(h.exercises.slice(0, 5).join(' · '))}${h.exercises.length > 5 ? ' …' : ''}</div>
+      </div>
+      <button class="del-btn" aria-label="Eintrag löschen" onclick="deleteHistory(${i}, event)">✕</button>
+    </div>`;
+  }).join('') + '<div style="text-align:center"><button class="link-btn" onclick="clearHistory()">Verlauf leeren</button></div>';
+}
+function loadHistorySession(i) {
+  const s = history[i] && history[i].session; if (!s) return;
+  if (!s.id) s.id = Date.now() + i;
+  currentSession = s; switchTab('plan'); renderSession(true);
+}
+function deleteHistory(i, ev) {
+  ev.stopPropagation();
+  if (history[i] && history[i].session === currentSession) currentSession = null, renderSession();
+  history.splice(i, 1); persistHistory(); renderHistory();
+}
+function clearHistory() {
+  if (!confirm('Gesamten Verlauf löschen?')) return;
+  history = []; currentSession = null; persistHistory(); renderHistory(); renderSession();
+}
+
+/* ---------- Kursmodus ---------- */
+const P = { tl: [], i: 0, remaining: 0, running: false, endAt: 0, timer: null, lastTick: 0, wake: null, ctx: null };
+const CIRC = 2 * Math.PI * 88;
+
+function buildTimeline(s) {
+  return PHASES.flatMap((ph, pi) => s[ph.key].map((ex, i) =>
+    ({ ph, ex, secs: phaseSecs(s, pi), music: s.music[ph.key], idx: i, count: s[ph.key].length })));
+}
+function openPlayer() {
+  if (!currentSession) return;
+  P.tl = buildTimeline(currentSession); P.i = 0; P.running = false;
+  P.remaining = P.tl[0].secs * 1000;
+  $('p-main').hidden = false; $('p-done').hidden = true;
+  $('player').hidden = false; document.body.style.overflow = 'hidden';
+  $('p-sound').textContent = settings.sound ? '🔔' : '🔕';
+  playerRender();
+}
+function closePlayer(finished) {
+  if (!finished && P.i > 0 && !$('p-main').hidden && !confirm('Kursmodus beenden?')) return;
+  pauseTimer(); $('player').hidden = true; document.body.style.overflow = '';
+  if (finished) { renderSession(); renderHistory(); }
+}
+function playerRender() {
+  const cur = P.tl[P.i];
+  $('p-phase').textContent = cur.ph.label; $('p-dot').style.background = cur.ph.color;
+  $('p-count').textContent = `Übung ${P.i + 1} von ${P.tl.length}`;
+  $('p-name').textContent = cur.ex.name;
+  $('p-tip').textContent = cur.ex.tip;
+  $('p-song').textContent = cur.music.title;
+  $('p-music').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(cur.music.yt);
+  const nx = P.tl[P.i + 1];
+  $('p-next').textContent = nx ? `Als Nächstes: ${nx.ex.name}` + (nx.ph !== cur.ph ? ` (${nx.ph.label})` : '') : 'Letzte Übung – gleich geschafft!';
+  $('p-play').textContent = P.running ? '⏸' : '▶';
+  timerRender();
+}
+function timerRender() {
+  const cur = P.tl[P.i], total = cur.secs * 1000;
+  $('p-time').textContent = fmt(Math.ceil(P.remaining / 1000));
+  $('p-ring').style.strokeDashoffset = CIRC * (1 - P.remaining / total);
+  const before = P.tl.slice(0, P.i).reduce((n, t) => n + t.secs, 0);
+  const all = P.tl.reduce((n, t) => n + t.secs, 0);
+  $('p-bar-fill').style.width = (100 * (before + (total - P.remaining) / 1000) / all) + '%';
+}
+function startTimer() {
+  P.running = true; P.endAt = Date.now() + P.remaining;
+  clearInterval(P.timer); P.timer = setInterval(tick, 250);
+  requestWake(); $('p-play').textContent = '⏸';
+}
+function pauseTimer() {
+  if (P.running) P.remaining = Math.max(0, P.endAt - Date.now());
+  P.running = false; clearInterval(P.timer); releaseWake();
+  $('p-play').textContent = '▶';
+}
+function togglePlay() { P.running ? pauseTimer() : startTimer(); timerRender(); }
+function tick() {
+  P.remaining = Math.max(0, P.endAt - Date.now());
+  const sec = Math.ceil(P.remaining / 1000);
+  if (sec <= 3 && sec > 0 && sec !== P.lastTick) { P.lastTick = sec; beep(660, 0.07); }
+  if (P.remaining <= 0) { advance(true); return; }
+  timerRender();
+}
+function advance(auto) {
+  if (P.i >= P.tl.length - 1) return finishClass();
+  P.i++; P.remaining = P.tl[P.i].secs * 1000; P.lastTick = 0;
+  if (P.running) P.endAt = Date.now() + P.remaining;
+  if (auto) { beep(880, 0.15); setTimeout(() => beep(1175, 0.2), 180); if (navigator.vibrate) navigator.vibrate([120, 60, 120]); }
+  playerRender();
+}
+function playerNext() { advance(false); }
+function playerPrev() {
+  const cur = P.tl[P.i], elapsed = cur.secs - (P.running ? Math.max(0, P.endAt - Date.now()) : P.remaining) / 1000;
+  if (elapsed > 3 || P.i === 0) P.remaining = cur.secs * 1000; else { P.i--; P.remaining = P.tl[P.i].secs * 1000; }
+  P.lastTick = 0; if (P.running) P.endAt = Date.now() + P.remaining;
+  playerRender();
+}
+function finishClass() {
+  pauseTimer(); P.remaining = 0;
+  currentSession.done = true; persistHistory();
+  $('p-main').hidden = true; $('p-done').hidden = false; $('p-bar-fill').style.width = '100%';
+  if (settings.sound) { beep(784, .2); setTimeout(() => beep(988, .2), 220); setTimeout(() => beep(1319, .35), 440); }
+  renderStars();
+}
+function renderStars() {
+  const r = currentSession.rating || 0;
+  $('p-stars').innerHTML = [1, 2, 3, 4, 5].map(n => `<button class="${n <= r ? 'on' : ''}" aria-label="${n} Sterne" onclick="rate(${n})">★</button>`).join('');
+}
+function rate(n) { currentSession.rating = n; persistHistory(); renderStars(); }
+function toggleSound() { settings.sound = !settings.sound; persistSettings(); $('p-sound').textContent = settings.sound ? '🔔' : '🔕'; }
+function beep(freq, dur) {
+  if (!settings.sound) return;
+  try {
+    P.ctx = P.ctx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = P.ctx.createOscillator(), g = P.ctx.createGain();
+    o.frequency.value = freq; o.connect(g); g.connect(P.ctx.destination);
+    g.gain.setValueAtTime(0.18, P.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, P.ctx.currentTime + dur);
+    o.start(); o.stop(P.ctx.currentTime + dur);
+  } catch (e) {}
+}
+async function requestWake() { try { if (navigator.wakeLock && !P.wake) P.wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
+function releaseWake() { try { if (P.wake) P.wake.release(); } catch (e) {} P.wake = null; }
+document.addEventListener('visibilitychange', () => { if (!document.hidden && P.running) { tick(); requestWake(); } });
+
+/* ---------- Einstellungen, Design, Tabs ---------- */
+function setSetting(k, v) { settings[k] = v; persistSettings(); syncControls(); }
+function syncControls() {
+  document.querySelectorAll('[data-set]').forEach(b => b.classList.toggle('active', String(settings[b.dataset.set]) === b.dataset.val));
+  $('favpref').checked = !!settings.favPref;
+}
+const darkMq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : { matches: false };
+function applyTheme() {
+  const dark = settings.theme === 'dark' || (settings.theme === 'auto' && darkMq.matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  $('theme-btn').textContent = settings.theme === 'auto' ? '🌓' : dark ? '🌙' : '☀️';
+  const m = document.querySelector('meta[name=theme-color]'); if (m) m.content = dark ? '#17120e' : '#2d1f14';
+}
+function cycleTheme() {
+  settings.theme = { auto: 'light', light: 'dark', dark: 'auto' }[settings.theme] || 'auto';
+  persistSettings(); applyTheme();
+  toast({ auto: 'Design: automatisch', light: 'Design: hell', dark: 'Design: dunkel' }[settings.theme]);
+}
+if (darkMq.addEventListener) darkMq.addEventListener('change', applyTheme);
+
+const TABS = ['plan', 'library', 'history', 'favorites'];
 function switchTab(name) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav button').forEach((b, i) => {
-    b.classList.toggle('active', ['plan','history','favorites'][i] === name);
-  });
-  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.nav button').forEach((b, i) => b.classList.toggle('active', TABS[i] === name));
+  $('tab-' + name).classList.add('active');
   window.scrollTo({ top: 0 });
 }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { if ($('modal').classList.contains('open')) closeModal(); else if (!$('player').hidden) closePlayer(); }
+  if (e.key === ' ' && !$('player').hidden && e.target === document.body) { e.preventDefault(); togglePlay(); }
+});
 
-renderHistory();
-renderFavorites();
+/* ---------- Start ---------- */
+applyTheme(); syncControls(); renderSession(); renderLibrary(); renderHistory(); renderFavorites();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
-<div class="toast" id="toast" role="status"></div>
 </body>
 </html>
