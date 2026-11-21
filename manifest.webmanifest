@@ -1,16 +1,25 @@
 {
   "name": "Zumba Planer",
   "short_name": "Zumba",
-  "description": "Deine persönliche Kursassistentin für Zumba-Stunden",
+  "description": "Deine Kursassistentin für Zumba-Stunden: planen, Kursmodus mit Timer und Beat, Choreos, Fortschritt.",
   "lang": "de",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#2d1f14",
-  "theme_color": "#2d1f14",
+  "orientation": "portrait",
+  "background_color": "#faf6f2",
+  "theme_color": "#faf6f2",
+  "categories": ["fitness", "health", "lifestyle"],
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Neue Stunde", "url": "./?tab=plan" },
+    { "name": "Choreo", "url": "./?tab=choreo" },
+    { "name": "Fortschritt", "url": "./?tab=progress" }
   ]
 }
