@@ -95,7 +95,8 @@ const BADGES = [
 /* ---------- Zustand ---------- */
 const DEFAULTS = {
   dur: 55, level: 'alle', favPref: false, trendPref: false, music: 'spotify', playlists: {}, theme: 'auto',
-  sound: true, beat: false, voice: false, big: false, water: false, goal: 2, weight: 65, badges: []
+  sound: true, beat: false, voice: false, big: false, water: false, goal: 2, weight: 65, badges: [],
+  name: '', onboarded: false, lastBackup: 0, backupSnooze: 0
 };
 let settings, favs, hist, doneLog, templates, choreo, choreos;
 let cur = null;                      // aktuell angezeigte Stunde (Objekt aus hist)
@@ -117,8 +118,12 @@ function cleanSettings(s) {
     PHASES.forEach(ph => { const v = s.playlists[ph.key]; if (typeof v === 'string' && spotifyEmbed(v)) out.playlists[ph.key] = v.trim().slice(0, 300); });
   }
   if (Array.isArray(s.badges)) out.badges = s.badges.filter(b => BADGES.some(x => x.id === b));
+  if (typeof s.name === 'string') out.name = cleanName(s.name);
+  if (typeof s.onboarded === 'boolean') out.onboarded = s.onboarded;
+  ['lastBackup', 'backupSnooze'].forEach(k => { if (Number.isFinite(+s[k]) && +s[k] >= 0 && +s[k] < 4e12) out[k] = +s[k]; });
   return out;
 }
+const cleanName = v => String(v || '').replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 30);
 const persistSettings = () => saveStore('zumba-settings', settings);
 const persistFavs = () => saveStore('zumba-favs', [...favs]);
 const persistHistory = () => saveStore('zumba-history', hist.map(packSession));
@@ -237,7 +242,7 @@ function generate() {
   PHASES.forEach(ph => { s.music[ph.key] = pickSong(ph.key, songs); songs.add(s.music[ph.key].title); });
   s.tip = pickOne(TIPS); s.notes = ''; s.date = nowDate(); s.done = false;
   hist.unshift(s); hist = hist.slice(0, 40); persistHistory();
-  cur = s; renderSession(true); renderHistory();
+  cur = s; renderSession(true); renderHistory(); requestPersist();
   requestAnimationFrame(() => { const el = $('session'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 }
 
@@ -806,7 +811,7 @@ function renderProgress() {
   const grad = id => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e4503c"/><stop offset=".5" stop-color="#d63a6e"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>`;
   const extra = (s.avgRating ? `<div class="fact"><b>${s.avgRating.toFixed(1).replace('.', ',')} ★</b><span>Ø Bewertung</span></div>` : '')
     + (s.avgP ? `<div class="fact"><b>${Math.round(s.avgP)}</b><span>Ø Teilnehmende</span></div>` : '');
-  c.innerHTML = `
+  c.innerHTML = backupReminder() + `
     <div class="card"><div class="card-h"><h2>Diese Woche</h2><span class="pill">Ziel: ${goal}×</span></div>
       <div class="dash">
         <div class="goal-ring" role="img" aria-label="${s.thisWeek} von ${goal} Stunden diese Woche">
@@ -897,13 +902,15 @@ function useTemplate(i) {
   cur = s; showTab('plan'); renderSession(true); renderHistory(); toast(`Vorlage „${t.name}“ geladen`);
 }
 function exportData() {
+  settings.lastBackup = Date.now(); persistSettings();
   const data = { app: 'zumba-planer', v: 3, exported: new Date().toISOString(), settings, favorites: [...favs], history: hist.map(packSession), log: doneLog, templates, choreos, choreo };
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'zumba-backup-' + new Date().toISOString().slice(0, 10) + '.json';
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 3000);
-  toast('Backup gespeichert');
+  renderMore(); renderProgress();
+  toast('Backup gespeichert – am besten in iCloud, Google Drive oder per Mail ablegen');
 }
 function importData(input) {
   const f = input.files && input.files[0]; input.value = '';
@@ -952,6 +959,7 @@ function renderMore() {
       ${PHASES.map(ph => { const v = settings.playlists[ph.key] || ''; return `<label class="pl-row"><span>${ph.label}</span><input class="input${v ? (spotifyEmbed(v) ? ' ok' : ' bad') : ''}" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://open.spotify.com/playlist/…" value="${esc(v)}" data-input="playlist" data-k="${ph.key}"></label>`; }).join('')}
     </details></div>
     <div class="card"><h2>Ziel &amp; Profil</h2>
+      <div class="set-row"><div class="field"><label for="name">Dein Name</label><input class="input" id="name" type="text" maxlength="30" autocomplete="given-name" placeholder="optional" value="${esc(settings.name)}" data-change="name" style="max-width:180px"></div></div>
       <div class="set-row"><div class="field"><span>Stunden pro Woche</span><span class="stepper"><button data-act="goal" data-d="-1" aria-label="Weniger">${ic('minus', 'sm')}</button><output>${settings.goal}</output><button data-act="goal" data-d="1" aria-label="Mehr">${ic('plus', 'sm')}</button></span></div></div>
       <div class="set-row"><div class="field"><label for="weight">Gewicht in kg <small class="hint">(für die Kalorien-Schätzung)</small></label><input class="input" id="weight" type="number" inputmode="numeric" min="30" max="250" value="${settings.weight}" data-change="weight"></div></div>
     </div>
@@ -959,7 +967,13 @@ function renderMore() {
       ${templates.length ? templates.map((t, i) => { const d = unpackSession(t.data); return `<div class="list-item"><span class="nm">${esc(t.name)} <small>· ${d ? d.dur + ' min' : ''}</small></span><button class="btn btn-soft" data-act="tpl-use" data-i="${i}">Laden</button><button class="mini" data-act="tpl-del" data-i="${i}" aria-label="Vorlage löschen">${ic('trash')}</button></div>`; }).join('')
         : '<p class="hint">Noch keine Vorlage. Erstelle eine Stunde und tippe dort auf „Vorlage“ – ideal für feste Kurse.</p>'}
     </div>
+    <div class="card"><h2>Hilfe</h2>
+      <button class="btn btn-soft btn-block" data-act="tour">${ic('help')} Einführung noch mal ansehen</button>
+      <div class="faq" style="margin-top:8px">${FAQ.map(([q, a]) => `<details><summary>${q}${ic('chevron')}</summary><p>${a}</p></details>`).join('')}</div>
+    </div>
     <div class="card"><h2>Sichern &amp; Umziehen</h2>
+      <div class="safe" id="safe-status">${ic('shield')}<div><b>Speicher wird geprüft …</b></div></div>
+      <p class="hint" style="margin:.6rem 0 .7rem">Letztes Backup: <b>${settings.lastBackup ? nowDate(settings.lastBackup) : 'noch keins'}</b></p>
       <div class="btn-row"><button class="btn btn-ghost" data-act="export">${ic('download')} Sichern</button>
         <button class="btn btn-ghost" data-act="import-pick">${ic('upload')} Laden</button></div>
       <input type="file" id="import-file" accept="application/json,.json" hidden data-change="import">
@@ -969,8 +983,104 @@ function renderMore() {
       ${installEvt ? `<button class="btn btn-primary btn-block" style="margin-top:12px" data-act="install">${ic('install')} Als App installieren</button>`
         : standalone ? '' : '<p class="hint">Als App nutzen: im Browser-Menü „Zum Startbildschirm hinzufügen“ wählen (iPhone: Teilen-Symbol → „Zum Home-Bildschirm“).</p>'}
     </div>`;
-  syncControls();
+  syncControls(); updateSafeStatus();
 }
+
+/* =====================================================================
+   EINFÜHRUNG, HILFE, DATENSICHERHEIT
+   ===================================================================== */
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isStandalone = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+const li = (icon, html) => `<li>${ic(icon)}<span>${html}</span></li>`;
+function installHelp() {
+  if (isStandalone()) return '<div class="note">Die App ist bereits auf Deinem Startbildschirm installiert. Deine Daten sind gut aufgehoben.</div>';
+  if (installEvt) return '<button class="btn btn-primary btn-block" data-act="install" style="margin-top:.4rem">' + ic('install') + ' Jetzt als App installieren</button>';
+  return isIOS()
+    ? '<div class="note"><b>So geht’s auf dem iPhone:</b> In Safari unten auf das Teilen-Symbol tippen (Quadrat mit Pfeil) → „Zum Home-Bildschirm“. Danach die App immer über das neue Symbol öffnen.</div>'
+    : '<div class="note"><b>So geht’s:</b> Im Browser-Menü (⋮) „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen.</div>';
+}
+const TOUR = [
+  { icon: 'logo', title: 'Willkommen!', body: () => `<p>Der Zumba Planer hilft Dir, Stunden zu planen, sie im Kurs anzuleiten und Deinen Fortschritt zu sehen. Die Einführung dauert eine Minute.</p>
+      <label class="lbl" for="tour-name" style="display:block;text-align:center">Wie dürfen wir Dich nennen? (freiwillig)</label>
+      <input class="input" id="tour-name" type="text" maxlength="30" autocomplete="given-name" placeholder="Dein Vorname" value="${esc(settings.name)}" data-input="tour-name">` },
+  { icon: 'sparkle', title: 'Stunde planen', body: () => `<ul>
+      ${li('check', 'Unten auf <b>Stunde</b> tippen, Dauer und Intensität wählen und auf <b>„Neue Stunde erstellen“</b> drücken.')}
+      ${li('check', 'Eine <b>Übung antippen</b> zeigt die Anleitung Schritt für Schritt und ein Video.')}
+      ${li('check', 'Die Symbole daneben: <b>Herz</b> = merken, <b>Pfeile</b> = austauschen, <b>Mülleimer</b> = entfernen.')}
+      ${li('check', 'Ein Versehen? Einfach auf <b>„Rückgängig“</b> tippen.')}</ul>` },
+  { icon: 'play', title: 'Kursmodus', body: () => `<ul>
+      ${li('check', '<b>„Kursmodus starten“</b> und dann den großen Play-Knopf: nach 3-2-1 läuft der Timer.')}
+      ${li('check', 'Die App wechselt <b>automatisch</b> zur nächsten Übung, mit Signalton.')}
+      ${li('check', '<b>Beat</b> zählt 1–8 mit, <b>Ansage</b> sagt die nächste Übung, <b>Groß</b> macht alles gut lesbar.')}
+      ${li('check', 'Nach links <b>wischen</b> = nächste Übung, nach rechts = zurück.')}</ul>` },
+  { icon: 'beat', title: 'Übungen & Choreo', body: () => `<ul>
+      ${li('check', 'Unter <b>Übungen</b> findest Du alle Schritte, sortiert nach Phase und Rhythmus. Lieblinge mit dem Herz merken.')}
+      ${li('check', 'Unter <b>Choreo</b> baust Du eigene Abfolgen in 8er-Blöcken und übst sie im Takt – oder lässt würfeln.')}</ul>` },
+  { icon: 'chart', title: 'Fortschritt', body: () => `<ul>
+      ${li('check', 'Nach jeder Stunde Sterne, Teilnehmende und Notizen eintragen.')}
+      ${li('check', 'Unter <b>Fortschritt</b> siehst Du Wochenziel, Serien, Minuten und Abzeichen.')}
+      ${li('check', 'Unter <b>Mehr</b> stellst Du Wochenziel, Musik, Trinkpausen und Design ein.')}</ul>` },
+  { icon: 'shield', title: 'Deine Daten bleiben bei Dir', body: () => `<ul>
+      ${li('check', 'Alles wird <b>nur auf diesem Gerät</b> gespeichert. Kein Konto, keine Anmeldung, niemand sonst sieht etwas.')}
+      ${li('check', 'Damit nichts verloren geht: <b>App zum Startbildschirm hinzufügen</b>. Auf dem iPhone löscht Safari sonst Daten von Seiten, die 7 Tage nicht genutzt wurden.')}
+      ${li('check', 'Ab und zu unter <b>Mehr → Sichern</b> ein Backup machen, z. B. für ein neues Handy.')}</ul>${installHelp()}` }
+];
+let tourStep = 0;
+function openTour(i) {
+  closeModal(); tourStep = i; renderTour();
+  $('tour').classList.add('open'); document.body.classList.add('locked');
+  setTimeout(() => { const n = $('tour-name'); (n && !settings.name ? n : $('tour-next')).focus({ preventScroll: true }); }, 60);
+}
+function renderTour() {
+  const st = TOUR[tourStep], last = tourStep === TOUR.length - 1;
+  $('tour-dots').innerHTML = TOUR.map((_, i) => `<i class="${i === tourStep ? 'on' : ''}"></i>`).join('');
+  $('tour-ic').innerHTML = ic(st.icon);
+  $('tour-title').textContent = tourStep === 0 && settings.name ? `Willkommen, ${settings.name}!` : st.title;
+  $('tour-body').innerHTML = st.body();
+  $('tour-back').hidden = tourStep === 0;
+  $('tour-back').parentElement.classList.toggle('single', tourStep === 0);
+  $('tour-next').textContent = last ? 'Los geht’s!' : tourStep === 0 ? 'Einführung starten' : 'Weiter';
+  $('tour-skip').hidden = last;
+}
+function tourGo(d) {
+  const n = tourStep + d;
+  if (n >= TOUR.length) return closeTour();
+  if (n < 0) return;
+  tourStep = n; renderTour(); $('tour-next').focus({ preventScroll: true });
+}
+function closeTour() {
+  $('tour').classList.remove('open');
+  if ($('player').hidden && !$('modal').classList.contains('open')) document.body.classList.remove('locked');
+  if (!settings.onboarded) { settings.onboarded = true; persistSettings(); requestPersist(); }
+}
+async function requestPersist() {
+  try { if (navigator.storage && navigator.storage.persist && !(await navigator.storage.persisted())) await navigator.storage.persist(); } catch (e) {}
+  updateSafeStatus();
+}
+async function updateSafeStatus() {
+  const el = $('safe-status'); if (!el) return;
+  let persisted = false;
+  try { persisted = !!(navigator.storage && navigator.storage.persisted && await navigator.storage.persisted()); } catch (e) {}
+  const good = persisted || isStandalone();
+  el.className = 'safe ' + (good ? 'good' : 'warn');
+  el.innerHTML = ic('shield') + (good
+    ? '<div><b>Daten dauerhaft gespeichert</b><span>' + (isStandalone() ? 'Die App ist installiert.' : 'Der Browser hat dauerhaften Speicher zugesagt.') + ' Ein Backup schadet trotzdem nie.</span></div>'
+    : '<div><b>Speicher nicht garantiert</b><span>Füge die App zum Startbildschirm hinzu und mach ab und zu ein Backup.' + (isIOS() ? ' Safari löscht sonst Daten nach 7 Tagen ohne Nutzung.' : '') + '</span></div>');
+}
+function backupReminder() {
+  const now = Date.now(), DAY = 864e5;
+  if (doneLog.length < 3 || now - settings.lastBackup < 30 * DAY || now - settings.backupSnooze < 7 * DAY) return '';
+  return `<div class="card remind">${ic('shield')}<div><b>Zeit für ein Backup</b>${settings.lastBackup ? 'Dein letztes Backup ist über einen Monat alt.' : 'Sichere Deine Stunden, damit nichts verloren geht.'}</div>
+    <button class="btn btn-soft" data-act="export">Sichern</button><button class="mini" data-act="backup-later" aria-label="Später erinnern">${ic('close')}</button></div>`;
+}
+const FAQ = [
+  ['Wo werden meine Daten gespeichert?', 'Nur auf diesem Gerät, im Speicher des Browsers bzw. der installierten App. Es gibt keinen Server und kein Konto. Wenn Du die App auf einem anderen Handy öffnest, startet sie dort leer.'],
+  ['Wie installiere ich die App?', 'iPhone: In Safari auf das Teilen-Symbol → „Zum Home-Bildschirm“. Android: Im Chrome-Menü (⋮) → „App installieren“. Danach öffnest Du sie wie jede andere App, auch ohne Internet.'],
+  ['Wie ziehe ich auf ein neues Handy um?', 'Auf dem alten Gerät unter „Mehr“ auf „Sichern“ tippen und die Datei z. B. per Mail oder Cloud weitergeben. Auf dem neuen Gerät die App öffnen, „Laden“ tippen und die Datei auswählen.'],
+  ['Wie läuft die Musik?', 'Im Kursmodus öffnet „Spotify“ den passenden Song. Bequemer: Unter „Mehr“ eine Spotify-Playlist pro Phase einfügen, dann läuft die Musik direkt in der App.'],
+  ['Kann ich eine Stunde weitergeben?', 'Ja. In der Stunde auf „Teilen“ tippen. Der Link öffnet genau diese Stunde beim Empfänger, dessen eigene Daten bleiben unberührt.'],
+  ['Funktioniert die App ohne Internet?', 'Ja, nach dem ersten Öffnen. Nur Musik und Videos brauchen Internet.']
+];
 
 /* =====================================================================
    DESIGN, TABS, STEUERUNG
@@ -1002,7 +1112,10 @@ function applyTheme() {
 }
 if (darkMq.addEventListener) darkMq.addEventListener('change', applyTheme);
 
-function renderAll() { renderSession(); renderLibrary(); renderChoreo(); renderProgress(); renderHistory(); renderMore(); }
+function renderGreeting() {
+  $('hero-title').textContent = settings.name ? `Hallo ${settings.name}!` : 'Deine nächste Stunde';
+}
+function renderAll() { renderGreeting(); renderSession(); renderLibrary(); renderChoreo(); renderProgress(); renderHistory(); renderMore(); }
 
 /* ---------- Ereignisse (keine Inline-Handler, damit die CSP greift) ---------- */
 const ACT = {
@@ -1061,6 +1174,11 @@ const ACT = {
     toast('Vorlage gelöscht', () => { templates.splice(i, 0, t); persistTpl(); renderMore(); });
   },
   export: () => exportData(),
+  'backup-later': () => { settings.backupSnooze = Date.now(); persistSettings(); renderProgress(); },
+  tour: () => openTour(0),
+  'tour-next': () => tourGo(1),
+  'tour-back': () => tourGo(-1),
+  'tour-skip': () => closeTour(),
   'import-pick': () => $('import-file').click(),
   install: async () => { if (!installEvt) return; installEvt.prompt(); try { await installEvt.userChoice; } catch (e) {} installEvt = null; renderMore(); },
   'ch-play': () => chToggle(),
@@ -1084,6 +1202,7 @@ const ACT = {
   }
 };
 const INPUT = {
+  'tour-name': el => { settings.name = cleanName(el.value); persistSettings(); renderGreeting(); },
   'lib-search': () => renderLibrary(),
   notes: el => { if (cur) { cur.notes = el.value.slice(0, 4000); persistHistory(); } },
   playlist: el => {
@@ -1093,6 +1212,7 @@ const INPUT = {
   }
 };
 const CHANGE = {
+  name: el => { settings.name = cleanName(el.value); el.value = settings.name; persistSettings(); renderGreeting(); },
   toggle: el => setSetting(el.dataset.k, el.checked),
   weight: el => { settings.weight = clampInt(el.value, 30, 250, 65); el.value = settings.weight; persistSettings(); renderProgress(); },
   import: el => importData(el),
@@ -1105,6 +1225,7 @@ document.addEventListener('click', e => {
 document.addEventListener('input', e => { const el = e.target.closest('[data-input]'); if (el && INPUT[el.dataset.input]) INPUT[el.dataset.input](el, e); });
 document.addEventListener('change', e => { const el = e.target.closest('[data-change]'); if (el && CHANGE[el.dataset.change]) CHANGE[el.dataset.change](el, e); });
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('tour').classList.contains('open')) { closeTour(); return; }
   if (e.key === 'Escape') { if ($('modal').classList.contains('open')) closeModal(); else if (!$('player').hidden) closePlayer(!$('p-done').hidden); return; }
   if ($('player').hidden || $('modal').classList.contains('open') || !$('p-done').hidden) return;
   if (e.target.matches('input, textarea, select')) return;
@@ -1137,4 +1258,5 @@ loadState();
 applyTheme(); syncControls(); renderAll();
 try { const t = new URLSearchParams(location.search).get('tab'); if (t) showTab(t); } catch (e) {}
 loadFromHash();
+if (!settings.onboarded) openTour(0);
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});

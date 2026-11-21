@@ -66,19 +66,24 @@
 <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9.5" r="2.5"/><path d="M15.8 14.3c2.3.2 4 1.8 4.6 4.7"/></symbol>
 <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.1"/></symbol>
 <symbol id="i-install" viewBox="0 0 24 24"><rect x="6.5" y="3" width="11" height="18" rx="2.5"/><path d="M12 7.5v6.5M9.5 11.5L12 14l2.5-2.5"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.8M12 17.2v.1"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.300-3 7.800-7 9.500-4-1.700-7-5.200-7-9.500V6z"/><path d="M9 12l2 2 4-4"/></symbol>
 <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
 </svg>
 
 <header class="topbar">
   <div class="brand"><span class="brand-mark"><svg class="ic" aria-hidden="true"><use href="#i-logo"/></svg></span><span>Zumba Planer</span></div>
+  <div class="top-actions">
+  <button class="icon-btn" data-act="tour" aria-label="Einführung und Hilfe" title="Einführung"><svg class="ic" aria-hidden="true"><use href="#i-help"/></svg></button>
   <button class="icon-btn" id="theme-btn" data-act="theme" aria-label="Design wechseln" title="Automatisch / Hell / Dunkel"><svg class="ic" aria-hidden="true"><use href="#i-auto"/></svg></button>
+  </div>
 </header>
 
 <main class="main" id="main">
   <!-- Stunde -->
   <section id="tab-plan" class="tab active" aria-label="Stunde planen">
     <div class="hero">
-      <h1>Deine nächste Stunde</h1>
+      <h1 id="hero-title">Deine nächste Stunde</h1>
       <p>Dauer und Intensität wählen – Plan, Musik und Timer sind in Sekunden fertig.</p>
       <div class="cfg">
         <div class="cfg-row"><span class="lbl" id="lbl-dur">Dauer</span>
@@ -214,6 +219,21 @@
     <h4>Tipp für die Kursleitung</h4>
     <p class="m-tip" id="m-tip"></p>
     <a class="btn btn-ghost btn-block" id="m-video" href="#" target="_blank" rel="noopener"><svg class="ic sm" aria-hidden="true"><use href="#i-play"/></svg> Tutorial auf YouTube suchen</a>
+  </div>
+</div>
+
+<!-- Einführung -->
+<div class="tour-bg" id="tour" role="dialog" aria-modal="true" aria-labelledby="tour-title">
+  <div class="tour">
+    <div class="tour-dots" id="tour-dots"></div>
+    <div class="tour-ic" id="tour-ic"></div>
+    <h2 id="tour-title"></h2>
+    <div class="tour-body" id="tour-body"></div>
+    <div class="tour-nav">
+      <button class="btn btn-ghost" id="tour-back" data-act="tour-back">Zurück</button>
+      <button class="btn btn-primary" id="tour-next" data-act="tour-next">Weiter</button>
+    </div>
+    <button class="text-btn" id="tour-skip" data-act="tour-skip">Überspringen</button>
   </div>
 </div>
 

@@ -1,5 +1,5 @@
 /* Zumba Planer – Service Worker: App offline verfügbar, Updates im Hintergrund */
-const CACHE = 'zumba-v7';
+const CACHE = 'zumba-v8';
 const SHELL = ['./', 'index.html', 'css/app.css', 'js/data.js', 'js/app.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 

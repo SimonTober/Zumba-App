@@ -4,6 +4,7 @@ Persönliche Kursassistentin für Zumba-Stunden. Eine statische Web-App (PWA), i
 
 ## Funktionen
 
+- **Einführung**: geführte Tour beim ersten Öffnen (mit Namen für eine persönliche Begrüßung), jederzeit über das ?-Symbol oben erneut abrufbar. Hilfe mit häufigen Fragen unter „Mehr“.
 - **Stunde planen**: 30 / 45 / 55 / 60 Minuten, Intensität (Gemischt, Sanft, Mittel, Power), Favoriten und Trends bevorzugen. Mischt automatisch mit Abwechslung zu den letzten Stunden. Mit Intensitätsverlauf.
 - **Anpassen**: Übungen tauschen, hinzufügen und entfernen (mit „Rückgängig“), Song pro Phase wechseln, Notizen.
 - **Kursmodus**: Timer mit Ring, 3-2-1-Countdown, Beat-Zähler 1–8 mit Klick und mitlaufender Schrittanleitung, Sprachansagen, Trinkpausen, „Groß“-Modus für den Raum, Vollbild, Wischen und Pfeiltasten, Bildschirm bleibt an. Holt die Zeit nach, wenn Du kurz in Spotify warst.
@@ -33,6 +34,15 @@ python3 -m http.server       # dann http://localhost:8000 öffnen
 node tests/smoke.js          # braucht Playwright mit Chromium
 SHOTS=ordner node tests/smoke.js   # zusätzlich Screenshots speichern
 ```
+
+## App weitergeben (z. B. an Familie)
+
+1. Die App muss unter einer Web-Adresse erreichbar sein, z. B. über GitHub Pages (Repo → Settings → Pages → Branch `main`, Ordner `/`). Die Adresse ist dann `https://<name>.github.io/Zumba-App/`.
+2. Den Link schicken. Beim ersten Öffnen erscheint die Einführung.
+3. Die App zum Startbildschirm hinzufügen (die Einführung erklärt, wie). Wichtig auf dem iPhone: Safari löscht sonst Daten von Seiten, die 7 Tage nicht genutzt wurden.
+4. Jede Person hat ihre eigenen Daten auf ihrem eigenen Gerät. Nichts wird geteilt oder hochgeladen.
+
+Zusätzlich fragt die App den Browser nach dauerhaftem Speicher, zeigt unter „Mehr“ den Speicherstatus und das letzte Backup an und erinnert im Fortschritt an ein Backup (ab 3 Stunden, wenn das letzte über 30 Tage alt ist).
 
 ## Sicherheit und Datenschutz
 
