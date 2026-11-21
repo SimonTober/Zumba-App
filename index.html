@@ -639,6 +639,85 @@
   .done-badge { width: 84px; height: 84px; border-radius: 50%; border: 2px solid #e8c5b0; color: #e8c5b0; background: rgba(232,197,176,.12); display: flex; align-items: center; justify-content: center; }
   .done-badge .ic { width: 2.6rem; height: 2.6rem; stroke-width: 2; }
   .p-x { color: #fff; }
+
+  /* ===== Neu: Fortschritt, Choreo, Mehr, Kursmodus Pro ===== */
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; margin-bottom: .9rem; }
+  .card h3 { font-size: 1.05rem; margin-bottom: .6rem; }
+  .card .hint { margin-top: .5rem; }
+  .dash { display: grid; grid-template-columns: 112px 1fr; gap: 1rem; align-items: center; }
+  .goal-ring { position: relative; width: 112px; height: 112px; }
+  .goal-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .goal-ring circle { fill: none; stroke-width: 9; }
+  .goal-ring .bg { stroke: var(--accent-soft); }
+  .goal-ring .fg { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
+  .goal-ring .mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+  .goal-ring .mid b { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 500; }
+  .goal-ring .mid span { font-size: .68rem; color: var(--gray-soft); text-transform: uppercase; letter-spacing: .4px; }
+  .dash-facts { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .fact b { display: block; font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 500; }
+  .fact span { font-size: .7rem; color: var(--gray-soft); text-transform: uppercase; letter-spacing: .3px; }
+  .bars { width: 100%; height: auto; display: block; }
+  .bars rect { fill: var(--accent); }
+  .bars rect.zero { fill: var(--accent-soft); }
+  .bars text { fill: var(--gray-soft); font-size: 9px; font-family: 'Nunito', sans-serif; text-anchor: middle; }
+  .bars text.v { fill: var(--brown); font-weight: 700; }
+  .badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .5rem; }
+  .bdg { text-align: center; padding: .6rem .3rem; border-radius: 12px; border: 1px solid var(--border); font-size: .72rem; line-height: 1.25; color: var(--gray-soft); opacity: .55; }
+  .bdg .ic { width: 1.6rem; height: 1.6rem; display: block; margin: 0 auto .25rem; }
+  .bdg.on { opacity: 1; background: var(--accent-soft); border-color: var(--accent); color: var(--brown); }
+  .bdg.on .ic { color: var(--accent); }
+  .bdg b { display: block; font-size: .78rem; }
+  .field { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .6rem; font-size: .9rem; }
+  .field input[type=number], .field select, .ch-add select { padding: .5rem .6rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); color: var(--brown); font: inherit; font-size: .9rem; }
+  .field input[type=number] { width: 84px; text-align: center; }
+  .stepper { display: inline-flex; align-items: center; gap: .4rem; }
+  .stepper button, .mini-btn { min-width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--border); background: var(--card-bg); color: var(--brown); font: inherit; font-weight: 700; cursor: pointer; padding: 0 .6rem; }
+  .stepper button:hover, .mini-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .stepper output { min-width: 3.2rem; text-align: center; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .btn-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .btn-row > button, .btn-row > label { flex: 1; min-width: 130px; }
+  .tpl-item, .ch-block { display: flex; align-items: center; gap: .5rem; padding: .55rem .2rem; border-bottom: 1px solid var(--border); font-size: .9rem; }
+  .tpl-item:last-child, .ch-block:last-child { border-bottom: none; }
+  .tpl-item .nm, .ch-block .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .ch-block { flex-wrap: wrap; }
+  .ch-block .nm { flex: 1 1 100%; white-space: normal; }
+  .ch-block.now { background: var(--accent-soft); border-radius: 10px; padding-left: .5rem; }
+  .ch-add { display: flex; gap: .5rem; margin-bottom: .6rem; }
+  .ch-add select { flex: 1; min-width: 0; }
+  .stage { text-align: center; padding: 1rem .6rem; border-radius: 16px; background: linear-gradient(160deg, #2d1f14 0%, #4a3350 100%); color: #f5efe8; margin-bottom: .9rem; }
+  .stage h3 { color: #fff; font-size: 1.5rem; margin: .2rem 0 .4rem; min-height: 1.9rem; }
+  .stage .info { font-size: .78rem; opacity: .75; min-height: 1.1em; }
+  .stage .stp { font-size: .92rem; min-height: 2.6em; margin-top: .5rem; line-height: 1.4; }
+  .dots { display: flex; justify-content: center; gap: .5rem; margin: .6rem 0; }
+  .dots i { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.14); display: flex; align-items: center; justify-content: center; font-style: normal; font-size: .7rem; font-weight: 700; color: rgba(255,255,255,.55); transition: background .08s, transform .08s; }
+  .dots i.on { background: #e8c5b0; color: #2d1f14; transform: scale(1.25); }
+  .dots i.one.on { background: #fff; }
+  .stage .btn-row { justify-content: center; margin-top: .6rem; }
+  .stage .btn-row button { flex: 0 1 auto; }
+  .p-tools { display: flex; gap: .4rem; justify-content: center; flex-wrap: wrap; max-width: 560px; width: 100%; margin: .5rem auto 0; }
+  .p-tool { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .8rem; border-radius: 20px; border: 1px solid rgba(255,255,255,.22); background: transparent; color: #f5efe8; font: inherit; font-size: .76rem; font-weight: 700; cursor: pointer; }
+  .p-tool.on { background: #e8c5b0; color: #2d1f14; border-color: #e8c5b0; }
+  .p-tool .ic { width: .95rem; height: .95rem; }
+  #p-beatbar { width: 100%; }
+  #p-beatbar .dots i { background: rgba(255,255,255,.14); }
+  .p-bpm { display: flex; justify-content: center; align-items: center; gap: .5rem; font-size: .78rem; opacity: .85; }
+  .p-bpm button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #fff; cursor: pointer; font-weight: 700; }
+  .p-steps { text-align: left; margin: .2rem auto 0; padding: 0; list-style: none; max-width: 420px; width: 100%; }
+  .p-steps li { padding: .35rem .7rem; border-radius: 10px; font-size: .85rem; opacity: .6; transition: background .2s, opacity .2s; }
+  .p-steps li.on { opacity: 1; background: rgba(232,197,176,.18); font-weight: 700; }
+  #p-cd { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; background: rgba(23,18,14,.88); font-family: 'Playfair Display', serif; font-size: 9rem; color: #e8c5b0; }
+  #p-cd[hidden] { display: none; }
+  .player.big #p-name { font-size: 2.6rem; line-height: 1.1; }
+  .player.big .ring { width: min(80vw, 340px); }
+  .player.big .ring .time { font-size: 4.6rem; }
+  .player.big .p-tip { font-size: 1.15rem; max-width: 640px; }
+  .player.big .p-hint, .player.big .p-links, .player.big #p-embed { display: none; }
+  .player.big .p-steps li { font-size: 1.1rem; }
+  .player.big #p-main { max-width: 760px; }
+  .rhy { background: var(--accent) !important; color: #fff !important; font-weight: 700; }
+  html[data-theme="dark"] .rhy { color: #1d1712 !important; }
+  @media (max-width: 380px) { .dash { grid-template-columns: 1fr; justify-items: center; } }
+  @media print { #p-cd, .p-tools { display: none !important; } }
 </style>
 </head>
 <body>
@@ -669,6 +748,17 @@
 <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c.8 3.6 5.5 5.4 5.5 10.2a5.5 5.5 0 0 1-11 0c0-2.2 1-3.6 2.2-4.6.2 1.6.9 2.6 2 2.9C10.4 8.6 10.6 5.8 12 3z"/></symbol>
 <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5.5 13.5h5.8L10.5 21 18.5 10.5h-5.8z"/></symbol>
 <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19C5 10.5 10.5 5 19 5c0 8.500-5.500 14-14 14z"/><path d="M5 19c2.500-4.500 5.500-7.500 9.500-9.500"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.500A3 3 0 0 0 7 10.500M17 6h3v1.500a3 3 0 0 1-3 3M12 14v4M8.500 20h7"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.500"/><circle cx="17.500" cy="6" r="2.500"/><circle cx="17.500" cy="18" r="2.500"/><path d="M8.200 10.800l7-3.600M8.200 13.200l7 3.600"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.500 11L12 15.500 16.500 11M5 20h14"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7.500 9L12 4.500 16.500 9M5 20h14"/></symbol>
+<symbol id="i-expand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+<symbol id="i-voice" viewBox="0 0 24 24"><path d="M4 10v4h3.500L12 18V6L7.500 10zM15.500 9a4 4 0 0 1 0 6M18 6.500a7.500 7.500 0 0 1 0 11"/></symbol>
+<symbol id="i-beat" viewBox="0 0 24 24"><path d="M12 4L6.500 20h11zM12 14l5-6"/></symbol>
+<symbol id="i-text" viewBox="0 0 24 24"><path d="M4 18L9 6l5 12M5.800 14h6.400M16 18l3-7 2 7"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="15" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/><circle cx="9" cy="15" r="1" fill="currentColor"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></symbol>
 </svg>
 
 <div class="header">
@@ -682,6 +772,8 @@
   <button onclick="switchTab('library')">Übungen</button>
   <button onclick="switchTab('history')">Verlauf</button>
   <button onclick="switchTab('favorites')">Favoriten</button>
+  <button onclick="switchTab('choreo')">Choreo</button>
+  <button onclick="switchTab('more')">Mehr</button>
 </nav>
 
 <div class="main">
@@ -727,6 +819,7 @@
   </div>
 
   <div id="tab-history" class="tab-content">
+    <div id="progress"></div>
     <div id="history-stats"></div>
     <p class="section-label">Letzte Stunden</p>
     <div id="history-container"></div>
@@ -736,6 +829,10 @@
     <p class="section-label">Gespeicherte Übungen</p>
     <div id="favorites-container"></div>
   </div>
+
+  <div id="tab-choreo" class="tab-content"><div id="choreo-container"></div></div>
+
+  <div id="tab-more" class="tab-content"><div id="more-container"></div></div>
 </div>
 
 <!-- Kursmodus -->
@@ -746,6 +843,12 @@
     <button class="p-x" id="p-sound" onclick="toggleSound()" aria-label="Ton an/aus"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg></button>
   </div>
   <div class="p-bar"><div id="p-bar-fill"></div></div>
+  <div class="p-tools" id="p-tools">
+    <button class="p-tool" id="t-beat" onclick="toggleBeat()"><svg class="ic" aria-hidden="true"><use href="#i-beat"/></svg>Beat</button>
+    <button class="p-tool" id="t-voice" onclick="toggleVoice()"><svg class="ic" aria-hidden="true"><use href="#i-voice"/></svg>Ansage</button>
+    <button class="p-tool" id="t-big" onclick="toggleBig()"><svg class="ic" aria-hidden="true"><use href="#i-text"/></svg>Groß</button>
+    <button class="p-tool" id="t-fs" onclick="toggleFs()"><svg class="ic" aria-hidden="true"><use href="#i-expand"/></svg>Vollbild</button>
+  </div>
   <div id="p-main">
     <div class="p-count" id="p-count"></div>
     <h2 id="p-name"></h2>
@@ -754,6 +857,11 @@
       <div class="time" id="p-time" aria-live="off"></div>
     </div>
     <p class="p-tip" id="p-tip"></p>
+    <div id="p-beatbar" hidden>
+      <div class="dots" id="p-dots"></div>
+      <div class="p-bpm"><button onclick="bpmAdj(-5)" aria-label="Langsamer">−</button><span id="p-bpm"></span><button onclick="bpmAdj(5)" aria-label="Schneller">+</button></div>
+      <ol class="p-steps" id="p-steps"></ol>
+    </div>
     <div class="p-songline"><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg><span id="p-song"></span></div>
     <div class="p-links">
       <a class="p-music" id="p-sp" href="#" onclick="return openSpotify(event, P.tl[P.i].music.title)"><span>Spotify</span><em>öffnen <svg class="ic sm" aria-hidden="true"><use href="#i-external"/></svg></em></a>
@@ -776,6 +884,7 @@
     <div class="stars" id="p-stars"></div>
     <div class="p-done-actions"><button onclick="closePlayer(true)">Fertig</button></div>
   </div>
+  <div id="p-cd" hidden aria-live="assertive"></div>
 </div>
 
 <!-- Modal -->
@@ -1631,7 +1740,11 @@ function renderSession(animate) {
     <button class="start-btn" onclick="openPlayer()">${ic('play')} Kursmodus starten</button>
     <div class="actions">
       <button class="action-btn" onclick="copyPlan()">${ic('copy')} Kopieren</button>
-      <button class="action-btn" onclick="window.print()">${ic('print')} Drucken</button>
+      <button class="action-btn" onclick="window.print()">${ic('print')} Drucken / PDF</button>
+    </div>
+    <div class="actions">
+      <button class="action-btn" onclick="shareSession()">${ic('share')} Teilen</button>
+      <button class="action-btn" onclick="saveTemplate()">${ic('check')} Als Vorlage</button>
     </div>
     ${PHASES.map((ph, i) => renderPhase(ph, i, s)).join('')}
     <div class="tip-box"><strong>Tipp für heute:</strong> ${esc(s.tip)}</div>
@@ -1642,7 +1755,7 @@ function renderSession(animate) {
 function renderPhase(ph, i, s) {
   const per = phaseSecs(s, i);
   const music = s.music[ph.key];
-  const bpmLabel = music.bpm;
+  const bpmLabel = music.bpm + ' · ca. ' + bpmEst(music) + ' BPM';
   const rows = s[ph.key].map((ex, idx) => renderExercise(ex, ph.key, idx, per)).join('');
   return `
     <div class="phase-card" style="--accent:${ph.color};animation-delay:${i * 0.06}s">
@@ -1757,7 +1870,7 @@ function openModal(name) {
   const ex = exRegistry[name]; if (!ex) return;
   modalName = name;
   $('modal-title').textContent = ex.name;
-  $('modal-tags').innerHTML = `${ex.trend ? '<span class="tag tag-trend">Trend</span>' : ''}<span class="tag ${levelClass(ex.level)}">${esc(ex.level)}</span><span class="tag tag-muscle">${esc(ex.muscle)}</span><span class="tag tag-duration">${esc(ex.duration)}</span>`;
+  $('modal-tags').innerHTML = `${rhythmOf(ex) ? `<span class="tag rhy">${esc(rhythmOf(ex))}</span>` : ''}${ex.trend ? '<span class="tag tag-trend">Trend</span>' : ''}<span class="tag ${levelClass(ex.level)}">${esc(ex.level)}</span><span class="tag tag-muscle">${esc(ex.muscle)}</span><span class="tag tag-duration">${esc(ex.duration)}</span>`;
   $('modal-beschreibung').textContent = ex.beschreibung || '';
   $('modal-steps').innerHTML = ex.steps.map((s, i) => `<li data-num="${i + 1}">${esc(s)}</li>`).join('');
   $('modal-tip').textContent = ex.tip;
@@ -1810,7 +1923,7 @@ function renderLibrary() {
     <div class="fav-card lib-card" onclick="openModal(decodeURIComponent('${q(e.name)}'))">
       <div class="fav-card-info">
         <div class="fav-card-name">${esc(e.name)}</div>
-        <div class="exercise-tags">${e.trend ? '<span class="tag tag-trend">Trend</span>' : ''}<span class="tag ${levelClass(e.level)}">${esc(e.level)}</span><span class="tag tag-muscle">${esc(e.muscle)}</span></div>
+        <div class="exercise-tags">${rhythmOf(e) ? `<span class="tag rhy">${esc(rhythmOf(e))}</span>` : ''}${e.trend ? '<span class="tag tag-trend">Trend</span>' : ''}<span class="tag ${levelClass(e.level)}">${esc(e.level)}</span><span class="tag tag-muscle">${esc(e.muscle)}</span></div>
       </div>
       <button class="fav-btn ${isFav(e.name) ? 'active' : ''}" aria-label="Favorit" onclick="event.stopPropagation();toggleFav(decodeURIComponent('${q(e.name)}'))">${ic('heart')}</button>
     </div>`).join('')
@@ -1882,17 +1995,19 @@ function buildTimeline(s) {
 }
 function openPlayer() {
   if (!currentSession) return;
-  P.tl = buildTimeline(currentSession); P.i = 0; P.running = false; P.embedUrl = '';
+  chStop(); P.tl = buildTimeline(currentSession); P.i = 0; P.running = false; P.embedUrl = ''; P.started = false; P.cd = false; P.bpmAdj = 0; P.spoken = -1; P.warned = -1; P.beatFor = -1; P.shownFor = -1; $('p-cd').hidden = true;
   P.remaining = P.tl[0].secs * 1000;
   $('p-main').hidden = false; $('p-done').hidden = true;
   $('player').hidden = false; document.body.style.overflow = 'hidden';
   $('p-sound').innerHTML = ic(settings.sound ? 'bell' : 'bell-off');
-  playerRender();
+  syncTools(); playerRender();
 }
 function closePlayer(finished) {
   if (!finished && P.i > 0 && !$('p-main').hidden && !confirm('Kursmodus beenden?')) return;
-  pauseTimer(); stopEmbed(); $('player').hidden = true; document.body.style.overflow = '';
-  if (finished) { renderSession(); renderHistory(); }
+  pauseTimer(); stopEmbed(); P.cd = false; $('p-cd').hidden = true; Beat.stop();
+  try { if (document.fullscreenElement) document.exitFullscreen(); if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+  $('player').hidden = true; document.body.style.overflow = '';
+  if (finished) { renderSession(); renderHistory(); renderProgress(); }
 }
 function playerRender() {
   const cur = P.tl[P.i];
@@ -1904,10 +2019,13 @@ function playerRender() {
   $('p-music').href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(cur.music.yt);
   $('p-sp').href = spotifyWeb(cur.music.title);
   updateEmbed(cur);
+  if (P.shownFor !== P.i) { P.shownFor = P.i; P.bpmAdj = 0; }
+  renderBeatBar();
   const nx = P.tl[P.i + 1];
   $('p-next').textContent = nx ? `Als Nächstes: ${nx.ex.name}` + (nx.ph !== cur.ph ? ` (${nx.ph.label})` : '') : 'Letzte Übung – gleich geschafft!';
   $('p-play').innerHTML = ic(P.running ? 'pause' : 'play');
   timerRender();
+  announce(); beatSync();
 }
 function timerRender() {
   const cur = P.tl[P.i], total = cur.secs * 1000;
@@ -1920,14 +2038,18 @@ function timerRender() {
 function startTimer() {
   P.running = true; P.endAt = Date.now() + P.remaining;
   clearInterval(P.timer); P.timer = setInterval(tick, 250);
-  requestWake(); $('p-play').innerHTML = ic('pause');
+  requestWake(); $('p-play').innerHTML = ic('pause'); beatSync();
 }
 function pauseTimer() {
   if (P.running) P.remaining = Math.max(0, P.endAt - Date.now());
   P.running = false; clearInterval(P.timer); releaseWake();
-  $('p-play').innerHTML = ic('play');
+  $('p-play').innerHTML = ic('play'); beatSync();
 }
-function togglePlay() { P.running ? pauseTimer() : startTimer(); timerRender(); }
+function togglePlay() {
+  if (P.cd) return;
+  if (!P.running && !P.started) { audio(); countdown(() => { P.started = true; startTimer(); timerRender(); announce(); }); return; }
+  P.running ? pauseTimer() : startTimer(); timerRender();
+}
 function tick() {
   P.remaining = Math.max(0, P.endAt - Date.now());
   // War die App im Hintergrund (z. B. Spotify), ggf. mehrere Übungen überspringen
@@ -1946,6 +2068,7 @@ function tick() {
     playerRender(); return;
   }
   if (sec <= 3 && sec > 0 && sec !== P.lastTick) { P.lastTick = sec; beep(660, 0.07); }
+  warnNext(sec);
   timerRender();
 }
 function advance(auto) {
@@ -1964,7 +2087,10 @@ function playerPrev() {
 }
 function finishClass() {
   pauseTimer(); P.remaining = 0;
-  currentSession.done = true; persistHistory();
+  const cs = currentSession; cs.done = true; cs.doneAt = Date.now(); persistHistory();
+  const prev = doneLog.find(e => e.id === cs.id && cs.doneAt - e.t < 3 * 3600e3);
+  if (!prev) doneLog.push({ id: cs.id, t: cs.doneAt, dur: cs.dur || 55, rating: cs.rating || 0 });
+  persistLog(); renderProgress(); checkBadges(); speak('Geschafft! Tolle Stunde.');
   $('p-main').hidden = true; $('p-done').hidden = false; $('p-bar-fill').style.width = '100%';
   if (settings.sound) { beep(784, .2); setTimeout(() => beep(988, .2), 220); setTimeout(() => beep(1319, .35), 440); }
   renderStars();
@@ -1973,12 +2099,16 @@ function renderStars() {
   const r = currentSession.rating || 0;
   $('p-stars').innerHTML = [1, 2, 3, 4, 5].map(n => `<button class="${n <= r ? 'on' : ''}" aria-label="${n} Sterne" onclick="rate(${n})">${ic('star')}</button>`).join('');
 }
-function rate(n) { currentSession.rating = n; persistHistory(); renderStars(); }
+function rate(n) {
+  currentSession.rating = n; persistHistory(); renderStars();
+  const e = [...doneLog].reverse().find(x => x.id === currentSession.id); if (e) { e.rating = n; persistLog(); }
+  renderProgress(); checkBadges();
+}
 function toggleSound() { settings.sound = !settings.sound; persistSettings(); $('p-sound').innerHTML = ic(settings.sound ? 'bell' : 'bell-off'); }
 function beep(freq, dur) {
   if (!settings.sound) return;
   try {
-    P.ctx = P.ctx || new (window.AudioContext || window.webkitAudioContext)();
+    audio();
     const o = P.ctx.createOscillator(), g = P.ctx.createGain();
     o.frequency.value = freq; o.connect(g); g.connect(P.ctx.destination);
     g.gain.setValueAtTime(0.18, P.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, P.ctx.currentTime + dur);
@@ -2013,8 +2143,9 @@ function cycleTheme() {
 }
 if (darkMq.addEventListener) darkMq.addEventListener('change', applyTheme);
 
-const TABS = ['plan', 'library', 'history', 'favorites'];
+const TABS = ['plan', 'library', 'history', 'favorites', 'choreo', 'more'];
 function switchTab(name) {
+  if (name !== 'choreo' && CH.playing) { chStop(); renderChoreo(); }
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach((b, i) => b.classList.toggle('active', TABS[i] === name));
   $('tab-' + name).classList.add('active');
@@ -2025,8 +2156,433 @@ document.addEventListener('keydown', e => {
   if (e.key === ' ' && !$('player').hidden && e.target === document.body) { e.preventDefault(); togglePlay(); }
 });
 
+/* =====================================================================
+   NEU: Rhythmus & Beat, Kursmodus Pro, Fortschritt, Choreo, Backup
+   ===================================================================== */
+const hasOwn = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+const exByName = n => (typeof n === 'string' && hasOwn(exRegistry, n)) ? exRegistry[n] : null;
+const MUSIC_BY_TITLE = new Map(Object.values(MUSIC).flat().map(m => [m.title, m]));
+const clampInt = (v, lo, hi, d) => { v = Math.round(+v); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : d; };
+const nowDate = () => new Date().toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+/* ---------- Rhythmus ---------- */
+const RHYTHMS = [['Merengue','merengue'],['Salsa','salsa'],['Cumbia','cumbia'],['Reggaeton','reggaeton'],['Cha-Cha','cha cha'],['Cha-Cha','cha-cha'],
+  ['Afrobeats','afro'],['Samba','samba'],['Amapiano','amapiano'],['Bachata','bachata'],['Dancehall','dancehall'],['Kuduro','kuduro'],['Soca','soca'],
+  ['Mambo','mambo'],['Flamenco','flamenco'],['Bollywood','bollywood'],['Hip-Hop','hip-hop'],['Hip-Hop','hip hop'],['Tango','tango'],['Zouk','zouk'],['Bossa','bossa']];
+function rhythmOf(ex) {
+  const t = ((ex && ex.name) + ' ' + ((ex && ex.yt) || '')).toLowerCase();
+  const r = RHYTHMS.find(([, k]) => t.includes(k)); return r ? r[0] : '';
+}
+// Grobe Schätzung aus dem Tempo-Wort der Songliste (kein exakter BPM-Wert)
+const BPM_EST = { 'ruhig': 80, 'mittel': 100, 'schnell': 120, 'sehr schnell': 135 };
+const bpmEst = m => BPM_EST[m && m.bpm] || 100;
+
+/* ---------- Audio & Beat-Engine ---------- */
+function audio() {
+  try {
+    P.ctx = P.ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (P.ctx.state === 'suspended') P.ctx.resume();
+    return P.ctx;
+  } catch (e) { return null; }
+}
+function tone(t, freq, dur, vol) {
+  const c = audio(); if (!c) return;
+  const o = c.createOscillator(), g = c.createGain();
+  o.frequency.value = freq; o.connect(g); g.connect(c.destination);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.start(t); o.stop(t + dur + 0.02);
+}
+const Beat = {
+  on: false, bpm: 100, n: 0, next: 0, timer: null, cb: null, click: true,
+  start(bpm, cb, click) {
+    this.stop(); const c = audio(); if (!c) return;
+    this.bpm = bpm; this.cb = cb; this.click = click; this.n = 0; this.next = c.currentTime + 0.1; this.on = true;
+    this.timer = setInterval(() => this.sched(), 25);
+  },
+  sched() {
+    const c = P.ctx; if (!c || !this.on) return;
+    while (this.next < c.currentTime + 0.15) {
+      const n = this.n, k = n % 8, cb = this.cb;
+      if (this.click) tone(this.next, k ? 760 : 1180, 0.05, k ? 0.1 : 0.2);
+      setTimeout(() => { if (this.on && this.cb === cb) cb(n); }, Math.max(0, (this.next - c.currentTime) * 1000));
+      this.next += 60 / this.bpm; this.n++;
+    }
+  },
+  stop() { clearInterval(this.timer); this.timer = null; this.on = false; this.cb = null; }
+};
+const dotsHtml = () => [1,2,3,4,5,6,7,8].map(n => `<i class="${n === 1 ? 'one' : ''}">${n}</i>`).join('');
+function lightDots(el, k) { [...el.children].forEach((d, i) => d.classList.toggle('on', i === k)); }
+
+/* ---------- Kursmodus Pro ---------- */
+Object.assign(settings, { goal: clampInt(settings.goal, 1, 14, 2), weight: clampInt(settings.weight, 30, 250, 65) });
+settings.badges = asArray(settings.badges).filter(b => typeof b === 'string');
+P.bpmAdj = 0; P.started = false; P.spoken = -1; P.warned = -1; P.beatFor = -1;
+
+function stepsOf(i) { const e = P.tl[i]; return e ? e.ex.steps : []; }
+function beatSync() {
+  const should = settings.beat && P.running && !$('player').hidden && !$('p-main').hidden;
+  if (!should) { Beat.stop(); return; }
+  if (Beat.on && P.beatFor === P.i) return;
+  P.beatFor = P.i;
+  const steps = stepsOf(P.i), dots = $('p-dots'), list = [...$('p-steps').children];
+  Beat.start(bpmEst(P.tl[P.i].music) + P.bpmAdj, n => {
+    lightDots(dots, n % 8);
+    const si = steps.length ? Math.floor(n / 8) % steps.length : -1;
+    list.forEach((li, i) => li.classList.toggle('on', i === si));
+  }, true);
+}
+function renderBeatBar() {
+  const bar = $('p-beatbar'); bar.hidden = !settings.beat;
+  if (!settings.beat) return;
+  const cur = P.tl[P.i];
+  $('p-dots').innerHTML = dotsHtml();
+  $('p-bpm').textContent = 'ca. ' + (bpmEst(cur.music) + P.bpmAdj) + ' BPM';
+  $('p-steps').innerHTML = cur.ex.steps.map(s => `<li>${esc(s)}</li>`).join('');
+}
+function bpmAdj(d) {
+  const base = bpmEst(P.tl[P.i].music);
+  P.bpmAdj = Math.max(60 - base, Math.min(170 - base, P.bpmAdj + d));
+  $('p-bpm').textContent = 'ca. ' + (base + P.bpmAdj) + ' BPM';
+  if (Beat.on) Beat.bpm = base + P.bpmAdj;
+}
+function syncTools() {
+  $('t-beat').classList.toggle('on', !!settings.beat);
+  $('t-voice').classList.toggle('on', !!settings.voice);
+  $('t-big').classList.toggle('on', !!settings.big);
+  $('t-fs').classList.toggle('on', !!document.fullscreenElement);
+  $('t-fs').hidden = !($('player').requestFullscreen && document.fullscreenEnabled);
+  $('player').classList.toggle('big', !!settings.big);
+}
+function toggleBeat() { settings.beat = !settings.beat; persistSettings(); P.beatFor = -1; syncTools(); renderBeatBar(); beatSync(); }
+function toggleVoice() {
+  settings.voice = !settings.voice; persistSettings(); syncTools();
+  if (settings.voice) speak('Ansagen sind an'); else if ('speechSynthesis' in window) speechSynthesis.cancel();
+}
+function toggleBig() { settings.big = !settings.big; persistSettings(); syncTools(); }
+function toggleFs() {
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else $('player').requestFullscreen();
+  } catch (e) {}
+}
+document.addEventListener('fullscreenchange', () => { if (!$('player').hidden) syncTools(); });
+function speak(text) {
+  if (!settings.voice || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'de-DE'; u.rate = 1;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function announce() {
+  if (!settings.voice || !P.running || P.spoken === P.i) return;
+  P.spoken = P.i;
+  const cur = P.tl[P.i], prev = P.tl[P.i - 1];
+  speak((!prev || prev.ph !== cur.ph ? cur.ph.label + '. ' : '') + cur.ex.name);
+}
+function warnNext(sec) {
+  if (!settings.voice || sec !== 10 || P.warned === P.i || P.tl[P.i].secs < 25) return;
+  const nx = P.tl[P.i + 1]; if (!nx) return;
+  P.warned = P.i; speak('Gleich: ' + nx.ex.name);
+}
+function countdown(done) {
+  if (P.cd) return; P.cd = true;
+  const el = $('p-cd'); let n = 3; el.hidden = false;
+  const step = () => {
+    if (n === 0) { el.hidden = true; P.cd = false; done(); return; }
+    el.textContent = n; beep(n === 1 ? 880 : 660, 0.12); n--; setTimeout(step, 1000);
+  };
+  step();
+}
+
+/* ---------- Fortschritt ---------- */
+let doneLog = asArray(loadStore('zumba-log', [])).filter(e => e && Number.isFinite(e.t));
+let hasLog = true; try { hasLog = localStorage.getItem('zumba-log') !== null; } catch (e) {}
+if (!hasLog) {
+  // Einmalig: bereits absolvierte Stunden aus dem Verlauf übernehmen
+  history.forEach(h => { const s = h && h.session; if (s && s.done) doneLog.push({ id: s.id || 0, t: s.doneAt || s.id || Date.now(), dur: s.dur || 55, rating: s.rating || 0 }); });
+  saveStore('zumba-log', doneLog);
+}
+const persistLog = () => { if (doneLog.length > 2000) doneLog = doneLog.slice(-2000); saveStore('zumba-log', doneLog); };
+function weekStart(t) { const d = new Date(t); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getTime(); }
+function prevWeek(w) { const d = new Date(w); d.setDate(d.getDate() - 7); return d.getTime(); }
+const BADGES = [
+  { id: 'first', name: 'Erste Stunde', icon: 'star', ok: s => s.n >= 1 },
+  { id: 'five', name: '5 Stunden', icon: 'flame', ok: s => s.n >= 5 },
+  { id: 'ten', name: '10 Stunden', icon: 'bolt', ok: s => s.n >= 10 },
+  { id: 'twentyfive', name: '25 Stunden', icon: 'trophy', ok: s => s.n >= 25 },
+  { id: 'goal', name: 'Wochenziel', icon: 'check', ok: s => s.goalHit },
+  { id: 'streak4', name: '4 Wochen am Stück', icon: 'calendar', ok: s => s.best >= 4 },
+  { id: 'five_star', name: 'Fünf Sterne', icon: 'heart', ok: s => s.five },
+  { id: 'hours', name: '10 Stunden Tanzzeit', icon: 'clock', ok: s => s.mins >= 600 }
+];
+function computeStats() {
+  const byWeek = {};
+  doneLog.forEach(e => { const w = weekStart(e.t); const b = byWeek[w] = byWeek[w] || { n: 0, min: 0 }; b.n++; b.min += e.dur || 0; });
+  const cur = weekStart(Date.now());
+  let streak = 0, w = byWeek[cur] ? cur : prevWeek(cur);
+  while (byWeek[w]) { streak++; w = prevWeek(w); }
+  const weeks = Object.keys(byWeek).map(Number).sort((a, b) => a - b);
+  let best = 0, run = 0, last = 0;
+  weeks.forEach(k => { run = (last && prevWeek(k) === last) ? run + 1 : 1; last = k; best = Math.max(best, run); });
+  const mins = doneLog.reduce((n, e) => n + (e.dur || 0), 0);
+  return {
+    n: doneLog.length, mins, byWeek, cur, streak, best,
+    thisWeek: byWeek[cur] ? byWeek[cur].n : 0,
+    goalHit: weeks.some(k => byWeek[k].n >= settings.goal),
+    five: doneLog.some(e => e.rating === 5),
+    kcal: Math.round(6.5 * settings.weight * mins / 60) // MET ca. 6,5 (Schätzwert)
+  };
+}
+function renderProgress() {
+  const c = $('progress'); if (!c) return;
+  const s = computeStats();
+  const goal = settings.goal, pct = Math.min(1, s.thisWeek / goal), R = 48, C = 2 * Math.PI * R;
+  const weeks = [], labels = [];
+  let w = s.cur; for (let i = 0; i < 8; i++) { weeks.unshift(w); w = prevWeek(w); }
+  const vals = weeks.map(k => (s.byWeek[k] ? s.byWeek[k].min : 0)), max = Math.max(60, ...vals);
+  const bars = weeks.map((k, i) => {
+    const h = Math.round(vals[i] / max * 70), x = 10 + i * 38, d = new Date(k);
+    return `<rect class="${vals[i] ? '' : 'zero'}" x="${x}" y="${88 - Math.max(h, 3)}" width="26" height="${Math.max(h, 3)}" rx="5"/>` +
+      (vals[i] ? `<text class="v" x="${x + 13}" y="${84 - h}">${vals[i]}</text>` : '') +
+      `<text x="${x + 13}" y="102">${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.</text>`;
+  }).join('');
+  const bd = BADGES.map(b => { const on = b.ok(s); return `<div class="bdg${on ? ' on' : ''}">${ic(b.icon)}<b>${esc(b.name)}</b>${on ? 'erreicht' : 'offen'}</div>`; }).join('');
+  c.innerHTML = `
+    <div class="card"><h3>Diese Woche</h3>
+      <div class="dash">
+        <div class="goal-ring" role="img" aria-label="${s.thisWeek} von ${goal} Stunden diese Woche">
+          <svg viewBox="0 0 112 112"><circle class="bg" cx="56" cy="56" r="${R}"/><circle class="fg" cx="56" cy="56" r="${R}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - pct)).toFixed(1)}"/></svg>
+          <div class="mid"><b>${s.thisWeek}/${goal}</b><span>Stunden</span></div>
+        </div>
+        <div class="dash-facts">
+          <div class="fact"><b>${s.streak}</b><span>Wochen-Serie</span></div>
+          <div class="fact"><b>${s.n}</b><span>Stunden gesamt</span></div>
+          <div class="fact"><b>${Math.floor(s.mins / 60)} h ${s.mins % 60}</b><span>Tanzzeit</span></div>
+          <div class="fact"><b>~${s.kcal.toLocaleString('de-DE')}</b><span>kcal geschätzt</span></div>
+        </div>
+      </div>
+      <p class="hint">Serie = aufeinanderfolgende Wochen mit mindestens einer Stunde. Kalorien sind eine grobe Schätzung (Zumba ≈ 6,5 MET, bei ${settings.weight} kg). Wochenziel und Gewicht änderst Du unter „Mehr“.</p>
+    </div>
+    <div class="card"><h3>Minuten pro Woche</h3>
+      <svg class="bars" viewBox="0 0 320 108" role="img" aria-label="Tanzminuten der letzten 8 Wochen: ${vals.join(', ')}">${bars}</svg></div>
+    <div class="card"><h3>Abzeichen</h3><div class="badges">${bd}</div></div>`;
+}
+function checkBadges() {
+  const s = computeStats(), fresh = BADGES.filter(b => b.ok(s) && !settings.badges.includes(b.id));
+  if (!fresh.length) return;
+  settings.badges.push(...fresh.map(b => b.id)); persistSettings();
+  setTimeout(() => toast('Neues Abzeichen: ' + fresh.map(b => b.name).join(', ')), 900);
+}
+
+/* ---------- Stunde prüfen, teilen, Vorlagen ---------- */
+function cleanSession(s) {
+  if (!s || typeof s !== 'object') return null;
+  const out = { id: Date.now(), dur: PROFILES[s.dur] ? s.dur : 55 };
+  for (const ph of PHASES) {
+    const arr = asArray(s[ph.key]).map(x => exByName(typeof x === 'string' ? x : x && x.name)).filter(Boolean).slice(0, 12);
+    if (!arr.length) return null;
+    out[ph.key] = arr;
+  }
+  out.music = {};
+  for (const ph of PHASES) {
+    const m = s.music && s.music[ph.key], t = m && typeof m === 'object' ? m.title : m;
+    out.music[ph.key] = MUSIC_BY_TITLE.get(t) || pickOne(MUSIC[ph.key]);
+  }
+  out.tip = typeof s.tip === 'string' ? s.tip.slice(0, 400) : pickOne(TIPS);
+  out.notes = typeof s.notes === 'string' ? s.notes.slice(0, 2000) : '';
+  out.date = typeof s.date === 'string' ? s.date.slice(0, 40) : nowDate();
+  out.done = !!s.done;
+  const r = Math.round(+s.rating); if (r >= 1 && r <= 5) out.rating = r;
+  if (Number.isFinite(+s.doneAt) && +s.doneAt > 0) out.doneAt = +s.doneAt;
+  return out;
+}
+const toB64 = str => { let b = ''; new TextEncoder().encode(str).forEach(c => b += String.fromCharCode(c)); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const fromB64 = str => { str = str.replace(/-/g, '+').replace(/_/g, '/'); while (str.length % 4) str += '='; return new TextDecoder().decode(Uint8Array.from(atob(str), c => c.charCodeAt(0))); };
+function sessionPayload(s) {
+  const p = { d: s.dur, e: {}, m: {} };
+  PHASES.forEach(ph => { p.e[ph.key] = s[ph.key].map(e => e.name); p.m[ph.key] = s.music[ph.key].title; });
+  return p;
+}
+function fromPayload(p) { return p && cleanSession({ dur: p.d, ...p.e, music: p.m }); }
+function shareLink() {
+  const base = location.href.split('#')[0];
+  return base + '#s=' + toB64(JSON.stringify(sessionPayload(currentSession)));
+}
+async function shareSession() {
+  if (!currentSession) return;
+  const url = shareLink(), text = `Meine Zumba-Stunde (${currentSession.dur} min)`;
+  try { if (navigator.share) { await navigator.share({ title: 'Zumba Planer', text, url }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast('Link kopiert'), () => toast('Kopieren nicht möglich'));
+  else toast('Teilen nicht möglich');
+}
+function loadFromHash() {
+  const m = /^#s=([A-Za-z0-9_-]{1,8000})$/.exec(location.hash); if (!m) return;
+  try {
+    const s = fromPayload(JSON.parse(fromB64(m[1])));
+    if (s) { s.date = nowDate(); currentSession = s; saveToHistory(s); renderSession(true); toast('Stunde aus Link geladen'); }
+    else toast('Link ungültig');
+  } catch (e) { toast('Link ungültig'); }
+  try { window.history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+}
+let templates = asArray(loadStore('zumba-templates', [])).filter(t => t && typeof t.name === 'string' && t.data);
+const persistTpl = () => saveStore('zumba-templates', templates);
+function saveTemplate() {
+  if (!currentSession) return;
+  const name = (prompt('Name der Vorlage:', 'Meine Stunde') || '').trim().slice(0, 40);
+  if (!name) return;
+  templates.unshift({ name, data: sessionPayload(currentSession) }); templates = templates.slice(0, 20);
+  persistTpl(); renderMore(); toast('Vorlage gespeichert');
+}
+function useTemplate(i) {
+  const t = templates[i], s = t && fromPayload(t.data); if (!s) return toast('Vorlage ungültig');
+  s.date = nowDate(); currentSession = s; saveToHistory(s); renderSession(true); switchTab('plan');
+}
+function deleteTemplate(i) { templates.splice(i, 1); persistTpl(); renderMore(); }
+
+/* ---------- Backup ---------- */
+function exportData() {
+  const data = { app: 'zumba-planer', v: 2, exported: new Date().toISOString(), favorites: favorites.map(f => f.name), history, log: doneLog, settings, templates, choreos, choreo };
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'zumba-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Backup gespeichert');
+}
+function cleanSettings(s) {
+  const out = {}; if (!s || typeof s !== 'object') return out;
+  if (PROFILES[s.dur]) out.dur = s.dur;
+  if (['alle', 'leicht', 'mittel', 'aktiv'].includes(s.level)) out.level = s.level;
+  if (['spotify', 'youtube'].includes(s.music)) out.music = s.music;
+  if (['auto', 'light', 'dark'].includes(s.theme)) out.theme = s.theme;
+  ['favPref', 'trendPref', 'sound', 'beat', 'voice', 'big'].forEach(k => { if (typeof s[k] === 'boolean') out[k] = s[k]; });
+  if (s.goal != null) out.goal = clampInt(s.goal, 1, 14, 2);
+  if (s.weight != null) out.weight = clampInt(s.weight, 30, 250, 65);
+  if (s.playlists && typeof s.playlists === 'object') {
+    out.playlists = {};
+    PHASES.forEach(ph => { const v = s.playlists[ph.key]; if (typeof v === 'string' && spotifyEmbed(v)) out.playlists[ph.key] = v.slice(0, 200); });
+  }
+  if (Array.isArray(s.badges)) out.badges = s.badges.filter(b => BADGES.some(x => x.id === b));
+  return out;
+}
+function importData(input) {
+  const f = input.files && input.files[0]; input.value = '';
+  if (!f) return;
+  if (f.size > 5e6) return toast('Datei zu groß');
+  const r = new FileReader();
+  r.onerror = () => toast('Datei nicht lesbar');
+  r.onload = () => {
+    let d; try { d = JSON.parse(r.result); } catch (e) { return toast('Keine gültige Backup-Datei'); }
+    if (!d || d.app !== 'zumba-planer') return toast('Keine Zumba-Planer-Datei');
+    if (!confirm('Backup einspielen? Deine aktuellen Daten auf diesem Gerät werden dabei ersetzt.')) return;
+    favorites = asArray(d.favorites).map(n => exByName(typeof n === 'string' ? n : n && n.name)).filter(Boolean);
+    history = asArray(d.history).slice(0, 30).map(h => { const s = cleanSession(h && h.session); if (!s) return null; s.id = clampInt(h.session.id, 1, 4e12, s.id); return { date: s.date, exercises: sessionNames(s), session: s }; }).filter(Boolean);
+    doneLog = asArray(d.log).map(e => e && ({ id: +e.id || 0, t: +e.t, dur: PROFILES[e.dur] ? e.dur : clampInt(e.dur, 5, 180, 55), rating: clampInt(e.rating, 0, 5, 0) })).filter(e => e && e.t > 0 && e.t < 4e12);
+    templates = asArray(d.templates).filter(t => t && typeof t.name === 'string' && fromPayload(t.data)).map(t => ({ name: t.name.slice(0, 40), data: t.data })).slice(0, 20);
+    choreos = asArray(d.choreos).map(cleanChoreo).filter(Boolean).slice(0, 20);
+    choreo = cleanChoreo(d.choreo) || { name: '', bpm: 100, blocks: [] };
+    Object.assign(settings, cleanSettings(d.settings));
+    saveStore('zumba-favs', favorites); persistHistory(); persistLog(); persistTpl(); saveStore('zumba-choreos', choreos); saveStore('zumba-choreo', choreo); persistSettings();
+    currentSession = null; applyTheme(); syncControls(); renderPlaylistInputs(); renderAll(); toast('Backup eingespielt');
+  };
+  r.readAsText(f);
+}
+
+/* ---------- Mehr-Tab ---------- */
+function renderMore() {
+  const c = $('more-container'); if (!c) return;
+  c.innerHTML = `
+    <div class="card"><h3>Dein Ziel</h3>
+      <div class="field"><span>Stunden pro Woche</span><span class="stepper"><button onclick="setGoal(-1)" aria-label="Weniger">−</button><output>${settings.goal}</output><button onclick="setGoal(1)" aria-label="Mehr">+</button></span></div>
+      <div class="field"><label for="weight">Gewicht in kg (für die Kalorien-Schätzung)</label><input id="weight" type="number" inputmode="numeric" min="30" max="250" value="${settings.weight}" onchange="setWeight(this.value)"></div>
+      <p class="hint">Das Gewicht bleibt nur auf diesem Gerät.</p></div>
+    <div class="card"><h3>Vorlagen</h3>
+      ${templates.length ? templates.map((t, i) => `<div class="tpl-item"><span class="nm">${esc(t.name)}</span><button class="mini-btn" onclick="useTemplate(${i})">Laden</button><button class="mini-btn" aria-label="Vorlage löschen" onclick="deleteTemplate(${i})">${ic('trash','sm')}</button></div>`).join('')
+        : '<p class="hint">Noch keine Vorlage. Erstelle eine Stunde und tippe dort auf „Vorlage“.</p>'}</div>
+    <div class="card"><h3>Sichern &amp; Übertragen</h3>
+      <div class="btn-row"><button class="action-btn" onclick="exportData()">${ic('download')} Backup speichern</button>
+      <label class="action-btn" style="cursor:pointer">${ic('upload')} Backup laden<input type="file" accept="application/json,.json" hidden onchange="importData(this)"></label></div>
+      <p class="hint">Das Backup enthält Verlauf, Favoriten, Vorlagen, Choreos und Einstellungen. Damit kannst Du auf ein neues Handy umziehen. Eine einzelne Stunde teilst Du in der Stunden-Ansicht per „Teilen“-Link. PDF: „Drucken / PDF“ antippen und im Druckdialog „Als PDF sichern“ wählen.</p></div>`;
+}
+function setGoal(d) { settings.goal = clampInt(settings.goal + d, 1, 14, 2); persistSettings(); renderMore(); renderProgress(); }
+function setWeight(v) { settings.weight = clampInt(v, 30, 250, 65); persistSettings(); renderMore(); renderProgress(); }
+
+/* ---------- Choreo-Baukasten ---------- */
+function cleanChoreo(c) {
+  if (!c || typeof c !== 'object') return null;
+  const blocks = asArray(c.blocks).map(b => b && exByName(b.name) ? { name: b.name, reps: clampInt(b.reps, 1, 16, 2) } : null).filter(Boolean).slice(0, 16);
+  return { name: typeof c.name === 'string' ? c.name.slice(0, 40) : '', bpm: clampInt(c.bpm, 60, 170, 100), blocks };
+}
+let choreo = cleanChoreo(loadStore('zumba-choreo', null)) || { name: '', bpm: 100, blocks: [] };
+let choreos = asArray(loadStore('zumba-choreos', [])).map(cleanChoreo).filter(c => c && c.blocks.length);
+const CH = { playing: false };
+const persistChoreo = () => saveStore('zumba-choreo', choreo);
+function renderChoreo() {
+  const c = $('choreo-container'); if (!c) return;
+  const groups = [['warmup', 'Warm-Up'], ['main', 'Hauptteil'], ['cooldown', 'Cool-Down']];
+  const opts = groups.map(([k, l]) => `<optgroup label="${l}">${EXERCISES[k].map(e => `<option value="${esc(e.name)}">${esc(e.name)}</option>`).join('')}</optgroup>`).join('');
+  c.innerHTML = `
+    <div class="stage" aria-live="off">
+      <div class="info" id="ch-info">${choreo.blocks.length ? 'Bereit' : 'Füge unten Schritte hinzu'}</div>
+      <h3 id="ch-now">–</h3>
+      <div class="dots" id="ch-dots">${dotsHtml()}</div>
+      <div class="stp" id="ch-stp"></div>
+      <div class="btn-row"><button class="p-tool${CH.playing ? ' on' : ''}" id="ch-play" onclick="chToggle()">${ic(CH.playing ? 'pause' : 'play')} ${CH.playing ? 'Stopp' : 'Start'}</button></div>
+    </div>
+    <div class="card"><h3>Choreo bauen</h3>
+      <div class="ch-add"><select id="ch-sel" aria-label="Schritt wählen">${opts}</select><button class="mini-btn" onclick="chAdd()" aria-label="Schritt hinzufügen">${ic('plus','sm')}</button><button class="mini-btn" onclick="chRandom()" aria-label="Zufalls-Choreo" title="Zufalls-Choreo">${ic('dice','sm')}</button></div>
+      <div class="field"><span>Tempo</span><span class="stepper"><button onclick="chBpm(-5)" aria-label="Langsamer">−</button><output id="ch-bpm">${choreo.bpm} BPM</output><button onclick="chBpm(5)" aria-label="Schneller">+</button></span></div>
+      <div id="ch-blocks">${choreo.blocks.length ? choreo.blocks.map((b, i) => `
+        <div class="ch-block" data-i="${i}"><span class="nm">${esc(b.name)}</span>
+          <span class="stepper"><button onclick="chReps(${i},-1)" aria-label="Weniger Wiederholungen">−</button><output>${b.reps}×8</output><button onclick="chReps(${i},1)" aria-label="Mehr Wiederholungen">+</button></span>
+          <button class="mini-btn" onclick="chMove(${i},-1)" aria-label="Nach oben">↑</button><button class="mini-btn" onclick="chMove(${i},1)" aria-label="Nach unten">↓</button>
+          <button class="mini-btn" onclick="chDel(${i})" aria-label="Entfernen">${ic('trash','sm')}</button></div>`).join('')
+        : '<p class="hint">Wähle einen Schritt und tippe auf +. Jeder Block läuft in 8er-Zählzeiten, die Choreo wiederholt sich als Schleife. Mit dem Würfel entsteht eine Zufalls-Choreo.</p>'}</div>
+      ${choreo.blocks.length ? `<div class="btn-row" style="margin-top:.7rem"><button class="action-btn" onclick="chSave()">${ic('check')} Speichern</button><button class="action-btn" onclick="chClear()">${ic('close')} Leeren</button></div>` : ''}</div>
+    ${choreos.length ? `<div class="card"><h3>Gespeicherte Choreos</h3>${choreos.map((x, i) => `<div class="tpl-item"><span class="nm">${esc(x.name || 'Choreo')} <span class="hint">· ${x.blocks.length} Schritte</span></span><button class="mini-btn" onclick="chLoad(${i})">Laden</button><button class="mini-btn" aria-label="Löschen" onclick="chRemove(${i})">${ic('trash','sm')}</button></div>`).join('')}</div>` : ''}`;
+}
+function chStop() { if (CH.playing) { CH.playing = false; Beat.stop(); } }
+function chToggle() {
+  if (CH.playing) { chStop(); renderChoreo(); return; }
+  if (!choreo.blocks.length) return toast('Erst Schritte hinzufügen');
+  CH.playing = true; renderChoreo();
+  const dots = $('ch-dots');
+  Beat.start(choreo.bpm, n => {
+    const total = choreo.blocks.reduce((a, b) => a + b.reps, 0) * 8; if (!total) return;
+    const p = n % total; let acc = 0, bi = 0;
+    for (; bi < choreo.blocks.length; bi++) { if (p < acc + choreo.blocks[bi].reps * 8) break; acc += choreo.blocks[bi].reps * 8; }
+    const b = choreo.blocks[bi]; if (!b) return;
+    const within = p - acc, rep = Math.floor(within / 8), ex = exByName(b.name);
+    lightDots(dots, within % 8);
+    $('ch-now').textContent = b.name;
+    $('ch-info').textContent = `Schritt ${bi + 1}/${choreo.blocks.length} · Wiederholung ${rep + 1}/${b.reps} · Runde ${Math.floor(n / total) + 1}`;
+    $('ch-stp').textContent = ex && ex.steps.length ? ex.steps[rep % ex.steps.length] : '';
+    document.querySelectorAll('.ch-block').forEach(el => el.classList.toggle('now', +el.dataset.i === bi));
+  }, true);
+}
+function chAdd() { const n = $('ch-sel').value; if (!exByName(n) || choreo.blocks.length >= 16) return; choreo.blocks.push({ name: n, reps: 2 }); chChanged(); }
+function chRandom() {
+  const pool = shuffle(EXERCISES.main).slice(0, 4), reps = [2, 2, 4, 2];
+  choreo.blocks = pool.map((e, i) => ({ name: e.name, reps: reps[i] })); choreo.name = ''; chChanged();
+}
+function chReps(i, d) { const b = choreo.blocks[i]; if (b) { b.reps = clampInt(b.reps + d, 1, 16, 2); chChanged(); } }
+function chMove(i, d) { const j = i + d; if (j < 0 || j >= choreo.blocks.length) return; [choreo.blocks[i], choreo.blocks[j]] = [choreo.blocks[j], choreo.blocks[i]]; chChanged(); }
+function chDel(i) { choreo.blocks.splice(i, 1); chChanged(); }
+function chBpm(d) { choreo.bpm = clampInt(choreo.bpm + d, 60, 170, 100); persistChoreo(); $('ch-bpm').textContent = choreo.bpm + ' BPM'; if (CH.playing) Beat.bpm = choreo.bpm; }
+function chClear() { chStop(); choreo.blocks = []; choreo.name = ''; chChanged(); }
+function chChanged() { chStop(); persistChoreo(); renderChoreo(); }
+function chSave() {
+  const name = (prompt('Name der Choreo:', choreo.name || 'Meine Choreo') || '').trim().slice(0, 40); if (!name) return;
+  choreo.name = name; choreos.unshift(JSON.parse(JSON.stringify(choreo))); choreos = choreos.slice(0, 20);
+  saveStore('zumba-choreos', choreos); persistChoreo(); renderChoreo(); toast('Choreo gespeichert');
+}
+function chLoad(i) { const c = choreos[i]; if (!c) return; chStop(); choreo = JSON.parse(JSON.stringify(c)); persistChoreo(); renderChoreo(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function chRemove(i) { choreos.splice(i, 1); saveStore('zumba-choreos', choreos); renderChoreo(); }
+
+function renderAll() { renderSession(); renderLibrary(); renderHistory(); renderFavorites(); renderProgress(); renderChoreo(); renderMore(); }
+
 /* ---------- Start ---------- */
-applyTheme(); syncControls(); renderPlaylistInputs(); renderSession(); renderLibrary(); renderHistory(); renderFavorites();
+applyTheme(); syncControls(); renderPlaylistInputs(); renderAll(); loadFromHash();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
